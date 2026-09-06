@@ -2,7 +2,7 @@
 
 ## Scope
 
-`web-falah` is a **fully static, prerendered company profile site** (Next.js, `output: "export"`). It contains:
+`web-falah` is a **fully static, prerendered company profile site** (Next.js App Router; every route is prerendered at build time, no dynamic rendering, served via `next start`). It contains:
 
 - No backend, no API routes, no server actions
 - No database, no authentication, no user sessions

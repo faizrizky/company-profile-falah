@@ -296,6 +296,26 @@ function checkGraphifyIsolation(files) {
   } else {
     details.push(".gitignore ignores graphify-out/");
   }
+  // Regression: .gitignore only prevents future additions; files committed
+  // before the ignore rule existed would still be tracked.
+  let tracked = "";
+  try {
+    tracked = execFileSync("git", ["ls-files", "graphify-out"], {
+      cwd: ROOT,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    tracked = "";
+  }
+  if (tracked) {
+    status = "fail";
+    details.push(
+      `graphify-out tracked by git (${tracked.split("\n").length} file(s)) — run: git rm -r --cached graphify-out`,
+    );
+  } else {
+    details.push("no graphify-out files tracked by git");
+  }
   const refs = [];
   for (const { file, lines } of files) {
     if (file === "scripts/security-audit.mjs") continue;

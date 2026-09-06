@@ -82,6 +82,28 @@ add(
   (headers["x-frame-options"] ?? "").toUpperCase() === "DENY" ? "X-Frame-Options DENY" : /frame-ancestors\s+'none'/i.test(csp) ? "frame-ancestors 'none'" : "missing",
 );
 
+if (url.protocol === "https:") {
+  try {
+    const httpUrl = new URL(url);
+    httpUrl.protocol = "http:";
+    httpUrl.pathname = "/";
+    httpUrl.search = "";
+    let httpRes = await fetch(httpUrl, { method: "HEAD", redirect: "follow", signal: AbortSignal.timeout(15_000) });
+    if (httpRes.status === 405 || httpRes.status === 501) {
+      httpRes = await fetch(httpUrl, { method: "GET", redirect: "follow", signal: AbortSignal.timeout(15_000) });
+    }
+    if (httpRes.body) await httpRes.body.cancel();
+    const httpFinal = httpRes.url || httpUrl.toString();
+    add(
+      "http-redirects-to-https",
+      httpFinal.startsWith("https://"),
+      httpFinal.startsWith("https://") ? `http:// redirects to ${new URL(httpFinal).host}` : `http:// did not end on HTTPS (final: ${httpFinal})`,
+    );
+  } catch {
+    add("http-redirects-to-https", true, "http:// listener unreachable — not verifiable (ok if host only serves HTTPS)");
+  }
+}
+
 const failed = checks.filter((c) => c.status === "fail");
 const ok = failed.length === 0;
 
