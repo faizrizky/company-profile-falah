@@ -85,10 +85,10 @@ export const SOLUTION_SMALL = [
 ];
 
 export const STATS = [
-  { value: "50+", label: "Strategic Projects" },
-  { value: "10K+ Hour", label: "of Immersive Training" },
-  { value: "99.4%", label: "Simulation Accuracy" },
-  { value: "0", label: "Operational Accidents" },
+  { value: 50, suffix: "+", label: "Strategic Projects" },
+  { value: 10, suffix: "K+ Hour", label: "of Immersive Training" },
+  { value: 99.4, suffix: "%", label: "Simulation Accuracy" },
+  { value: 0, suffix: "", label: "Operational Accidents" },
 ];
 
 export const EXPERTS = [

@@ -115,8 +115,8 @@ export const LEADERS = [
 ];
 
 export const EXPERTS = [
-  { title: "Management Team", count: "55+" },
-  { title: "Software Development Team", count: "45+" },
-  { title: "Content Development Team", count: "45+" },
-  { title: "IT Infrastructure Team", count: "15+" },
+  { title: "Management Team", value: 55, suffix: "+" },
+  { title: "Software Development Team", value: 45, suffix: "+" },
+  { title: "Content Development Team", value: 45, suffix: "+" },
+  { title: "IT Infrastructure Team", value: 15, suffix: "+" },
 ];

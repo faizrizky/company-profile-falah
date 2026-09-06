@@ -7,6 +7,7 @@ import {
   Section,
   SectionHeader,
 } from "@/components/sections/home/shared";
+import { CountUp } from "@/components/ui/count-up";
 
 export function ExpertsSection() {
   return (
@@ -22,14 +23,17 @@ export function ExpertsSection() {
         <Glow className="-top-3 left-0 h-[25px] w-full" />
 
         <div className="grid min-h-[100px] w-full grid-cols-2 items-center rounded-lg border border-accent/50 bg-surface-dark/20 px-6 py-5 backdrop-blur-sm md:grid-cols-4 md:px-10">
-          {STATS.map((s) => (
+          {STATS.map((s, i) => (
             <div
               key={s.label}
               className="flex flex-col items-center justify-center gap-2 text-center"
             >
-              <span className="font-display text-3xl font-bold leading-none text-accent">
-                {s.value}
-              </span>
+              <CountUp
+                value={s.value}
+                suffix={s.suffix}
+                delay={i * 80}
+                className="font-display text-3xl font-bold leading-none text-accent"
+              />
 
               <span className="text-sm font-semibold leading-5 text-white">
                 {s.label}

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Glow, Head } from "@/components/common/section-ui";
 import { A, EXPERTS } from "@/components/sections/about/data";
+import { CountUp } from "@/components/ui/count-up";
 
 export function ExpertsSection() {
   return (
@@ -20,7 +21,7 @@ export function ExpertsSection() {
           desc="Falah combines immersive technologies & integrated systems to deliver scalable solutions for modern operations."
         />
         <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
-          {EXPERTS.map((expert) => (
+          {EXPERTS.map((expert, i) => (
             <div key={expert.title} className="relative">
               <Glow className="-top-[14px] left-1/2 h-[25px] w-[356px] -translate-x-1/2" />
               <div className="flex h-full flex-col items-center gap-5 p-10">
@@ -28,9 +29,12 @@ export function ExpertsSection() {
                   {expert.title}
                 </h3>
                 <div className="flex h-[34px] flex-col justify-center">
-                  <span className="font-display text-[48px] font-bold leading-6 text-[#1866EF]">
-                    {expert.count}
-                  </span>
+                  <CountUp
+                    value={expert.value}
+                    suffix={expert.suffix}
+                    delay={i * 80}
+                    className="font-display text-[48px] font-bold leading-6 text-[#1866EF]"
+                  />
                 </div>
               </div>
             </div>
