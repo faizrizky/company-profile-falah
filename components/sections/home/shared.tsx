@@ -79,7 +79,7 @@ export const SOLUTION_SMALL = [
     title: "Advanced Education Systems",
   },
   {
-    img: "/home/3ebc014598e8a2249d2313ba3224e7bcea7058d0.webp",
+    img: "/home/3ebc014598e8a2249d2813ba3224e7bcea7058d0.webp",
     title: "Virtual Connect Suite",
   },
 ];
