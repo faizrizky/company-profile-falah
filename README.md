@@ -65,5 +65,14 @@ lib/
 
 scripts/
 ├── validate-product-category.*
-└── security-audit.*
+├── security-audit.*
+└── security-http-check.*
 ```
+
+## Branch & Release Policy
+
+- All changes are merged to `main` **via pull request** — direct pushes to `main` are not allowed.
+- A PR is only mergeable when **all CI checks pass** (lint, typecheck, product-category validation, security audit, production build). See `.github/workflows/ci.yml`.
+- **Force push to `main` is disabled** on the remote; **deletion of `main` is disabled**.
+- The production site is built and deployed from `main` only.
+- Security reporting and scope: see [SECURITY.md](./SECURITY.md).

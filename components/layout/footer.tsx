@@ -66,7 +66,7 @@ export function Footer() {
           {/* Brand */}
           <div className="flex flex-col gap-5">
             <img
-              src="/home/logo.svg"
+              src="/home/4f0e49a6e733d436853e5c48772d58ef1c454c51.webp"
               alt="Falah Inovasi Teknologi"
               className="h-10 w-fit"
             />

@@ -281,6 +281,283 @@ function checkCors(files) {
   return { status, details };
 }
 
+function readRootFile(name) {
+  const p = join(ROOT, name);
+  return existsSync(p) ? readFileSync(p, "utf8") : null;
+}
+
+function checkGraphifyIsolation(files) {
+  const details = [];
+  let status = "pass";
+  const gitignore = readRootFile(".gitignore") ?? "";
+  if (!/^\s*graphify-out\//m.test(gitignore)) {
+    status = "fail";
+    details.push(".gitignore missing graphify-out/ entry");
+  } else {
+    details.push(".gitignore ignores graphify-out/");
+  }
+  const refs = [];
+  for (const { file, lines } of files) {
+    if (file === "scripts/security-audit.mjs") continue;
+    lines.forEach((line, i) => {
+      if (/graphify-out/.test(line)) refs.push(`${file}:${i + 1}`);
+    });
+  }
+  if (refs.length) {
+    status = "fail";
+    details.push(`source references graphify-out: ${refs.join(", ")}`);
+  } else {
+    details.push("no source references to graphify-out");
+  }
+  return { status, details };
+}
+
+const DEPLOY_FILES = [
+  "vercel.json",
+  "Dockerfile",
+  "docker-compose.yml",
+  "docker-compose.yaml",
+  "nginx.conf",
+];
+
+function checkDeploymentConfig() {
+  const found = DEPLOY_FILES.filter((n) => existsSync(join(ROOT, n)));
+  for (const n of readdirSync(ROOT)) {
+    if (/^nginx.*\.conf$/.test(n) && !found.includes(n)) found.push(n);
+  }
+  if (!found.length) {
+    return { status: "pass", details: ["no explicit deployment config — platform-managed static host"] };
+  }
+  const details = [];
+  let status = "pass";
+  for (const n of found) {
+    const content = readFileSync(join(ROOT, n), "utf8");
+    const bad = [];
+    if (/graphify/.test(content)) bad.push("references graphify-out");
+    if (/\.env\b/.test(content)) bad.push("references .env");
+    if (bad.length) {
+      status = "fail";
+      details.push(`${n}: ${bad.join("; ")}`);
+    } else {
+      details.push(`${n}: present, no graphify/.env references`);
+    }
+  }
+  return { status, details };
+}
+
+function checkEnvTracking() {
+  const gitignore = readRootFile(".gitignore");
+  if (gitignore === null) return { status: "fail", details: [".gitignore missing"] };
+  if (/^\s*\.env\*/m.test(gitignore)) {
+    return { status: "pass", details: [".gitignore covers all .env* variants"] };
+  }
+  const required = [".env", ".env.local", ".env.development.local", ".env.test.local", ".env.production.local"];
+  const missing = required.filter(
+    (e) => !new RegExp(`^\\s*${e.replace(/\./g, "\\.")}(\\s|$)`, "m").test(gitignore),
+  );
+  if (missing.length) {
+    return { status: "fail", details: [`.gitignore does not cover: ${missing.join(", ")}`] };
+  }
+  return { status: "pass", details: [".gitignore covers env files (explicit list)"] };
+}
+
+function checkPublicHygiene() {
+  const pub = join(ROOT, "public");
+  if (!existsSync(pub)) return { status: "warn", details: ["public/ directory missing"] };
+  const details = [];
+  let status = "pass";
+  const walk = (dir) => {
+    for (const name of readdirSync(dir)) {
+      const p = join(dir, name);
+      const st = statSync(p);
+      if (st.isDirectory()) {
+        if (!SKIP_DIRS.has(name)) walk(p);
+        continue;
+      }
+      const relp = rel(p);
+      const secretLike =
+        /\.(pem|key|p12)$/i.test(name) ||
+        /id_rsa/.test(name) ||
+        (/^\.env/.test(name) && !name.endsWith(".example")) ||
+        /(secret|credential)/i.test(name);
+      if (secretLike) {
+        status = "fail";
+        details.push(`${relp}: secret-like file in public/`);
+        continue;
+      }
+      if ([".DS_Store", "Thumbs.db"].includes(name) || /\.log$/i.test(name)) {
+        if (status !== "fail") status = "warn";
+        details.push(`${relp}: junk file in public/`);
+      }
+    }
+  };
+  walk(pub);
+  if (!details.length) details.push("public/ clean");
+  return { status, details };
+}
+
+function checkHeaderPolicy() {
+  const cfg = readFileSync(join(ROOT, "next.config.ts"), "utf8").split(/\r?\n/);
+  const gateIdx = cfg.findIndex((l) => /if\s*\(\s*isProduction\s*\)/.test(l));
+  if (gateIdx === -1) {
+    return { status: "fail", details: ["production gate (if (isProduction)) not found in next.config.ts"] };
+  }
+  const before = cfg.slice(0, gateIdx).join("\n");
+  const after = cfg.slice(gateIdx).join("\n");
+  const details = [];
+  let status = "pass";
+  for (const name of ["X-Content-Type-Options", "X-Frame-Options", "Referrer-Policy", "Permissions-Policy"]) {
+    if (!before.includes(name)) {
+      status = "fail";
+      details.push(`${name} must be always-on (outside production gate)`);
+    }
+  }
+  for (const name of ["Strict-Transport-Security", "Content-Security-Policy"]) {
+    if (!after.includes(name)) {
+      status = "fail";
+      details.push(`${name} must be production-gated`);
+    }
+  }
+  if (!details.length) details.push("safe headers always-on, HSTS/CSP production-gated");
+  return { status, details };
+}
+
+function checkCspQuality() {
+  const cfg = readFileSync(join(ROOT, "next.config.ts"), "utf8");
+  const m = cfg.match(/Content-Security-Policy"[\s\S]*?\]\.join/);
+  if (!m) return { status: "fail", details: ["CSP block not found in next.config.ts"] };
+  const csp = m[0];
+  const details = [];
+  let status = "pass";
+  const fail = (d) => {
+    status = "fail";
+    details.push(d);
+  };
+  const warn = (d) => {
+    if (status !== "fail") status = "warn";
+    details.push(d);
+  };
+  if (/unsafe-eval/.test(csp)) fail("unsafe-eval in CSP");
+  if (csp.includes("*")) fail("wildcard source in CSP");
+  if (!/frame-ancestors\s+'none'/.test(csp)) fail("missing frame-ancestors 'none'");
+  if (!/form-action\s+'self'/.test(csp)) fail("missing form-action 'self'");
+  if (!/base-uri\s+'self'/.test(csp)) fail("missing base-uri 'self'");
+  if (!/object-src\s+'none'/.test(csp)) fail("missing object-src 'none'");
+  if (/unsafe-inline/.test(csp)) warn("unsafe-inline present (documented: RSC flight scripts + style attributes)");
+  if (!details.length) details.push("CSP strict: no wildcards, no unsafe-eval, framing denied");
+  return { status, details };
+}
+
+function checkToolingPresence() {
+  const required = [
+    ["scripts/security-http-check.mjs", "live header checker"],
+    [".github/workflows/ci.yml", "CI workflow"],
+    ["SECURITY.md", "security policy"],
+  ];
+  const details = [];
+  let missing = 0;
+  for (const [path, label] of required) {
+    if (existsSync(join(ROOT, path))) {
+      details.push(`${path}: present (${label})`);
+    } else {
+      missing++;
+      details.push(`${path}: missing (${label})`);
+    }
+  }
+  return { status: missing ? "warn" : "pass", details };
+}
+
+function checkExternalOrigins(files) {
+  const hosts = new Map();
+  for (const { file, lines } of files) {
+    lines.forEach((line, i) => {
+      for (const m of line.matchAll(/https?:\/\/([a-zA-Z0-9.-]+)/g)) {
+        const host = m[1].toLowerCase();
+        if (/^(localhost|127\.0\.0\.1|0\.0\.0\.0|schema\.org|www\.w3\.org|w3\.org)$/.test(host)) continue;
+        if (!hosts.has(host)) hosts.set(host, `${file}:${i + 1}`);
+      }
+    });
+  }
+  if (!hosts.size) return { status: "pass", details: ["no external origins referenced in source"] };
+  return {
+    status: "warn",
+    details: [...hosts.entries()].map(
+      ([h, at]) => `external origin ${h} (${at}) — review against CSP allowlist`,
+    ),
+  };
+}
+
+const ASSET_EXT_RE = /["'`]([^"'`\s]*?\.(?:webp|svg|ico))["'`]/g;
+
+function checkStaticAssets(files) {
+  const details = [];
+  let status = "pass";
+  const refs = new Set();
+  for (const { lines } of files) {
+    for (const m of lines.join("\n").matchAll(ASSET_EXT_RE)) {
+      const ref = m[1];
+      if (ref.includes("://")) continue;
+      refs.add(ref.replace(/^\.?\//, ""));
+    }
+  }
+  for (const ref of [...refs].sort()) {
+    if (/\.(png|jpe?g)$/i.test(ref)) {
+      status = "fail";
+      details.push(`forbidden image format referenced: ${ref}`);
+      continue;
+    }
+    if (!existsSync(join(ROOT, "public", ref))) {
+      status = "fail";
+      details.push(`public/${ref} referenced but missing`);
+    }
+  }
+  if (!details.length) details.push("all referenced static assets exist in public/");
+  if (existsSync(join(ROOT, ".next"))) {
+    let contaminated = false;
+    const stack = [join(ROOT, ".next")];
+    while (stack.length && !contaminated) {
+      const cur = stack.pop();
+      for (const name of readdirSync(cur)) {
+        const p = join(cur, name);
+        const st = statSync(p);
+        if (st.isDirectory()) stack.push(p);
+        else if (/graphify/i.test(name)) {
+          contaminated = true;
+          details.push(`graphify artifact in build output: ${rel(p)}`);
+        }
+      }
+    }
+    if (contaminated) status = "fail";
+    else details.push("no graphify artifacts in .next build output");
+  } else {
+    details.push("no .next build output to verify (run build first)");
+  }
+  return { status, details };
+}
+
+function checkWorkspaceLockfile() {
+  let dir = join(ROOT, "..");
+  for (let i = 0; i < 4 && existsSync(dir); i++) {
+    const lock = [
+      "package.json",
+      "package-lock.json",
+      "pnpm-lock.yaml",
+      "yarn.lock",
+      "bun.lockb",
+    ].find((n) => existsSync(join(dir, n)));
+    if (lock) {
+      return {
+        status: "warn",
+        details: [
+          `parent workspace file at ${"../".repeat(i + 1)}${lock} — Next.js may treat this as a workspace (non-security, informational)`,
+        ],
+      };
+    }
+    dir = join(dir, "..");
+  }
+  return { status: "pass", details: ["no parent workspace/lockfile found"] };
+}
+
 function runNpm(cmdArgs) {
   try {
     return execFileSync("npm", cmdArgs, {
@@ -383,6 +660,16 @@ const checks = [
   { id: "open-redirect", ...checkOpenRedirects(runtime) },
   { id: "cors", ...checkCors(runtime) },
   { id: "dependencies", ...checkDependencies() },
+  { id: "graphify-isolation", ...checkGraphifyIsolation(scanned) },
+  { id: "deployment-config", ...checkDeploymentConfig() },
+  { id: "env-tracking", ...checkEnvTracking() },
+  { id: "public-hygiene", ...checkPublicHygiene() },
+  { id: "header-policy", ...checkHeaderPolicy() },
+  { id: "csp-quality", ...checkCspQuality() },
+  { id: "tooling-presence", ...checkToolingPresence() },
+  { id: "external-origins", ...checkExternalOrigins(scanned) },
+  { id: "static-assets", ...checkStaticAssets(scanned) },
+  { id: "workspace-lockfile", ...checkWorkspaceLockfile() },
 ];
 
 const errors = checks.filter((c) => c.status === "fail").length;
@@ -394,6 +681,7 @@ if (asJson) {
     ok,
     errors,
     warnings,
+    checks: checks.map((c) => ({ id: c.id, status: c.status, details: c.details })),
     summary: {
       headers: {
         status: checks[0].status,
