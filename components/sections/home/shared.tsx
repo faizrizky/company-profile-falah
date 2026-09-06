@@ -3,25 +3,25 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export const A = {
-  hero: "/home/868c1b8678b700d4c84b8c6d5a837d626c019e5d.png",
+  hero: "/home/868c1b8678b700d4c84b8c6d5a837d626c019e5d.webp",
   swipe: "/home/swipe.svg",
   play: "/home/play.svg",
-  problemBg: "/home/f10e93358df011d7fbe05934f5f037f47ad15923.png",
+  problemBg: "/home/f10e93358df011d7fbe05934f5f037f47ad15923.webp",
   problemImage: "/home/551e418bfd19a405d49ad61dcf057d03127ed7ec.webp",
   risk: ["/home/risk-1.svg", "/home/risk-2.svg", "/home/risk-3.svg"],
   demoBg: "/home/88bc9a9201a3404fc882594e5ce830b89b38ea39.webp",
-  demo: "/home/10a5d1245f72bfd89f17f50606b7e7305e297729.png",
-  solutionBg: "/home/b9b70d4fc025e8a7a993bb8443a97e3de9688b6f.png",
-  solution1: "/home/11741bf42ede88699c0d4a8887fb08c6bc410913.png",
-  expertsBg: "/home/f317684d3b7a2149261ee251a36adcafe02d43ef.png",
+  demo: "/home/10a5d1245f72bfd89f17f50606b7e7305e297729.webp",
+  solutionBg: "/home/b9b70d4fc025e8a7a993bb8443a97e3de9688b6f.webp",
+  solution1: "/home/11741bf42ede88699c0d4a8887fb08c6bc410913.webp",
+  expertsBg: "/home/f317684d3b7a2149261ee251a36adcafe02d43ef.webp",
   expertImages: [
     "/home/7efd48d26bc3228d5cc49dce0859d27495360778.webp",
-    "/home/2130c6305d92fa269b888e263381b3e1654ebce8.png",
+    "/home/2130c6305d92fa269b888e263381b3e1654ebce8.webp",
     "/home/ff2687bf9298ff3758774cd4688fda88e9e11151.webp",
   ],
-  certBg: "/home/d90572902ab21cd6375c061e1d9f1ea77a5ab7aa.png",
-  kemhan: "/home/88a046b82458ea063910ce5d1d8298a6d317580e.png",
-  faqBg: "/home/8462b075f5d2d273d27811df43b5d96ef5ae81ea.png",
+  certBg: "/home/d90572902ab21cd6375c061e1d9f1ea77a5ab7aa.webp",
+  kemhan: "/home/88a046b82458ea063910ce5d1d8298a6d317580e.webp",
+  faqBg: "/home/8462b075f5d2d273d27811df43b5d96ef5ae81ea.webp",
   ctaBg: "/home/72d60c1716d38f195a043cdb8338d0f47aa472c0.webp",
   ctaVideo: "/home/5867d85722b9f8d86edcabe75587f140fb96fa57-3dfac4.webp",
 };
@@ -30,23 +30,23 @@ export const A = {
 export const PARTNERS = [
   { src: "/home/partner-ilias.svg", alt: "ILIAS" },
   { src: "/home/partner-plath.svg", alt: "Plath" },
-  { src: "/home/0a753080592dcd342c94d545a636dcdf4da59a21.png", alt: "Bohemia" },
+  { src: "/home/0a753080592dcd342c94d545a636dcdf4da59a21.webp", alt: "Bohemia" },
   { src: "/home/partner-tni-ad.svg", alt: "TNI AD" },
   { src: "/home/partner-trelix.svg", alt: "Trelix" },
   { src: "/home/partner-everbridge.svg", alt: "Everbridge" },
   { src: "/home/partner-strojirna.svg", alt: "Strojirna" },
   { src: "/home/partner-tni-al.svg", alt: "TNI AL" },
   {
-    src: "/home/8174b2638eb0e466077f2ffb86c994fd812fa97a-a1ab07.png",
+    src: "/home/8174b2638eb0e466077f2ffb86c994fd812fa97a-a1ab07.webp",
     alt: "Bohemia",
   },
   {
-    src: "/home/83f3ebf81d5491ee538a965e7e177167d72c9ec9-559a07.png",
+    src: "/home/83f3ebf81d5491ee538a965e7e177167d72c9ec9-559a07.webp",
     alt: "Unity",
   },
-  { src: "/home/88a046b82458ea063910ce5d1d8298a6d317580e.png", alt: "KEMHAN" },
+  { src: "/home/88a046b82458ea063910ce5d1d8298a6d317580e.webp", alt: "KEMHAN" },
   {
-    src: "/home/61b51db11d6cc6b101b8d66fabfcf795877e26e1-528ece.png",
+    src: "/home/61b51db11d6cc6b101b8d66fabfcf795877e26e1-528ece.webp",
     alt: "Plath",
   },
 ];
@@ -67,19 +67,19 @@ export const PROBLEMS = [
 
 export const SOLUTION_SMALL = [
   {
-    img: "/home/ad08db80f2a754576b36c904e844bb37fb2dffba.jpg",
+    img: "/home/ad08db80f2a754576b36c904e844bb37fb2dffba.webp",
     title: "Training Simulator",
   },
   {
-    img: "/home/de800df70f7738cb5bcc4f313676d23acdaab2a1.jpg",
+    img: "/home/de800df70f7738cb5bcc4f313676d23acdaab2a1.webp",
     title: "Command Center",
   },
   {
-    img: "/home/58db185d52171011b7e5d439ed214da038ed6193.jpg",
+    img: "/home/58db185d52171011b7e5d439ed214da038ed6193.webp",
     title: "Advanced Education Systems",
   },
   {
-    img: "/home/3ebc014598e8a2249d2313ba3224e7bcea7058d0.jpg",
+    img: "/home/3ebc014598e8a2249d2313ba3224e7bcea7058d0.webp",
     title: "Virtual Connect Suite",
   },
 ];

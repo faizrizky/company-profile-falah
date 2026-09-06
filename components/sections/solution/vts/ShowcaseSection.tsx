@@ -42,7 +42,7 @@ export function ShowcaseSection({ categorySlug }: { categorySlug: string }) {
 
       <div className="relative mt-8 min-h-[560px] w-full overflow-hidden md:mt-0 md:min-h-[810px]">
         <Image
-          src="/solution/virtual-training-suite/video-bg.png"
+          src="/solution/virtual-training-suite/video-bg.webp"
           alt=""
           fill
           className="object-cover"

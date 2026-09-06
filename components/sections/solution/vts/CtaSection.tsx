@@ -8,7 +8,7 @@ export function CtaSection() {
     <section className="relative w-full overflow-hidden">
       <div className="absolute inset-0">
         <Image
-          src="/solution/virtual-training-suite/cta.png"
+          src="/solution/virtual-training-suite/cta.webp"
           alt=""
           fill
           className="object-cover"

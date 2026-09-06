@@ -29,7 +29,7 @@ const featuredCard = {
   title: "Smart Campus Enterprise",
   desc: "Digital learning infrastructure for modern educational institutions",
   href: "/solution",
-  img: "/solution/megamenu/featured-2dd562.png",
+  img: "/solution/megamenu/featured-2dd562.webp",
 };
 
 const solutionCards = [
@@ -37,13 +37,13 @@ const solutionCards = [
     title: "Education & Training",
     desc: "Immersive simulation for classrooms and institutional learning",
     href: "/solution",
-    img: "/solution/megamenu/education-5c3cd6.png",
+    img: "/solution/megamenu/education-5c3cd6.webp",
   },
   {
     title: "Enterprise Command Center",
     desc: "Unified operations for mission-critical command environments",
     href: "/solution",
-    img: "/solution/megamenu/classroom-376645.png",
+    img: "/solution/megamenu/classroom-376645.webp",
   },
 ];
 
@@ -70,7 +70,7 @@ export function Navbar() {
       <div className="flex h-[50px] items-center justify-between px-6 lg:px-20">
         <Link href="/">
           <Image
-            src="/home/4f0e49a6e733d436853e5c48772d58ef1c454c51.png"
+            src="/home/4f0e49a6e733d436853e5c48772d58ef1c454c51.webp"
             alt="Falah Inovasi Teknologi"
             width={128}
             height={30}

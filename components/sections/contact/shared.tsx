@@ -2,9 +2,9 @@ import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 
 export const A = {
-  heroBg: "/home/97a64a5c4d3dc933755b867e9e23776073c427e5.png",
+  heroBg: "/home/97a64a5c4d3dc933755b867e9e23776073c427e5.webp",
   swipe: "/home/swipe.svg",
-  ctaBg: "/solution/8ccf2a3a61e7241ef0a8fb2961008038f4a63929-3fbf2b.png",
+  ctaBg: "/solution/8ccf2a3a61e7241ef0a8fb2961008038f4a63929-3fbf2b.webp",
   iconArrow: "/about/icon-arrow.svg",
   iconUser: "/contact/icon-user.svg",
   iconOrganization: "/contact/icon-organization.svg",
@@ -14,7 +14,7 @@ export const A = {
   iconWhatsapp: "/contact/icon-whatsapp.svg",
   iconLocator: "/contact/icon-locator.svg",
   iconAddressArrow: "/contact/icon-address-arrow.svg",
-  map: "/contact/map.png",
+  map: "/contact/map.webp",
 };
 
 // ponytail: Figma ships all 6 rows as "Payment" + identical lorem; swap real copy when provided

@@ -8,7 +8,7 @@ import { Glow, Head } from "@/components/common/section-ui";
 import { useDelayedUnmount, useModalEffects } from "@/lib/use-animated";
 
 const A = {
-  certBg: "/about/b803afd761809dc0f0f44924cec0a407982bee62-70b324.png",
+  certBg: "/about/b803afd761809dc0f0f44924cec0a407982bee62-70b324.webp",
   iconMaximize: "/about/icon-maximize.svg",
 };
 

@@ -7,7 +7,7 @@ import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDelayedUnmount, useModalEffects } from "@/lib/use-animated";
 
-const certBg = "/about/b803afd761809dc0f0f44924cec0a407982bee62-70b324.png";
+const certBg = "/about/b803afd761809dc0f0f44924cec0a407982bee62-70b324.webp";
 
 const CERTS = [
   {

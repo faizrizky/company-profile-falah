@@ -9,7 +9,7 @@ export const categoryDetails: CategoryDetail[] = [
       title: "Virtual Training Suite",
       description:
         "Technology-enhanced learning environments for modern educational institutions.",
-      image: "/solution/virtual-training-suite/hero.png",
+      image: "/solution/virtual-training-suite/hero.webp",
       recommendedFor: ["VR Training", "Mission Readiness", "Operational Simulation"],
     },
     tabs: [
