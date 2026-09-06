@@ -42,5 +42,7 @@ coverage/
 .cache/
 .turbo/
 
-# Markdown
-*.md
+# Documentation / Agent files
+AGENTS.md
+TODO.md
+graphify-out/

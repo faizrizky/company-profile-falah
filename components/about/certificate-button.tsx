@@ -11,15 +11,15 @@ const certBg = "/about/b803afd761809dc0f0f44924cec0a407982bee62-70b324.png";
 
 const CERTS = [
   {
-    src: "/about/6344c5f997c3d40fc8b7c786d728dedb59c8a904.png",
+    src: "/about/6344c5f997c3d40fc8b7c786d728dedb59c8a904.webp",
     title: "ISO 9001:2015 QMS",
   },
   {
-    src: "/about/c9c4d051832f17cdfd69f36233a943e5aca0b3d6.png",
+    src: "/about/c9c4d051832f17cdfd69f36233a943e5aca0b3d6.webp",
     title: "TKDN Certification",
   },
   {
-    src: "/about/c9cab7691bbe1d2ccce3b99a21eb2804f5057079.png",
+    src: "/about/c9cab7691bbe1d2ccce3b99a21eb2804f5057079.webp",
     title: "National Defense Industry",
   },
 ];

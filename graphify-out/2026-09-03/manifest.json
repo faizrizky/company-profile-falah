@@ -155,7 +155,7 @@
     "ast_hash": "3b3904be31c2e9209ec48c634d740dd4",
     "semantic_hash": ""
   },
-  "public/about/6344c5f997c3d40fc8b7c786d728dedb59c8a904.png": {
+  "public/about/6344c5f997c3d40fc8b7c786d728dedb59c8a904.webp": {
     "mtime": 1788311384.2596922,
     "seen": 1788346443.0053391,
     "ast_hash": "ae10b83f268698b74027a44083229cac",
@@ -233,19 +233,19 @@
     "ast_hash": "5dfe6bb2573bc041ad30624451b7f039",
     "semantic_hash": ""
   },
-  "public/about/c9c4d051832f17cdfd69f36233a943e5aca0b3d6-b12d28.png": {
+  "public/about/c9c4d051832f17cdfd69f36233a943e5aca0b3d6-b12d28.webp": {
     "mtime": 1788311405.7545083,
     "seen": 1788346443.0053554,
     "ast_hash": "32a3da49dea3dfabd4669b1ad8ef7e91",
     "semantic_hash": ""
   },
-  "public/about/c9c4d051832f17cdfd69f36233a943e5aca0b3d6.png": {
+  "public/about/c9c4d051832f17cdfd69f36233a943e5aca0b3d6.webp": {
     "mtime": 1788311386.9296694,
     "seen": 1788346443.005356,
     "ast_hash": "dfab8d2220993716ab9afbb2af7e6632",
     "semantic_hash": ""
   },
-  "public/about/c9cab7691bbe1d2ccce3b99a21eb2804f5057079.png": {
+  "public/about/c9cab7691bbe1d2ccce3b99a21eb2804f5057079.webp": {
     "mtime": 1788311396.2305899,
     "seen": 1788346443.005357,
     "ast_hash": "b07ad4c4d9c08f9e53a1836cae27f7d9",
@@ -383,7 +383,7 @@
     "ast_hash": "5f0e119609eac50ea38e46d91f3fffe6",
     "semantic_hash": ""
   },
-  "public/home/37842d21ee84f9a4758b11e84e9899ab3fd211f1.png": {
+  "public/home/37842d21ee84f9a4758b11e84e9899ab3fd211f1.webp": {
     "mtime": 1788253495.5124075,
     "seen": 1788346443.005391,
     "ast_hash": "11e7a48eeae51329eb3deacb13c2c0e9",
@@ -395,7 +395,7 @@
     "ast_hash": "45fe101263f235be809a88669565935c",
     "semantic_hash": ""
   },
-  "public/home/48749811ade9fa7bccad37d96b9377b64ce05e8f.png": {
+  "public/home/48749811ade9fa7bccad37d96b9377b64ce05e8f.webp": {
     "mtime": 1788253506.150304,
     "seen": 1788346443.005394,
     "ast_hash": "e40060ae074f82527907364dc3e71a7d",
@@ -407,13 +407,13 @@
     "ast_hash": "a65b3f111180e01d2634b7476c9c5e95",
     "semantic_hash": ""
   },
-  "public/home/551e418bfd19a405d49ad61dcf057d03127ed7ec-3cc403.png": {
+  "public/home/551e418bfd19a405d49ad61dcf057d03127ed7ec-3cc403.webp": {
     "mtime": 1788253537.2490017,
     "seen": 1788346443.0053964,
     "ast_hash": "2bd53deefb1f8ccd538cb4754ca98fc2",
     "semantic_hash": ""
   },
-  "public/home/551e418bfd19a405d49ad61dcf057d03127ed7ec.png": {
+  "public/home/551e418bfd19a405d49ad61dcf057d03127ed7ec.webp": {
     "mtime": 1788253508.832278,
     "seen": 1788346443.005398,
     "ast_hash": "304d9dcd5189aa4673f13d628e0601ed",
@@ -455,7 +455,7 @@
     "ast_hash": "139a7b27a264c0af4d284e546fdbd162",
     "semantic_hash": ""
   },
-  "public/home/7efd48d26bc3228d5cc49dce0859d27495360778.png": {
+  "public/home/7efd48d26bc3228d5cc49dce0859d27495360778.webp": {
     "mtime": 1788253513.4382331,
     "seen": 1788346443.005406,
     "ast_hash": "bf35e2669b4fa986b5cf21f6f2d62d5f",
@@ -479,7 +479,7 @@
     "ast_hash": "3676da1a1da27c6ce521618a10a76bac",
     "semantic_hash": ""
   },
-  "public/home/88bc9a9201a3404fc882594e5ce830b89b38ea39.png": {
+  "public/home/88bc9a9201a3404fc882594e5ce830b89b38ea39.webp": {
     "mtime": 1788253516.0692077,
     "seen": 1788346443.0054102,
     "ast_hash": "26814c57f106f58e8c2d83cbe82cccd1",
@@ -491,7 +491,7 @@
     "ast_hash": "41f7413f4ddf92e7032a4a163e668502",
     "semantic_hash": ""
   },
-  "public/home/8ccf2a3a61e7241ef0a8fb2961008038f4a63929.png": {
+  "public/home/8ccf2a3a61e7241ef0a8fb2961008038f4a63929.webp": {
     "mtime": 1788253517.1101975,
     "seen": 1788346443.0054123,
     "ast_hash": "e4260132bb7347bbe2df49daca1fde4f",
@@ -629,7 +629,7 @@
     "ast_hash": "ae39fdc375e5f1d9eefe7309ecc6f921",
     "semantic_hash": ""
   },
-  "public/home/ff2687bf9298ff3758774cd4688fda88e9e11151.png": {
+  "public/home/ff2687bf9298ff3758774cd4688fda88e9e11151.webp": {
     "mtime": 1788253533.6590366,
     "seen": 1788346443.0054405,
     "ast_hash": "22d6d0fadeb3ba5c81fcc5295314f98b",
@@ -791,7 +791,7 @@
     "ast_hash": "1e3fc1ff1dd233e99aac313ec4b3b83d",
     "semantic_hash": ""
   },
-  "public/solution/8ccf2a3a61e7241ef0a8fb2961008038f4a63929.png": {
+  "public/solution/8ccf2a3a61e7241ef0a8fb2961008038f4a63929.webp": {
     "mtime": 1788292757.4379864,
     "seen": 1788346443.0054705,
     "ast_hash": "e4260132bb7347bbe2df49daca1fde4f",
@@ -803,7 +803,7 @@
     "ast_hash": "7bee3e5a52b4a3bf4c315370286945eb",
     "semantic_hash": ""
   },
-  "public/solution/a3e9fd7c8037cc3eaa6de2d66792d6cbd68c9b04.png": {
+  "public/solution/a3e9fd7c8037cc3eaa6de2d66792d6cbd68c9b04.webp": {
     "mtime": 1788292742.2191403,
     "seen": 1788346443.0054731,
     "ast_hash": "641f3829d9314fb8255e4177898f0415",
