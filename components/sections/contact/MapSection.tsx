@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { A, Head } from "@/components/sections/contact/shared";
+import { A, Head, OFFICE_ADDRESS } from "@/components/sections/contact/shared";
 
 export function MapSection() {
   return (
@@ -13,18 +13,16 @@ export function MapSection() {
         desc="Falah operates from a collaborative operational-tech environment designed to support innovation & strategic technology initiatives."
       />
       <div className="relative h-[177px] w-full overflow-hidden md:h-[480px] md:w-[853px] md:rounded-lg md:border md:border-accent md:shadow-[0_0_4px_2px_rgba(147,197,253,1)]">
-        <Image src={A.map} alt="" fill className="object-cover" />
-        <img
-          src={A.iconLocator}
-          alt=""
-          className="absolute left-[47.8%] top-[11.3%] h-[53px] w-[50px] md:left-[53%] md:top-[31.5%] md:h-[34px] md:w-[45px]"
+        <iframe
+          title="Peta lokasi kantor Falah"
+          src={`https://www.google.com/maps?q=${encodeURIComponent(OFFICE_ADDRESS)}&z=16&output=embed`}
+          className="h-full w-full border-0"
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
         />
         <div className="absolute left-[336px] top-[21px] hidden flex-col items-center backdrop-blur-[2.5px] md:flex">
           <div className="flex items-center rounded-lg bg-[#0F0F14]/50 p-3">
-            <span className="w-[258px] text-xs font-medium leading-4 text-white">
-              Jl. Mampang Prapatan XII Kel No.1, RT.8/RW.1, Tegal Parang, Kec. Mampang Prpt., Kota
-              Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12790
-            </span>
+            <span className="w-[258px] text-xs font-medium leading-4 text-white">{OFFICE_ADDRESS}</span>
           </div>
           <img src={A.iconAddressArrow} alt="" className="h-[10px] w-[20px]" />
         </div>

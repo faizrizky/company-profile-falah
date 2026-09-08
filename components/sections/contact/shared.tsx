@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { categories } from "@/lib/category";
 
 export const A = {
   heroBg: "/home/97a64a5c4d3dc933755b867e9e23776073c427e5.webp",
@@ -12,10 +13,16 @@ export const A = {
   iconPhone: "/contact/icon-phone.svg",
   iconDropdown: "/contact/icon-dropdown.svg",
   iconWhatsapp: "/contact/icon-whatsapp.svg",
-  iconLocator: "/contact/icon-locator.svg",
   iconAddressArrow: "/contact/icon-address-arrow.svg",
-  map: "/contact/map.webp",
 };
+
+export const OFFICE_ADDRESS =
+  "Jl. Mampang Prapatan XII Kel No.1, RT.8/RW.1, Tegal Parang, Kec. Mampang Prpt., Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12790";
+
+export const INTEREST_OPTIONS = [
+  "Immersive Simulation",
+  ...categories.map((c) => c.title),
+];
 
 // ponytail: Figma ships all 6 rows as "Payment" + identical lorem; swap real copy when provided
 export const FLOWS = [
@@ -47,18 +54,28 @@ export function Field({
   label,
   placeholder,
   required,
+  type = "text",
+  name,
 }: {
   icon: string;
   label: string;
   placeholder: string;
   required?: boolean;
+  type?: string;
+  name?: string;
 }) {
   return (
     <div className="flex flex-col gap-2">
       <Label required={required}>{label}</Label>
       <div className="flex h-11 items-center gap-3 rounded-lg border border-white bg-surface-dark/50 px-5 backdrop-blur-[14.7px]">
         <img src={icon} alt="" className="h-4 w-4" />
-        <span className="text-sm leading-4 text-white/50">{placeholder}</span>
+        <input
+          type={type}
+          name={name}
+          placeholder={placeholder}
+          aria-label={label}
+          className="h-full w-full bg-transparent text-sm leading-4 text-white outline-none placeholder:text-white/50"
+        />
       </div>
     </div>
   );
@@ -68,33 +85,50 @@ export function Fields() {
   return (
     <div className="flex w-full flex-col gap-4 px-6 md:gap-3 md:px-0">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Field icon={A.iconUser} label="Full name" placeholder="Enter your name" required />
+        <Field icon={A.iconUser} label="Full name" placeholder="Enter your name" required name="full-name" />
         <Field
           icon={A.iconOrganization}
           label="Organization/Institution"
           placeholder="Enter your organization / institution name ..."
           required
+          name="organization"
         />
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <Field icon={A.iconEmail} label="Email" placeholder="Enter your email" required />
-        <Field icon={A.iconPhone} label="Phone number" placeholder="Enter your phone number" required />
+        <Field icon={A.iconEmail} label="Email" placeholder="Enter your email" required name="email" type="email" />
+        <Field icon={A.iconPhone} label="Phone number" placeholder="Enter your phone number" required name="phone" type="tel" />
       </div>
       <div className="flex h-[73px] items-center gap-8">
         <div className="flex w-1/2 flex-col gap-2">
           <Label>Consultation Interest</Label>
-          <div className="flex h-11 items-center justify-between rounded-lg border border-white bg-surface-dark/50 px-5 backdrop-blur-[14.7px]">
-            <span className="text-sm leading-4 text-white">Immersive Simulation</span>
-            <img src={A.iconDropdown} alt="" className="h-4 w-4" />
+          <div className="relative">
+            <select
+              name="consultation-interest"
+              defaultValue="Immersive Simulation"
+              aria-label="Consultation Interest"
+              className="h-11 w-full cursor-pointer appearance-none rounded-lg border border-white bg-surface-dark/50 pl-5 pr-10 text-sm leading-4 text-white outline-none backdrop-blur-[14.7px]"
+            >
+              {INTEREST_OPTIONS.map((opt) => (
+                <option key={opt} value={opt} className="bg-surface-dark text-white">
+                  {opt}
+                </option>
+              ))}
+            </select>
+            <img
+              src={A.iconDropdown}
+              alt=""
+              className="pointer-events-none absolute right-5 top-1/2 h-4 w-4 -translate-y-1/2"
+            />
           </div>
         </div>
         <div className="flex w-1/2 flex-col gap-2">
           <Label>Consultation Detail</Label>
-          <div className="flex h-[66px] items-start rounded-lg border border-white bg-surface-dark/50 p-5 backdrop-blur-[14.7px]">
-            <span className="text-sm leading-4 text-white/50">
-              Tell us about your needs, project goals, or challenges ...
-            </span>
-          </div>
+          <textarea
+            name="consultation-detail"
+            aria-label="Consultation Detail"
+            placeholder="Tell us about your needs, project goals, or challenges ..."
+            className="h-[66px] w-full resize-none rounded-lg border border-white bg-surface-dark/50 p-5 text-sm leading-4 text-white outline-none backdrop-blur-[14.7px] placeholder:text-white/50"
+          />
         </div>
       </div>
     </div>
