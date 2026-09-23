@@ -89,6 +89,39 @@ function HeaderActions({
   );
 }
 
+/**
+ * Some browser extensions inject scripts into every frame and can make Puck's
+ * preview iframe (a srcdoc frame) reload. Puck keeps rendering into the
+ * discarded document, so the canvas turns blank for good. Detect that reload
+ * and ask for a remount; capped so a misbehaving extension can't loop it.
+ */
+function usePreviewFrameGuard(onLost: () => void, generation: number) {
+  const recoveries = useRef<number[]>([]);
+  useEffect(() => {
+    let firstLoadSeen = false;
+    const onLoad = (event: Event) => {
+      const frame = event.target;
+      if (!(frame instanceof HTMLIFrameElement) || frame.id !== "preview-frame") return;
+      if (!firstLoadSeen) {
+        firstLoadSeen = true; // Puck's own initial load
+        return;
+      }
+      requestAnimationFrame(() => {
+        if (frame.contentDocument?.getElementById("frame-root")?.childElementCount) return;
+        const now = Date.now();
+        recoveries.current = recoveries.current.filter((t) => now - t < 30_000);
+        if (recoveries.current.length >= 5) return;
+        recoveries.current.push(now);
+        console.warn("[studio] Preview frame was reloaded by an external script (browser extension?); remounting the editor.");
+        onLost();
+      });
+    };
+    // `load` doesn't bubble, but it can be caught while capturing.
+    document.addEventListener("load", onLoad, true);
+    return () => document.removeEventListener("load", onLoad, true);
+  }, [onLost, generation]);
+}
+
 const noopSubscribe = () => () => {};
 
 /** False during SSR and hydration, true afterwards. */
@@ -152,6 +185,12 @@ function StudioEditorClient(props: StudioEditorProps) {
     [],
   );
 
+  // Latest editor data, so a remount (see usePreviewFrameGuard) keeps edits.
+  const latestData = useRef<Data>(initialData);
+  const [generation, setGeneration] = useState(0);
+  const remount = useCallback(() => setGeneration((g) => g + 1), []);
+  usePreviewFrameGuard(remount, generation);
+
   const savedRef = useRef(JSON.stringify([page.title, page.layout]));
   const [dirty, setDirty] = useState(false);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
@@ -171,7 +210,10 @@ function StudioEditorClient(props: StudioEditorProps) {
   }, [status]);
 
   const onChange = useCallback(
-    (data: Data) => setDirty(JSON.stringify([puckTitle(data, page.title), puckToLayout(data)]) !== savedRef.current),
+    (data: Data) => {
+      latestData.current = data;
+      setDirty(JSON.stringify([puckTitle(data, page.title), puckToLayout(data)]) !== savedRef.current);
+    },
     [page.title],
   );
 
@@ -196,8 +238,9 @@ function StudioEditorClient(props: StudioEditorProps) {
     // backdrop) so it reads as part of the admin page — see studio.css.
     <div className={embedded ? "studio-embedded" : "studio-standalone"}>
       <Puck
+        key={generation}
         config={config}
-        data={initialData}
+        data={generation === 0 ? initialData : latestData.current}
         metadata={metadata}
         ui={initialUi}
         viewports={viewports}
