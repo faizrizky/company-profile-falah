@@ -10,7 +10,7 @@ const isProduction = process.env.NODE_ENV === "production";
  * bucket / CDN URL when S3/R2 storage is enabled.
  */
 function mediaOrigins(): URL[] {
-  return [process.env.CMS_MEDIA_URL, process.env.CMS_URL]
+  return [process.env.CMS_MEDIA_URL, process.env.CMS_PUBLIC_URL, process.env.CMS_URL]
     .filter((value): value is string => Boolean(value))
     .map((value) => new URL(value));
 }
@@ -22,6 +22,10 @@ const remotePatterns: RemotePattern[] = mediaOrigins().map((url) => ({
 }));
 const mediaSources = [...new Set(mediaOrigins().map((url) => url.origin))];
 const imgSrc = `img-src 'self'${mediaSources.map((origin) => ` ${origin}`).join("")}`;
+const cmsPublicOrigin = (() => {
+  const url = process.env.CMS_PUBLIC_URL ?? process.env.CMS_URL;
+  return url ? new URL(url).origin : "";
+})();
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -68,13 +72,48 @@ if (isProduction) {
   );
 }
 
+/**
+ * The visual editor (/studio) additionally talks to the CMS API from the
+ * browser (save, media library, uploads) and renders its canvas in a
+ * same-origin iframe. Public pages never get these permissions.
+ */
+const studioHeaders = [
+  ...securityHeaders.filter((h) => h.key !== "Content-Security-Policy"),
+  { key: "X-Robots-Tag", value: "noindex, nofollow" },
+  { key: "Cache-Control", value: "no-store" },
+  ...(isProduction
+    ? [
+        {
+          key: "Content-Security-Policy",
+          value: [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline'",
+            "style-src 'self' 'unsafe-inline'",
+            `${imgSrc} blob: data:`,
+            "font-src 'self' data:",
+            `connect-src 'self' ${cmsPublicOrigin}`.trim(),
+            "frame-src 'self' https://www.google.com",
+            "object-src 'none'",
+            "frame-ancestors 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "upgrade-insecure-requests",
+          ].join("; "),
+        },
+      ]
+    : []),
+];
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: { remotePatterns },
   // Pin the workspace root (a stray lockfile higher up confuses auto-detection).
   turbopack: { root: path.resolve(".") },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/((?!studio).*)", headers: securityHeaders },
+      { source: "/studio/:path*", headers: studioHeaders },
+    ];
   },
 };
 

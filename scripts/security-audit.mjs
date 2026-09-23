@@ -224,7 +224,7 @@ const DANGEROUS_HTML = [
 ];
 const REDIRECT_SINKS = [
   /redirect\s*\(([^)\n]*)\)/g,
-  /router\.(push|replace)\s*\(([^)\n]*)\)/g,
+  /router\.(?:push|replace)\s*\(([^)\n]*)\)/g,
   /window\.open\s*\(([^)\n]*)\)/g,
   /location\.href\s*=\s*([^\n;]+)/g,
   /window\.location\s*=\s*([^\n;]+)/g,
