@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { fontVariables } from "@/lib/fonts";
-import "@puckeditor/core/puck.css";
 import "../globals.css";
 import "./studio.css";
 

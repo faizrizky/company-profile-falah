@@ -59,9 +59,51 @@
   background-attachment: fixed;
 }
 
+html:has(.studio-body) {
+  color-scheme: light;
+}
+
 .studio-body [class*="_PuckLayout-nav_"] {
   background-image: var(--falah-rail);
   border-color: transparent;
+}
+
+/* ── Embedded in the CMS admin ─────────────────────────────────────────
+   The admin already provides the purple sidebar, the page title and the
+   backdrop, so the editor drops its own: transparent page, light rail,
+   header without title or bar. */
+
+html:has(.studio-embedded),
+.studio-body:has(.studio-embedded) {
+  background: transparent;
+}
+
+.studio-embedded {
+  --puck-header-color-bg: transparent;
+  --puck-pluginbar-color-bg: rgb(255 255 255 / 0.4);
+  --puck-pluginbar-color-text: #5d6286;
+  --puck-pluginbar-color-text-hover: #1f2340;
+  --puck-pluginbar-color-text-selected: #5b6cf0;
+  --puck-pluginbar-color-bg-hover: rgb(91 108 240 / 0.08);
+}
+
+.studio-embedded [class*="_PuckLayout-nav_"] {
+  background-image: none;
+  border-color: var(--puck-color-border);
+}
+
+.studio-embedded [class*="_PuckHeader_"] {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.studio-embedded [class*="_PuckHeader-inner_"] {
+  border-inline-start: 0;
+}
+
+/* The admin already shows the page title above the editor. */
+.studio-embedded [class*="_PuckHeader-title_"] {
+  visibility: hidden;
 }
 
 .studio-body [class*="_PuckHeader_"],

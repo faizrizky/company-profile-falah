@@ -167,7 +167,9 @@ export function StudioEditor(props: StudioEditorProps) {
   };
 
   return (
-    <>
+    // Inside the CMS the editor sheds its own chrome (title, coloured rail,
+    // backdrop) so it reads as part of the admin page — see studio.css.
+    <div className={embedded ? "studio-embedded" : "studio-standalone"}>
       <Puck
         config={config}
         data={initialData}
@@ -176,8 +178,8 @@ export function StudioEditor(props: StudioEditorProps) {
         viewports={viewports}
         iframe={{ enabled: true, waitForStyles: true }}
         dictionary={uiLang === "id" ? puckDictionaryId : undefined}
-        headerTitle={page.title}
-        headerPath={`/${locale}${page.slug === "home" ? "" : `/${page.slug}`}`}
+        headerTitle={embedded ? "" : page.title}
+        headerPath={embedded ? "" : `/${locale}${page.slug === "home" ? "" : `/${page.slug}`}`}
         onChange={onChange}
         onPublish={(data) => save(data, true)}
         overrides={{
@@ -193,6 +195,6 @@ export function StudioEditor(props: StudioEditorProps) {
           {status.message}
         </div>
       ) : null}
-    </>
+    </div>
   );
 }
