@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { Button, Puck, useGetPuck, type Data, type Viewports } from "@puckeditor/core";
 import { ExternalLink, Save } from "lucide-react";
 
@@ -14,6 +14,7 @@ import { puckDictionaryId, studioStrings, type StudioLang, type StudioStrings } 
 import type { Footer, Navigation, Page, User } from "@/types/cms";
 
 const VIEWPORTS = { desktop: 1440, tablet: 768, mobile: 375 } as const;
+const IFRAME = { enabled: true, waitForStyles: true };
 
 type Status =
   | { kind: "idle" }
@@ -88,7 +89,31 @@ function HeaderActions({
   );
 }
 
+const noopSubscribe = () => () => {};
+
+/** False during SSR and hydration, true afterwards. */
+function useHydrated() {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
+}
+
+/**
+ * Puck is client-only by nature (initial layout depends on the window size,
+ * ids feed its drag & drop registry). Rendering it after hydration keeps the
+ * server and client trees identical, so no ids get out of sync.
+ */
 export function StudioEditor(props: StudioEditorProps) {
+  const hydrated = useHydrated();
+  if (!hydrated) {
+    return <div className={props.embedded ? "studio-embedded" : "studio-standalone"} aria-busy="true" />;
+  }
+  return <StudioEditorClient {...props} />;
+}
+
+function StudioEditorClient(props: StudioEditorProps) {
   const { page, locale, uiLang, embedded, cmsUrl, siteData, chrome, dictionary, fontClass } = props;
   const s = studioStrings[uiLang];
 
@@ -113,7 +138,7 @@ export function StudioEditor(props: StudioEditorProps) {
   // On a desktop-sized editor start with both panels open and the desktop preview.
   const initialUi = useMemo(
     () =>
-      typeof window !== "undefined" && window.innerWidth >= 1024
+      window.innerWidth >= 1024
         ? {
             leftSideBarVisible: true,
             rightSideBarVisible: true,
@@ -176,7 +201,7 @@ export function StudioEditor(props: StudioEditorProps) {
         metadata={metadata}
         ui={initialUi}
         viewports={viewports}
-        iframe={{ enabled: true, waitForStyles: true }}
+        iframe={IFRAME}
         dictionary={uiLang === "id" ? puckDictionaryId : undefined}
         headerTitle={embedded ? "" : page.title}
         headerPath={embedded ? "" : `/${locale}${page.slug === "home" ? "" : `/${page.slug}`}`}

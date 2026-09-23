@@ -103,10 +103,16 @@ html:has(.studio-embedded),
   visibility: hidden;
 }
 
-.studio-body [class*="_PuckHeader_"],
-.studio-body [class*="_Sidebar--"] {
-  backdrop-filter: blur(22px) saturate(150%);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
+/* Deliberately no backdrop-filter anywhere in the editor chrome: on narrow
+   screens the sidebars overlay the preview iframe, and Chrome stops painting
+   an iframe under a blurred layer (blank white canvas). */
+@media (max-width: 1023px) {
+  /* Panels overlay the preview here, so they need a solid fill instead. */
+  :root {
+    --puck-header-color-bg: rgb(247 251 255 / 0.96);
+    --puck-sidebar-left-color-bg: #f3f9ff;
+    --puck-sidebar-right-color-bg: #f7fbff;
+  }
 }
 
 /* Publish (Puck primary button) uses the accent gradient. */
