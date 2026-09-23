@@ -9,7 +9,7 @@
  */
 
 :root {
-  --falah-rail: linear-gradient(180deg, #7d3fc0 0%, #5b40b3 48%, #3e4aa8 100%);
+  --falah-rail: linear-gradient(180deg, #38bdf8 0%, #1f7ae0 45%, #0b2e7a 100%);
   --falah-accent-gradient: linear-gradient(135deg, #6a8cff 0%, #7b5cf6 100%);
   --falah-pink: #e25fd3;
   --falah-cyan: #56d4ea;
@@ -39,7 +39,7 @@
   --puck-sidebar-right-color-bg: rgb(255 255 255 / 0.55);
 
   /* Plugin rail (left): deep violet with white icons, like the reference sidebar. */
-  --puck-pluginbar-color-bg: #5b40b3;
+  --puck-pluginbar-color-bg: #1f7ae0;
   --puck-pluginbar-color-text: rgb(255 255 255 / 0.78);
   --puck-pluginbar-color-text-hover: #fff;
   --puck-pluginbar-color-text-selected: #fff;
