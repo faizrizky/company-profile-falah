@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ locale?: string; ui?: string }>;
+  searchParams: Promise<{ locale?: string; ui?: string; embed?: string }>;
 };
 
 export default async function StudioPage({ params, searchParams }: Props) {
@@ -45,6 +45,7 @@ export default async function StudioPage({ params, searchParams }: Props) {
       page={{ id: page.id, title: page.title, slug: page.slug, layout: page.layout, _status: page._status }}
       locale={locale}
       uiLang={uiLang}
+      embedded={query.embed === "1"}
       user={{ email: session.user.email, name: session.user.name }}
       cmsUrl={cmsUrl}
       siteData={siteData}

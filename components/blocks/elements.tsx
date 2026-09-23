@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
@@ -9,6 +10,19 @@ import { cn } from "@/lib/utils";
 import type { LayoutSectionBlock } from "@/types/cms";
 
 export type Element = NonNullable<LayoutSectionBlock["column1"]>[number];
+
+/**
+ * Every element sits in a frame: on its own on the page it gets the site's
+ * container (dark background, gutters, max width); inside a Layout Section
+ * column the frame is neutral (see `.falah-el` in globals.css).
+ */
+export function ElementFrame({ children }: { children: ReactNode }) {
+  return (
+    <div className="falah-el">
+      <div className="falah-el__inner">{children}</div>
+    </div>
+  );
+}
 type Of<T extends Element["blockType"]> = Extract<Element, { blockType: T }>;
 
 // Design tokens → Tailwind classes. Editors pick tokens, never raw CSS, so
@@ -126,6 +140,10 @@ export function SpacerView({ el }: { el: Of<"spacer"> }) {
 }
 
 export function ElementView({ element }: { element: Element }) {
+  return <ElementFrame>{renderElement(element)}</ElementFrame>;
+}
+
+function renderElement(element: Element) {
   switch (element.blockType) {
     case "badge":
       return <BadgeView el={element} />;

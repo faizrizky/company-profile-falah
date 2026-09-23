@@ -77,8 +77,11 @@ if (isProduction) {
  * browser (save, media library, uploads) and renders its canvas in a
  * same-origin iframe. Public pages never get these permissions.
  */
+const studioFrameAncestors = `frame-ancestors 'self' ${cmsPublicOrigin}`.trim();
 const studioHeaders = [
-  ...securityHeaders.filter((h) => h.key !== "Content-Security-Policy"),
+  // Embedded in the CMS admin: framing is allowed for the CMS origin only (CSP
+  // frame-ancestors), so the blanket X-Frame-Options: DENY is dropped here.
+  ...securityHeaders.filter((h) => h.key !== "Content-Security-Policy" && h.key !== "X-Frame-Options"),
   { key: "X-Robots-Tag", value: "noindex, nofollow" },
   { key: "Cache-Control", value: "no-store" },
   ...(isProduction
@@ -94,14 +97,14 @@ const studioHeaders = [
             `connect-src 'self' ${cmsPublicOrigin}`.trim(),
             "frame-src 'self' https://www.google.com",
             "object-src 'none'",
-            "frame-ancestors 'none'",
+            studioFrameAncestors,
             "base-uri 'self'",
             "form-action 'self'",
             "upgrade-insecure-requests",
           ].join("; "),
         },
       ]
-    : []),
+    : [{ key: "Content-Security-Policy", value: studioFrameAncestors }]),
 ];
 
 const nextConfig: NextConfig = {

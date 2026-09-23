@@ -12,7 +12,7 @@ export function StudioMessage({
 }) {
   return (
     <main className="studio-center">
-      <div className="studio-card studio-glass">
+      <div className="studio-card">
         <div className="studio-brand">
           <span className="studio-brand__mark" aria-hidden>
             ✳

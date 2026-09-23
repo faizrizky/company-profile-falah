@@ -8,6 +8,7 @@ import {
   BadgeView,
   ButtonView,
   CardView,
+  ElementFrame,
   HeadingView,
   ImageView,
   ParagraphView,
@@ -17,7 +18,7 @@ import type { BlockContext, SiteData } from "@/components/blocks/types";
 import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
-import { MediaField, RelationField, TagsField } from "@/components/studio/fields";
+import { MediaField, PageSettingsField, RelationField, TagsField } from "@/components/studio/fields";
 import { asMedia, mediaUrl } from "@/lib/cms/media";
 import { ELEMENT_TYPES } from "@/lib/studio/convert";
 import { studioStrings, type StudioLang } from "@/lib/studio/strings";
@@ -33,7 +34,9 @@ export type StudioMetadata = {
 type Block = Page["layout"][number];
 type AnyProps = Record<string, unknown>;
 
-export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; cmsUrl: string; data: SiteData }): Config {
+type StudioContext = { lang: StudioLang; cmsUrl: string; data: SiteData; pageId: number; embedded: boolean };
+
+export function createStudioConfig({ lang, cmsUrl, data, pageId, embedded }: StudioContext): Config {
   const s = studioStrings[lang];
   const L = (en: string, id: string) => (lang === "id" ? id : en);
   const rowId = () => crypto.randomUUID().replace(/-/g, "").slice(0, 24);
@@ -407,7 +410,11 @@ export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; c
       label: "Badge",
       fields: { text: text("Text", "Teks"), align: align() },
       defaultProps: { text: L("New", "Baru"), align: "left" },
-      render: ({ puck: _p, ...props }) => <BadgeView el={{ ...props, blockType: "badge" } as never} />,
+      render: ({ puck: _p, ...props }) => (
+        <ElementFrame>
+          <BadgeView el={{ ...props, blockType: "badge" } as never} />
+        </ElementFrame>
+      ),
     },
     heading: {
       label: L("Heading", "Judul"),
@@ -419,7 +426,11 @@ export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; c
         align: align(),
       },
       defaultProps: { text: L("Heading", "Judul"), level: "h2", size: "lg", color: "accent", align: "left" },
-      render: ({ puck: _p, ...props }) => <HeadingView el={{ ...props, blockType: "heading" } as never} />,
+      render: ({ puck: _p, ...props }) => (
+        <ElementFrame>
+          <HeadingView el={{ ...props, blockType: "heading" } as never} />
+        </ElementFrame>
+      ),
     },
     paragraph: {
       label: L("Paragraph", "Paragraf"),
@@ -435,7 +446,11 @@ export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; c
         tone: "default",
         align: "left",
       },
-      render: ({ puck: _p, ...props }) => <ParagraphView el={{ ...props, blockType: "paragraph" } as never} />,
+      render: ({ puck: _p, ...props }) => (
+        <ElementFrame>
+          <ParagraphView el={{ ...props, blockType: "paragraph" } as never} />
+        </ElementFrame>
+      ),
     },
     image: {
       label: L("Image", "Gambar"),
@@ -446,46 +461,72 @@ export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; c
         caption: text("Caption", "Keterangan"),
       },
       defaultProps: { aspect: "video", framed: true },
-      render: ({ puck: _p, ...props }) => <ImageView el={{ ...props, blockType: "image" } as never} />,
+      render: ({ puck: _p, ...props }) => (
+        <ElementFrame>
+          <ImageView el={{ ...props, blockType: "image" } as never} />
+        </ElementFrame>
+      ),
     },
     button: {
       label: L("Button", "Tombol"),
       fields: { label: text("Label", "Label"), href: plain("Link", "Link"), style: style(), align: align() },
       defaultProps: { label: L("Request Consultation", "Ajukan Konsultasi"), href: "/contact", style: "fill", align: "left" },
-      render: ({ puck: _p, ...props }) => <ButtonView el={{ ...props, blockType: "button" } as never} />,
+      render: ({ puck: _p, ...props }) => (
+        <ElementFrame>
+          <ButtonView el={{ ...props, blockType: "button" } as never} />
+        </ElementFrame>
+      ),
     },
     card: {
       label: L("Card", "Kartu"),
       fields: { icon: image("Icon", "Ikon"), title: text("Title", "Judul"), description: textarea("Description", "Deskripsi"), href: plain("Link (optional)", "Link (opsional)") },
       defaultProps: { title: L("Card title", "Judul kartu"), description: L("Short supporting text.", "Teks pendukung singkat.") },
-      render: ({ puck: _p, ...props }) => <CardView el={{ ...props, blockType: "card" } as never} />,
+      render: ({ puck: _p, ...props }) => (
+        <ElementFrame>
+          <CardView el={{ ...props, blockType: "card" } as never} />
+        </ElementFrame>
+      ),
     },
     spacer: {
       label: L("Spacer", "Jarak"),
       fields: { size: radio("Size", "Ukuran", [["sm", "S", "K"], ["md", "M", "S"], ["lg", "L", "B"], ["xl", "XL", "XL"]]) },
       defaultProps: { size: "md" },
-      render: ({ puck: _p, ...props }) => <SpacerView el={{ ...props, blockType: "spacer" } as never} />,
+      render: ({ puck: _p, ...props }) => (
+        <ElementFrame>
+          <SpacerView el={{ ...props, blockType: "spacer" } as never} />
+        </ElementFrame>
+      ),
     },
   };
 
   const sectionTypes = Object.keys(components).filter((k) => k !== "layoutSection" && !ELEMENT_TYPES.includes(k));
 
+  // Same grouping as the Puck demo: building blocks first, ready-made sections last.
   return {
     categories: {
+      layout: { title: s.catLayout, components: ["layoutSection", "spacer"] },
+      typography: { title: s.catTypography, components: ["badge", "heading", "paragraph"] },
+      actions: { title: s.catActions, components: ["button"] },
+      media: { title: s.catMedia, components: ["image", "card"] },
       sections: { title: s.catSections, components: sectionTypes },
-      layout: { title: s.catLayout, components: ["layoutSection"] },
-      elements: { title: s.catElements, components: ELEMENT_TYPES, defaultExpanded: false },
     },
     components,
     root: {
-      fields: { title: plain("Page title", "Judul halaman") },
-      render: ({ puck }: { puck: { metadata: unknown; renderDropZone: (props: { zone: string; disallow?: string[] }) => React.ReactNode } }) => {
+      fields: {
+        title: plain("Page title", "Judul halaman"),
+        settings: {
+          type: "custom",
+          label: L("Editor", "Editor"),
+          render: () => <PageSettingsField lang={lang} cmsUrl={cmsUrl} pageId={pageId} embedded={embedded} s={s} />,
+        },
+      },
+      render: ({ children, puck }: { children: React.ReactNode; puck: { metadata: unknown } }) => {
         const { ctx, fontClass, chrome } = meta(puck);
         return (
           <div className={`${fontClass} min-h-screen bg-surface-dark font-sans antialiased`}>
             <LocaleProvider locale={ctx.locale} t={ctx.t}>
               {chrome.navigation && <Navbar navigation={chrome.navigation} logo={asMedia(ctx.data.settings?.logo)} />}
-              <main>{puck.renderDropZone({ zone: "default-zone", disallow: ELEMENT_TYPES })}</main>
+              <main>{children}</main>
               {chrome.footer && ctx.data.settings && (
                 <Footer footer={chrome.footer} settings={ctx.data.settings} contactLabel={ctx.t.footer.contact} />
               )}

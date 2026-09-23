@@ -4,7 +4,6 @@ export type StudioLang = "id" | "en";
 
 const en = {
   contentLanguage: "Content language",
-  uiLanguage: "Interface",
   desktop: "Desktop",
   tablet: "Tablet",
   mobile: "Mobile",
@@ -12,13 +11,10 @@ const en = {
   saving: "Saving…",
   saved: "Draft saved",
   published: "Published — the website updates in a few seconds.",
-  unsaved: "Unsaved changes",
-  upToDate: "All changes saved",
   backToCms: "Back to CMS",
   viewSite: "View page",
   sessionExpired: "Your CMS session has expired. Log in again in another tab, then retry.",
   forbidden: "You don't have permission to change this page.",
-  switchLangConfirm: "You have unsaved changes. Switch language and discard them?",
   structureShared:
     "Section order and images are shared by all languages; texts are saved per language.",
   // auth screen
@@ -38,17 +34,19 @@ const en = {
   loading: "Loading…",
   addTag: "Type and press Enter",
   addItem: "+ Add…",
+  interfaceLanguage: "Interface language",
   // categories
-  catSections: "Ready-made sections",
   catLayout: "Layout",
-  catElements: "Elements (inside columns)",
+  catTypography: "Typography",
+  catActions: "Actions",
+  catMedia: "Media",
+  catSections: "Sections",
 };
 
 export type StudioStrings = typeof en;
 
 const id: StudioStrings = {
   contentLanguage: "Bahasa konten",
-  uiLanguage: "Tampilan",
   desktop: "Desktop",
   tablet: "Tablet",
   mobile: "Ponsel",
@@ -56,13 +54,10 @@ const id: StudioStrings = {
   saving: "Menyimpan…",
   saved: "Draft tersimpan",
   published: "Terpublish — website diperbarui dalam beberapa detik.",
-  unsaved: "Ada perubahan belum disimpan",
-  upToDate: "Semua perubahan tersimpan",
   backToCms: "Kembali ke CMS",
   viewSite: "Lihat halaman",
   sessionExpired: "Sesi CMS Anda berakhir. Login ulang di tab lain, lalu coba lagi.",
   forbidden: "Anda tidak punya izin mengubah halaman ini.",
-  switchLangConfirm: "Ada perubahan yang belum disimpan. Ganti bahasa dan buang perubahan?",
   structureShared: "Urutan section dan gambar sama untuk semua bahasa; teks disimpan per bahasa.",
   loginTitle: "Masuk untuk melanjutkan",
   loginBody: "Editor visual memakai akun CMS Anda. Login ke CMS, lalu buka halaman ini lagi.",
@@ -79,9 +74,12 @@ const id: StudioStrings = {
   loading: "Memuat…",
   addTag: "Ketik lalu tekan Enter",
   addItem: "+ Tambah…",
-  catSections: "Section siap pakai",
-  catLayout: "Tata letak",
-  catElements: "Elemen (di dalam kolom)",
+  interfaceLanguage: "Bahasa tampilan",
+  catLayout: "Tata Letak",
+  catTypography: "Tipografi",
+  catActions: "Aksi",
+  catMedia: "Media",
+  catSections: "Section",
 };
 
 export const studioStrings: Record<StudioLang, StudioStrings> = { en, id };

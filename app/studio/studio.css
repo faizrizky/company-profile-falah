@@ -1,171 +1,128 @@
 /*
- * Falah Studio — glass theme for the visual editor.
- * Soft blue/lavender gradient, frosted white panels, violet accent.
- *
- * Puck is themed only through its public CSS variables (no overrides of its
- * internal class names), so Puck upgrades don't break the look. Everything
- * else is scoped to `.studio-*` classes; this file is also copied into the
- * canvas iframe, where those classes don't exist and the site renders as-is.
+ * Falah Studio — uses Puck's own look (same as the Puck demo). This file only
+ * styles our additions (header actions, custom fields, messages) with Puck's
+ * design tokens so they blend in. It is also copied into the canvas iframe,
+ * where none of these classes exist and the site renders as-is.
  */
-
-:root {
-  --studio-ink: #1f2233;
-  --studio-muted: #6b7090;
-  --studio-violet: #7a2ff0;
-  --studio-violet-2: #9b5cff;
-  --studio-violet-soft: rgb(139 61 255 / 0.12);
-  --studio-glass: rgb(255 255 255 / 0.58);
-  --studio-glass-strong: rgb(255 255 255 / 0.82);
-  --studio-border: rgb(255 255 255 / 0.75);
-  --studio-line: rgb(206 211 240 / 0.9);
-  --studio-shadow: 0 18px 50px -18px rgb(76 90 180 / 0.3), 0 2px 6px rgb(76 90 180 / 0.06);
-  --studio-radius: 18px;
-
-  /* Puck theme */
-  --puck-font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --puck-color-interactive: var(--studio-violet);
-  --puck-color-interactive-soft: var(--studio-violet-soft);
-  --puck-color-interactive-soft-hover: rgb(139 61 255 / 0.2);
-  --puck-color-focus-ring: rgb(139 61 255 / 0.35);
-  --puck-color-selection-border: var(--studio-violet);
-  --puck-color-text: var(--studio-ink);
-  --puck-color-text-secondary: var(--studio-muted);
-  --puck-color-border: var(--studio-line);
-  --puck-color-border-hover: rgb(172 177 208);
-  --puck-color-surface: rgb(255 255 255 / 0.72);
-  --puck-color-surface-subtle: rgb(255 255 255 / 0.5);
-  --puck-color-surface-muted: rgb(244 245 252 / 0.7);
-  --puck-field-color-bg: rgb(255 255 255 / 0.75);
-  --puck-field-color-bg-hover: #fff;
-  --puck-field-color-border: var(--studio-line);
-  --puck-field-radius: 10px;
-  --puck-radius-m: 12px;
-}
-
-/* ── Page backdrop ─────────────────────────────────────────────────────── */
 
 .studio-body {
   margin: 0;
   min-height: 100vh;
-  color: var(--studio-ink);
-  font-family: var(--puck-font-family);
-  background:
-    radial-gradient(38rem 38rem at 10% 6%, rgb(142 170 255 / 0.55), transparent 60%),
-    radial-gradient(34rem 30rem at 55% -4%, rgb(96 110 245 / 0.45), transparent 62%),
-    radial-gradient(30rem 30rem at 75% 82%, rgb(250 180 168 / 0.45), transparent 60%),
-    radial-gradient(24rem 24rem at 2% 96%, rgb(255 150 150 / 0.35), transparent 60%),
-    linear-gradient(135deg, #dce8fb 0%, #e6e4fb 45%, #dfe7fb 100%);
-  background-attachment: fixed;
+  background: var(--puck-color-grey-12, #fafafa);
+  color: var(--puck-color-grey-01, #181818);
+  font-family: var(--puck-font-family, Inter, ui-sans-serif, system-ui, sans-serif);
 }
 
-.studio-glass {
-  background: var(--studio-glass);
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  border: 1px solid var(--studio-border);
-  border-radius: var(--studio-radius);
-  box-shadow: var(--studio-shadow);
-}
+/* ── Header actions ────────────────────────────────────────────────────── */
 
-.studio-muted {
-  color: var(--studio-muted);
-}
-
-/* ── Brand ─────────────────────────────────────────────────────────────── */
-
-.studio-brand {
+.studio-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 18px 18px 12px;
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  gap: 8px;
 }
 
-.studio-brand__mark {
-  display: inline-grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  color: #fff;
-  font-size: 15px;
-  background: linear-gradient(135deg, var(--studio-violet-2), #6a2ee6);
-  box-shadow: 0 8px 18px -8px rgb(122 47 240 / 0.8);
-}
-
-/* ── Tabs / segments / buttons ─────────────────────────────────────────── */
-
-.studio-segment button,
-.studio-segment a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  border: 0;
-  background: transparent;
-  color: var(--studio-muted);
+.studio-select select {
+  height: 34px;
+  padding: 0 28px 0 12px;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 6px;
+  background: #fff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='m1 1 4 4 4-4' stroke='%23767676' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    no-repeat right 10px center;
+  color: inherit;
   font: inherit;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px;
+  appearance: none;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.studio-segment .is-active {
-  background: var(--studio-glass-strong);
-  color: var(--studio-violet);
-  box-shadow: 0 6px 18px -8px rgb(122 47 240 / 0.35);
+.studio-select select:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05, #3479be);
+  outline-offset: 1px;
 }
+
+.studio-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  z-index: 50;
+  transform: translateX(-50%);
+  max-width: min(560px, 90vw);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+}
+
+.studio-toast.is-success {
+  background: #181818;
+  color: #fff;
+}
+
+.studio-toast.is-error {
+  background: #fff1f0;
+  color: #9f1b1b;
+  border: 1px solid #f5c2bf;
+}
+
+/* ── Shared small controls ─────────────────────────────────────────────── */
 
 .studio-segment {
   display: inline-flex;
-  gap: 2px;
-  padding: 3px;
-  border-radius: 12px;
-  background: rgb(255 255 255 / 0.45);
-  border: 1px solid var(--studio-border);
+  width: 100%;
+  padding: 2px;
+  border-radius: 6px;
+  background: var(--puck-color-grey-11, #f5f5f5);
 }
 
-.studio-segment button,
 .studio-segment a {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 4px;
+  color: var(--puck-color-grey-04, #5a5a5a);
+  font-size: 13px;
+  text-align: center;
   text-decoration: none;
-  min-width: 36px;
-  height: 30px;
-  padding: 0 10px;
-  border-radius: 9px;
 }
 
-.studio-segment--icons button {
-  padding: 0 8px;
-}
-
-.studio-segment button:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.studio-segment a:not(.is-active):hover,
-.studio-segment button:not(.is-active):not(:disabled):hover {
-  color: var(--studio-ink);
+.studio-segment a.is-active {
+  background: #fff;
+  color: var(--puck-color-azure-04, #0158ad);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
 }
 
 .studio-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  height: 38px;
-  padding: 0 16px;
-  border-radius: 11px;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 6px;
   font: inherit;
   font-size: 13px;
-  font-weight: 600;
   text-decoration: none;
-  white-space: nowrap;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.studio-btn--ghost {
+  color: var(--puck-color-grey-02, #292929);
+  background: #fff;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+}
+
+.studio-btn--ghost:hover:not(:disabled) {
+  background: var(--puck-color-grey-11, #f5f5f5);
+}
+
+.studio-btn--primary {
+  border: 0;
+  color: #fff;
+  background: var(--puck-color-azure-04, #0158ad);
+}
+
+.studio-btn--primary:hover:not(:disabled) {
+  background: var(--puck-color-azure-03, #014292);
 }
 
 .studio-btn:disabled {
@@ -173,102 +130,58 @@
   cursor: progress;
 }
 
-.studio-btn--primary {
-  border: 0;
-  color: #fff;
-  background: linear-gradient(180deg, rgb(255 255 255 / 0.18), transparent), linear-gradient(135deg, var(--studio-violet-2), var(--studio-violet));
-  box-shadow: 0 10px 24px -10px rgb(122 47 240 / 0.75), inset 0 1px 0 rgb(255 255 255 / 0.35);
-}
-
-.studio-btn--primary:not(:disabled):hover {
-  transform: translateY(-1px);
-}
-
-.studio-btn--ghost {
-  color: var(--studio-ink);
-  background: rgb(255 255 255 / 0.7);
-  border: 1px solid var(--studio-border);
-  box-shadow: 0 6px 16px -10px rgb(76 90 180 / 0.35);
-}
-
-.studio-btn--ghost:not(:disabled):hover {
-  background: #fff;
-}
-
-/* ── Header actions (next to Puck's Publish) ─────────────────────────── */
-
-.studio-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.studio-actions .studio-btn {
-  height: 34px;
-  padding: 0 12px;
-}
-
-.studio-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #22c55e;
-  box-shadow: 0 0 0 3px rgb(34 197 94 / 0.18);
-}
-
-.studio-dot.is-dirty {
-  background: #f59e0b;
-  box-shadow: 0 0 0 3px rgb(245 158 11 / 0.2);
-}
-
-.studio-toast {
-  position: fixed;
-  top: 72px;
-  left: 50%;
-  z-index: 20;
-  transform: translateX(-50%);
-  max-width: min(640px, 90%);
-  padding: 10px 16px;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: 500;
-  backdrop-filter: blur(16px);
-  box-shadow: var(--studio-shadow);
-}
-
-.studio-toast.is-success {
-  color: #0f5132;
-  background: rgb(220 252 231 / 0.9);
-  border: 1px solid rgb(134 239 172);
-}
-
-.studio-toast.is-error {
-  color: #7f1d1d;
-  background: rgb(254 226 226 / 0.92);
-  border: 1px solid rgb(252 165 165);
-}
-
-/* ── Custom fields ─────────────────────────────────────────────────────── */
-
 .studio-input {
   width: 100%;
   height: 36px;
   padding: 0 12px;
   box-sizing: border-box;
-  border: 1px solid var(--studio-line);
-  border-radius: 10px;
-  background: rgb(255 255 255 / 0.8);
-  color: var(--studio-ink);
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 4px;
+  background: #fff;
+  color: inherit;
   font: inherit;
-  font-size: 13px;
-  outline: none;
+  font-size: 14px;
 }
 
 .studio-input:focus {
-  border-color: rgb(196 165 255);
-  box-shadow: 0 0 0 3px rgb(139 61 255 / 0.18);
+  outline: 2px solid var(--puck-color-azure-05, #3479be);
+  outline-offset: 0;
 }
+
+.studio-muted,
+.studio-note {
+  color: var(--puck-color-grey-05, #767676);
+}
+
+.studio-note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.studio-link {
+  color: var(--puck-color-azure-04, #0158ad);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.studio-link:hover {
+  text-decoration: underline;
+}
+
+.studio-error {
+  margin: 0;
+  font-size: 12px;
+  color: #b42318;
+}
+
+.studio-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Image field ───────────────────────────────────────────────────────── */
 
 .studio-media {
   display: flex;
@@ -279,15 +192,15 @@
 .studio-media__preview {
   display: grid;
   place-items: center;
-  width: 84px;
-  height: 60px;
+  width: 88px;
+  height: 64px;
   flex-shrink: 0;
   overflow: hidden;
-  border-radius: 10px;
-  border: 1px solid var(--studio-line);
-  background: repeating-conic-gradient(#eef0fa 0% 25%, #fff 0% 50%) 50% / 12px 12px;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 4px;
+  background: repeating-conic-gradient(#efefef 0% 25%, #fff 0% 50%) 50% / 12px 12px;
   font-size: 11px;
-  color: var(--studio-muted);
+  color: var(--puck-color-grey-05, #767676);
   text-align: center;
 }
 
@@ -303,25 +216,20 @@
   gap: 6px;
 }
 
-.studio-media__actions .studio-btn {
-  height: 30px;
-  padding: 0 12px;
-}
-
 .studio-media__library {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 12px;
-  background: rgb(255 255 255 / 0.55);
-  border: 1px solid var(--studio-border);
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 4px;
+  background: var(--puck-color-grey-12, #fafafa);
 }
 
 .studio-media__toolbar {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .studio-media__toolbar .studio-btn {
@@ -340,9 +248,9 @@
   aspect-ratio: 4 / 3;
   padding: 0;
   overflow: hidden;
-  border-radius: 8px;
   border: 2px solid transparent;
-  background: repeating-conic-gradient(#eef0fa 0% 25%, #fff 0% 50%) 50% / 10px 10px;
+  border-radius: 4px;
+  background: repeating-conic-gradient(#efefef 0% 25%, #fff 0% 50%) 50% / 10px 10px;
   cursor: pointer;
 }
 
@@ -352,37 +260,39 @@
   object-fit: cover;
 }
 
-.studio-media__item.is-active,
-.studio-media__item:hover {
-  border-color: var(--studio-violet);
+.studio-media__item:hover,
+.studio-media__item.is-active {
+  border-color: var(--puck-color-azure-04, #0158ad);
 }
+
+/* ── Tags field ────────────────────────────────────────────────────────── */
 
 .studio-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
   padding: 6px;
-  border: 1px solid var(--studio-line);
-  border-radius: 10px;
-  background: rgb(255 255 255 / 0.8);
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 4px;
+  background: #fff;
 }
 
 .studio-tag {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 3px 4px 3px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  background: var(--studio-violet-soft);
-  color: var(--studio-violet);
+  gap: 2px;
+  padding: 2px 4px 2px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  background: var(--puck-color-azure-10, #e7eef7);
+  color: var(--puck-color-azure-03, #014292);
 }
 
 .studio-tag button {
   width: 18px;
   height: 18px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 4px;
   background: transparent;
   color: inherit;
   cursor: pointer;
@@ -395,13 +305,15 @@
   outline: none;
   background: transparent;
   font: inherit;
-  font-size: 13px;
+  font-size: 14px;
 }
+
+/* ── Relation field (partners / certifications) ────────────────────────── */
 
 .studio-relation {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   margin: 0 0 8px;
   padding: 0;
   list-style: none;
@@ -412,18 +324,18 @@
   align-items: center;
   gap: 8px;
   padding: 6px 8px;
-  border-radius: 10px;
-  background: rgb(255 255 255 / 0.75);
-  border: 1px solid var(--studio-line);
-  font-size: 13px;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 4px;
+  background: #fff;
+  font-size: 14px;
 }
 
 .studio-relation__item img {
   width: 36px;
   height: 20px;
   object-fit: contain;
+  border-radius: 2px;
   background: #0b0f24;
-  border-radius: 4px;
 }
 
 .studio-relation__item span {
@@ -438,28 +350,22 @@
   width: 24px;
   height: 24px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 4px;
   background: transparent;
-  color: var(--studio-muted);
+  color: var(--puck-color-grey-05, #767676);
   cursor: pointer;
 }
 
 .studio-relation__item button:hover:not(:disabled) {
-  background: var(--studio-violet-soft);
-  color: var(--studio-violet);
+  background: var(--puck-color-grey-11, #f5f5f5);
+  color: var(--puck-color-grey-01, #181818);
 }
 
 .studio-relation__item button:disabled {
   opacity: 0.3;
 }
 
-.studio-error {
-  margin: 0;
-  font-size: 12px;
-  color: #b91c1c;
-}
-
-/* ── Centered message (login / not found) ──────────────────────────────── */
+/* ── Login / not found ─────────────────────────────────────────────────── */
 
 .studio-center {
   display: grid;
@@ -474,23 +380,39 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
-  width: min(440px, 100%);
-  padding: 28px 30px 32px;
+  width: min(420px, 100%);
+  padding: 28px;
   box-sizing: border-box;
-}
-
-.studio-card .studio-brand {
-  padding: 0 0 8px;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 8px;
+  background: #fff;
 }
 
 .studio-card h1 {
   margin: 0;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
-  letter-spacing: -0.01em;
 }
 
 .studio-card p {
-  margin: 0 0 8px;
+  margin: 0 0 4px;
   line-height: 1.55;
+}
+
+.studio-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.studio-brand__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 14px;
+  background: var(--puck-color-azure-04, #0158ad);
 }

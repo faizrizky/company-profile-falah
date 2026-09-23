@@ -179,6 +179,13 @@ export interface Page {
     | OfficeMapBlock
     | CtaBlock
     | LayoutSectionBlock
+    | BadgeElement
+    | HeadingElement
+    | ParagraphElement
+    | ImageElement
+    | ButtonElement
+    | CardElement
+    | SpacerElement
   )[];
   /**
    * Kosongkan untuk memakai judul halaman & deskripsi default situs.
@@ -1239,6 +1246,13 @@ export interface PagesSelect<T extends boolean = true> {
         officeMap?: T | OfficeMapBlockSelect<T>;
         cta?: T | CtaBlockSelect<T>;
         layoutSection?: T | LayoutSectionBlockSelect<T>;
+        badge?: T | BadgeElementSelect<T>;
+        heading?: T | HeadingElementSelect<T>;
+        paragraph?: T | ParagraphElementSelect<T>;
+        image?: T | ImageElementSelect<T>;
+        button?: T | ButtonElementSelect<T>;
+        card?: T | CardElementSelect<T>;
+        spacer?: T | SpacerElementSelect<T>;
       };
   meta?:
     | T

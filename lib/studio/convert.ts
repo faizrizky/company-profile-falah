@@ -72,15 +72,9 @@ export const puckTitle = (data: Data, fallback: string): string => {
   return typeof title === "string" && title.trim() ? title.trim() : fallback;
 };
 
-/** Element types only allowed inside Layout Section columns. */
+/** Small building blocks (usable on the page and inside Layout Section columns). */
 export const ELEMENT_TYPES = ["badge", "heading", "paragraph", "image", "button", "card", "spacer"];
 
 export function puckToLayout(data: Data): Page["layout"] {
-  const items = (data.content as PuckItem[]).map((item) =>
-    // Safety net: an element dropped at page level is wrapped in a one-column section.
-    ELEMENT_TYPES.includes(item.type)
-      ? { type: "layoutSection", props: { id: newId("layoutSection"), columns: "1", column1: [item] } }
-      : item,
-  );
-  return items.map(fromPuckItem) as unknown as Block[];
+  return (data.content as PuckItem[]).map(fromPuckItem) as unknown as Block[];
 }

@@ -8,6 +8,7 @@ import { FaqBlock } from "@/components/blocks/Faq";
 import { FeatureGridBlock } from "@/components/blocks/FeatureGrid";
 import { HeroBlock } from "@/components/blocks/Hero";
 import { LayoutSectionBlock } from "@/components/blocks/LayoutSection";
+import { ElementView } from "@/components/blocks/elements";
 import { LeadershipBlock } from "@/components/blocks/Leadership";
 import { OfficeMapBlock } from "@/components/blocks/OfficeMap";
 import { PartnersBlock } from "@/components/blocks/Partners";
@@ -25,6 +26,11 @@ import type { BlockContext } from "./types";
 type Block = Page["layout"][number];
 type BlockType = Block["blockType"];
 type BlockComponent<T extends BlockType> = ComponentType<{ block: Extract<Block, { blockType: T }>; ctx: BlockContext }>;
+
+/** Small elements placed directly on the page. */
+function ElementBlock({ block }: { block: Parameters<typeof ElementView>[0]["element"] }) {
+  return <ElementView element={block} />;
+}
 
 /**
  * blockType → component. Typed so adding a block in the CMS without a
@@ -48,6 +54,13 @@ const components: { [T in BlockType]: BlockComponent<T> } = {
   officeMap: OfficeMapBlock,
   cta: CtaBlock,
   layoutSection: LayoutSectionBlock,
+  badge: ElementBlock,
+  heading: ElementBlock,
+  paragraph: ElementBlock,
+  image: ElementBlock,
+  button: ElementBlock,
+  card: ElementBlock,
+  spacer: ElementBlock,
 };
 
 export const blockComponents = components;

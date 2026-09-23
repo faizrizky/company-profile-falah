@@ -126,3 +126,33 @@ body {
 .gradient-brand-alt {
   background: linear-gradient(179deg, #1866ef 100%, #05040d 100%);
 }
+
+/* Elements from the visual editor: standalone on the page they get the site
+   container; inside a Layout Section column they are neutral. */
+.falah-el {
+  background: var(--color-surface-dark);
+  padding: 12px 24px;
+}
+
+@media (min-width: 1024px) {
+  .falah-el {
+    padding-inline: 80px;
+  }
+}
+
+.falah-el__inner {
+  display: flex;
+  flex-direction: column;
+  max-width: 1269px;
+  margin-inline: auto;
+}
+
+.falah-col .falah-el {
+  background: none;
+  padding: 0;
+}
+
+.falah-col .falah-el__inner {
+  max-width: none;
+  margin: 0;
+}

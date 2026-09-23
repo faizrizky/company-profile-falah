@@ -270,3 +270,44 @@ export function RelationField<T extends { id: number }>({
     </FieldLabel>
   );
 }
+
+/** "Page" panel extras: interface language and (outside the CMS) a way back to it. */
+export function PageSettingsField({
+  lang,
+  cmsUrl,
+  pageId,
+  embedded,
+  s,
+}: {
+  lang: "id" | "en";
+  cmsUrl: string;
+  pageId: number;
+  embedded: boolean;
+  s: StudioStrings;
+}) {
+  const hrefFor = (ui: "id" | "en") => {
+    const params = new URLSearchParams(typeof window === "undefined" ? "" : window.location.search);
+    params.set("ui", ui);
+    return `?${params}`;
+  };
+
+  return (
+    <div className="studio-settings">
+      <FieldLabel label={s.interfaceLanguage} el="div">
+        <div className="studio-segment">
+          {(["id", "en"] as const).map((code) => (
+            <a key={code} href={hrefFor(code)} className={code === lang ? "is-active" : ""} aria-current={code === lang ? "true" : undefined}>
+              {code === "id" ? "Indonesia" : "English"}
+            </a>
+          ))}
+        </div>
+      </FieldLabel>
+      {!embedded && (
+        <a className="studio-link" href={`${cmsUrl}/admin/collections/pages/${pageId}/form`}>
+          ← {s.backToCms}
+        </a>
+      )}
+      <p className="studio-note">{s.structureShared}</p>
+    </div>
+  );
+}

@@ -55,7 +55,7 @@ export function LayoutSectionView({ block, columns }: { block: Data; columns: Re
         )}
       >
         {columns.slice(0, count).map((column, i) => (
-          <div key={i} className="flex min-w-0 flex-col gap-4">
+          <div key={i} className="falah-col flex min-w-0 flex-col gap-4">
             {column}
           </div>
         ))}

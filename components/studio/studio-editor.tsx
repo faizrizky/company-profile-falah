@@ -1,8 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { useSearchParams } from "next/navigation";
-import { Puck, useGetPuck, type Data, type Viewports } from "@puckeditor/core";
+import { Button, Puck, useGetPuck, type Data, type Viewports } from "@puckeditor/core";
 
 import type { SiteData } from "@/components/blocks/types";
 import { locales, localeNames, type Locale } from "@/lib/i18n/config";
@@ -25,6 +24,7 @@ export type StudioEditorProps = {
   page: Pick<Page, "id" | "title" | "slug" | "layout" | "_status">;
   locale: Locale;
   uiLang: StudioLang;
+  embedded: boolean;
   user: Pick<User, "email" | "name">;
   cmsUrl: string;
   siteData: SiteData;
@@ -34,88 +34,61 @@ export type StudioEditorProps = {
 };
 
 type SaveFn = (data: Data, publish: boolean) => Promise<void>;
-type SwitchLink = (param: "locale" | "ui", value: string) => { href: string; onClick: (e: React.MouseEvent) => void };
 
-/**
- * Extra header controls next to Puck's own Publish button: content language,
- * interface language, save draft, view page, back to the CMS.
- */
+/** Header controls next to Puck's Publish button — kept to the same few as the Puck demo. */
 function HeaderActions({
   children,
   props,
   s,
-  dirty,
   saving,
   onSave,
-  switchLink,
 }: {
   children: ReactNode;
   props: StudioEditorProps;
   s: StudioStrings;
-  dirty: boolean;
   saving: boolean;
   onSave: SaveFn;
-  switchLink: SwitchLink;
 }) {
   const getPuck = useGetPuck();
   const pagePath = `/${props.locale}${props.page.slug === "home" ? "" : `/${props.page.slug}`}`;
 
+  const switchContentLanguage = (locale: string) => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("locale", locale);
+    window.location.search = params.toString();
+  };
+
   return (
     <div className="studio-actions">
-      <span className={`studio-dot${dirty ? " is-dirty" : ""}`} title={dirty ? s.unsaved : s.upToDate} aria-label={dirty ? s.unsaved : s.upToDate} role="img" />
-
-      <div className="studio-segment" role="group" aria-label={s.contentLanguage} title={s.structureShared}>
-        {locales.map((code) => (
-          <a
-            key={code}
-            {...switchLink("locale", code)}
-            className={code === props.locale ? "is-active" : ""}
-            aria-current={code === props.locale ? "true" : undefined}
-            title={`${s.contentLanguage}: ${localeNames[code]}`}
-          >
-            {code.toUpperCase()}
-          </a>
-        ))}
-      </div>
-
-      <a className="studio-btn studio-btn--ghost" href={`${props.cmsUrl}/admin/collections/pages/${props.page.id}`}>
-        {s.backToCms}
-      </a>
-      <a className="studio-btn studio-btn--ghost" href={pagePath} target="_blank" rel="noopener noreferrer">
+      <label className="studio-select" title={s.structureShared}>
+        <span className="sr-only">{s.contentLanguage}</span>
+        <select value={props.locale} onChange={(e) => switchContentLanguage(e.target.value)} aria-label={s.contentLanguage}>
+          {locales.map((code) => (
+            <option key={code} value={code}>
+              {localeNames[code]}
+            </option>
+          ))}
+        </select>
+      </label>
+      <Button variant="secondary" href={pagePath} newTab>
         {s.viewSite}
-      </a>
-      <button
-        type="button"
-        className="studio-btn studio-btn--ghost"
-        disabled={saving}
-        onClick={() => onSave(getPuck().appState.data, false)}
-      >
+      </Button>
+      <Button variant="secondary" disabled={saving} onClick={() => onSave(getPuck().appState.data, false)}>
         {saving ? s.saving : s.saveDraft}
-      </button>
+      </Button>
       {children}
-
-      <div className="studio-segment" role="group" aria-label={s.uiLanguage} title={s.uiLanguage}>
-        {(["id", "en"] as const).map((code) => (
-          <a
-            key={code}
-            {...switchLink("ui", code)}
-            className={code === props.uiLang ? "is-active" : ""}
-            aria-current={code === props.uiLang ? "true" : undefined}
-          >
-            {code.toUpperCase()}
-          </a>
-        ))}
-      </div>
     </div>
   );
 }
 
 export function StudioEditor(props: StudioEditorProps) {
-  const { page, locale, uiLang, cmsUrl, siteData, chrome, dictionary, fontClass } = props;
+  const { page, locale, uiLang, embedded, cmsUrl, siteData, chrome, dictionary, fontClass } = props;
   const s = studioStrings[uiLang];
-  const searchParams = useSearchParams();
 
-  const config = useMemo(() => createStudioConfig({ lang: uiLang, cmsUrl, data: siteData }), [uiLang, cmsUrl, siteData]);
+  const config = useMemo(
+    () => createStudioConfig({ lang: uiLang, cmsUrl, data: siteData, pageId: page.id, embedded }),
+    [uiLang, cmsUrl, siteData, page.id, embedded],
+  );
   const initialData = useMemo(() => layoutToPuck(page.layout, page.title), [page.layout, page.title]);
   const metadata = useMemo<StudioMetadata>(
     () => ({ ctx: { locale, t: dictionary, data: siteData }, fontClass, chrome }),
@@ -130,11 +103,11 @@ export function StudioEditor(props: StudioEditorProps) {
     [s],
   );
 
-  const snapshot = (data: Data) => JSON.stringify([puckTitle(data, page.title), puckToLayout(data)]);
   const savedRef = useRef(JSON.stringify([page.title, page.layout]));
   const [dirty, setDirty] = useState(false);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
 
+  // Leaving with unsaved changes (closing, switching language) asks first.
   useEffect(() => {
     if (!dirty) return;
     const warn = (e: BeforeUnloadEvent) => e.preventDefault();
@@ -144,15 +117,13 @@ export function StudioEditor(props: StudioEditorProps) {
 
   useEffect(() => {
     if (status.kind !== "success") return;
-    const timer = setTimeout(() => setStatus({ kind: "idle" }), 5000);
+    const timer = setTimeout(() => setStatus({ kind: "idle" }), 4000);
     return () => clearTimeout(timer);
   }, [status]);
 
   const onChange = useCallback(
-    (data: Data) => setDirty(snapshot(data) !== savedRef.current),
-    // snapshot only depends on page.title, which is fixed for this editor instance
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
+    (data: Data) => setDirty(JSON.stringify([puckTitle(data, page.title), puckToLayout(data)]) !== savedRef.current),
+    [page.title],
   );
 
   const save: SaveFn = async (data, publish) => {
@@ -171,19 +142,6 @@ export function StudioEditor(props: StudioEditorProps) {
     }
   };
 
-  /** Language switches are plain links to the same page with a different query (confirm if unsaved). */
-  const switchLink: SwitchLink = (param, value) => {
-    const next = new URLSearchParams(searchParams?.toString());
-    next.set(param, value);
-    return {
-      href: `?${next}`,
-      onClick: (e) => {
-        if (dirty && !window.confirm(s.switchLangConfirm)) e.preventDefault();
-        else setDirty(false);
-      },
-    };
-  };
-
   return (
     <>
       <Puck
@@ -199,14 +157,7 @@ export function StudioEditor(props: StudioEditorProps) {
         onPublish={(data) => save(data, true)}
         overrides={{
           headerActions: ({ children }) => (
-            <HeaderActions
-              props={props}
-              s={s}
-              dirty={dirty}
-              saving={status.kind === "saving"}
-              onSave={save}
-              switchLink={switchLink}
-            >
+            <HeaderActions props={props} s={s} saving={status.kind === "saving"} onSave={save}>
               {children}
             </HeaderActions>
           ),
