@@ -3,22 +3,12 @@ import type { Dictionary as PuckDictionary } from "@puckeditor/core";
 export type StudioLang = "id" | "en";
 
 const en = {
-  // chrome
-  studio: "Falah Studio",
-  pages: "Pages",
-  components: "Components",
-  outline: "Structure",
-  properties: "Properties",
-  selectHint: "Select a section on the canvas to edit its content.",
   contentLanguage: "Content language",
   uiLanguage: "Interface",
   desktop: "Desktop",
   tablet: "Tablet",
   mobile: "Mobile",
-  undo: "Undo",
-  redo: "Redo",
   saveDraft: "Save draft",
-  publish: "Publish",
   saving: "Saving…",
   saved: "Draft saved",
   published: "Published — the website updates in a few seconds.",
@@ -57,21 +47,12 @@ const en = {
 export type StudioStrings = typeof en;
 
 const id: StudioStrings = {
-  studio: "Falah Studio",
-  pages: "Halaman",
-  components: "Komponen",
-  outline: "Struktur",
-  properties: "Properti",
-  selectHint: "Pilih section di kanvas untuk mengedit isinya.",
   contentLanguage: "Bahasa konten",
   uiLanguage: "Tampilan",
   desktop: "Desktop",
   tablet: "Tablet",
   mobile: "Ponsel",
-  undo: "Urungkan",
-  redo: "Ulangi",
   saveDraft: "Simpan draft",
-  publish: "Publish",
   saving: "Menyimpan…",
   saved: "Draft tersimpan",
   published: "Terpublish — website diperbarui dalam beberapa detik.",

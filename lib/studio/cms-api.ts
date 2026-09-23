@@ -31,7 +31,7 @@ async function request<T>(cmsUrl: string, path: string, init: RequestInit = {}):
 export function savePage(
   cmsUrl: string,
   id: number,
-  layout: Page["layout"],
+  changes: Pick<Page, "title" | "layout">,
   { locale, publish }: { locale: string; publish: boolean },
 ) {
   const params = new URLSearchParams({ locale, depth: "0" });
@@ -39,7 +39,7 @@ export function savePage(
   return request<{ doc: Page }>(cmsUrl, `/api/pages/${id}?${params}`, {
     method: "PATCH",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify(publish ? { layout, _status: "published" } : { layout }),
+    body: JSON.stringify(publish ? { ...changes, _status: "published" } : changes),
   });
 }
 

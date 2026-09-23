@@ -36,10 +36,14 @@ type AnyProps = Record<string, unknown>;
 export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; cmsUrl: string; data: SiteData }): Config {
   const s = studioStrings[lang];
   const L = (en: string, id: string) => (lang === "id" ? id : en);
+  const rowId = () => crypto.randomUUID().replace(/-/g, "").slice(0, 24);
 
   // ── Field builders (mirror the CMS schema) ─────────────────────────────
-  const text = (en: string, id: string): Field => ({ type: "text", label: L(en, id) });
-  const textarea = (en: string, id: string): Field => ({ type: "textarea", label: L(en, id) });
+  // Copy fields are editable directly on the canvas (click the text and type);
+  // links, URLs and short technical values stay form-only.
+  const text = (en: string, id: string): Field => ({ type: "text", label: L(en, id), contentEditable: true });
+  const textarea = (en: string, id: string): Field => ({ type: "textarea", label: L(en, id), contentEditable: true });
+  const plain = (en: string, id: string): Field => ({ type: "text", label: L(en, id) });
   const number = (en: string, id: string): Field => ({ type: "number", label: L(en, id), min: 0 });
   const select = (en: string, id: string, options: [string, string, string][]): Field => ({
     type: "select",
@@ -114,15 +118,16 @@ export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; c
     label: L("Buttons", "Tombol"),
     max,
     getItemSummary: (item: AnyProps) => String(item.label || "…"),
-    defaultItemProps: { label: L("Request Consultation", "Ajukan Konsultasi"), href: "/contact", style: "fill" },
-    arrayFields: { label: text("Label", "Label"), href: text("Link", "Link"), style: style() },
+    defaultItemProps: () => ({ id: rowId(), label: L("Request Consultation", "Ajukan Konsultasi"), href: "/contact", style: "fill" }),
+    arrayFields: { label: text("Label", "Label"), href: plain("Link", "Link"), style: style() },
   });
   const list = (en: string, id: string, arrayFields: Fields, summaryKey: string, defaults: AnyProps, max?: number): Field => ({
     type: "array",
     label: L(en, id),
     max,
     getItemSummary: (item: AnyProps) => String(item[summaryKey] || "…"),
-    defaultItemProps: defaults,
+    // Rows get an id up front so React keys and CMS translations stay stable.
+    defaultItemProps: () => ({ id: rowId(), ...defaults }),
     arrayFields,
   });
   const headerDefaults = {
@@ -201,7 +206,7 @@ export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; c
         poster: image("Video poster", "Gambar video"),
         captionTitle: text("Caption title", "Judul keterangan"),
         captionDescription: text("Caption text", "Teks keterangan"),
-        videoUrl: text("Video link (https://…)", "Link video (https://…)"),
+        videoUrl: plain("Video link (https://…)", "Link video (https://…)"),
       },
       defaultProps: { header: headerDefaults },
     }),
@@ -219,10 +224,10 @@ export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; c
             description: textarea("Description", "Deskripsi"),
             tagsLabel: text("Tags label", "Label tag"),
             tags: tags("Tags", "Tag"),
-            button: { type: "object", label: L("Button", "Tombol"), objectFields: { label: text("Label", "Label"), href: text("Link", "Link") } },
+            button: { type: "object", label: L("Button", "Tombol"), objectFields: { label: text("Label", "Label"), href: plain("Link", "Link") } },
           },
         },
-        items: list("Small cards", "Kartu kecil", { image: image("Image", "Gambar"), title: text("Title", "Judul"), href: text("Link", "Link") }, "title", { title: L("Card", "Kartu"), href: "/solution" }, 4),
+        items: list("Small cards", "Kartu kecil", { image: image("Image", "Gambar"), title: text("Title", "Judul"), href: plain("Link", "Link") }, "title", { title: L("Card", "Kartu"), href: "/solution" }, 4),
       },
       defaultProps: { header: headerDefaults, featured: { title: L("Featured", "Utama"), tags: [], button: {} }, items: [] },
     }),
@@ -231,7 +236,7 @@ export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; c
       fields: {
         header: header(),
         background: image("Background", "Latar belakang"),
-        stats: list("Stats", "Statistik", { value: number("Value", "Angka"), suffix: text("Suffix", "Akhiran"), label: text("Label", "Label") }, "label", { value: 10, suffix: "+", label: L("Metric", "Metrik") }, 4),
+        stats: list("Stats", "Statistik", { value: number("Value", "Angka"), suffix: plain("Suffix", "Akhiran"), label: text("Label", "Label") }, "label", { value: 10, suffix: "+", label: L("Metric", "Metrik") }, 4),
         cards: list("Cards", "Kartu", { image: image("Image", "Gambar"), icon: image("Icon", "Ikon"), title: text("Title", "Judul"), description: textarea("Description", "Deskripsi") }, "title", { title: L("Card", "Kartu") }, 6),
       },
       defaultProps: { header: headerDefaults, stats: [], cards: [] },
@@ -262,7 +267,7 @@ export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; c
       fields: {
         header: header(),
         background: image("Background", "Latar belakang"),
-        items: list("Stats", "Statistik", { label: text("Label", "Label"), value: number("Value", "Angka"), suffix: text("Suffix", "Akhiran") }, "label", { label: L("Team", "Tim"), value: 10, suffix: "+" }, 8),
+        items: list("Stats", "Statistik", { label: text("Label", "Label"), value: number("Value", "Angka"), suffix: plain("Suffix", "Akhiran") }, "label", { label: L("Team", "Tim"), value: 10, suffix: "+" }, 8),
       },
       defaultProps: { header: headerDefaults, items: [] },
     }),
@@ -338,7 +343,7 @@ export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; c
         backgroundMobile: image("Background (mobile)", "Latar belakang (ponsel)"),
         buttons: buttons(),
         media: image("Media", "Media"),
-        videoUrl: text("Video link (https://…)", "Link video (https://…)"),
+        videoUrl: plain("Video link (https://…)", "Link video (https://…)"),
       },
       resolveFields: (item, { fields }) => {
         const { media, videoUrl, ...rest } = fields as Fields<AnyProps>;
@@ -445,13 +450,13 @@ export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; c
     },
     button: {
       label: L("Button", "Tombol"),
-      fields: { label: text("Label", "Label"), href: text("Link", "Link"), style: style(), align: align() },
+      fields: { label: text("Label", "Label"), href: plain("Link", "Link"), style: style(), align: align() },
       defaultProps: { label: L("Request Consultation", "Ajukan Konsultasi"), href: "/contact", style: "fill", align: "left" },
       render: ({ puck: _p, ...props }) => <ButtonView el={{ ...props, blockType: "button" } as never} />,
     },
     card: {
       label: L("Card", "Kartu"),
-      fields: { icon: image("Icon", "Ikon"), title: text("Title", "Judul"), description: textarea("Description", "Deskripsi"), href: text("Link (optional)", "Link (opsional)") },
+      fields: { icon: image("Icon", "Ikon"), title: text("Title", "Judul"), description: textarea("Description", "Deskripsi"), href: plain("Link (optional)", "Link (opsional)") },
       defaultProps: { title: L("Card title", "Judul kartu"), description: L("Short supporting text.", "Teks pendukung singkat.") },
       render: ({ puck: _p, ...props }) => <CardView el={{ ...props, blockType: "card" } as never} />,
     },
@@ -473,6 +478,7 @@ export function createStudioConfig({ lang, cmsUrl, data }: { lang: StudioLang; c
     },
     components,
     root: {
+      fields: { title: plain("Page title", "Judul halaman") },
       render: ({ puck }: { puck: { metadata: unknown; renderDropZone: (props: { zone: string; disallow?: string[] }) => React.ReactNode } }) => {
         const { ctx, fontClass, chrome } = meta(puck);
         return (

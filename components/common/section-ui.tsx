@@ -3,9 +3,13 @@ import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
-/** Renders CMS text with its line breaks preserved. */
-export function Lines({ text }: { text: string | null | undefined }) {
-  const lines = (text ?? "").split("\n");
+/**
+ * Renders CMS text with its line breaks preserved. In the visual editor the
+ * value is an inline-editing element instead of a string; render it as-is.
+ */
+export function Lines({ text }: { text: ReactNode }) {
+  if (typeof text !== "string") return <>{text}</>;
+  const lines = text.split("\n");
   return (
     <>
       {lines.map((line, i) => (

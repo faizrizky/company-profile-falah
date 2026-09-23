@@ -66,6 +66,12 @@ function fromPuckItem(item: PuckItem): Record<string, unknown> {
   return block;
 }
 
+/** Page title edited in the "Page" panel (Puck root). */
+export const puckTitle = (data: Data, fallback: string): string => {
+  const title = (data.root as { props?: { title?: unknown } }).props?.title;
+  return typeof title === "string" && title.trim() ? title.trim() : fallback;
+};
+
 /** Element types only allowed inside Layout Section columns. */
 export const ELEMENT_TYPES = ["badge", "heading", "paragraph", "image", "button", "card", "spacer"];
 
