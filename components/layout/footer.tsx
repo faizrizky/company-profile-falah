@@ -1,165 +1,109 @@
 import type { ReactNode } from "react";
-import { MapPin, Mail, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 
-const solutionLinks = [
-  {
-    label: "Advanced Education System Solution",
-    href: "/solution/advanced-education-system",
-  },
-  {
-    label: "Command Center Solution",
-    href: "/solution/command-center",
-  },
-  {
-    label: "Simulation Training Solution",
-    href: "/solution/simulation-training",
-  },
-  {
-    label: "Virtual Training Suites Solution",
-    href: "/solution/virtual-training-suite",
-  },
-  {
-    label: "Virtual Connect Suites Solution",
-    href: "/solution/virtual-connect-suite",
-  },
-];
+import { Lines } from "@/components/common/section-ui";
+import { LocaleLink } from "@/components/i18n/locale-link";
+import { mediaAlt, mediaUrl } from "@/lib/cms/media";
+import type { Footer as FooterData, SiteSetting } from "@/types/cms";
 
-const companyLinks = [
-  {
-    label: "About Us",
-    href: "/about",
-  },
-];
-
-const socials = [
-  { icon: "/home/social-1.svg", label: "Social 1", href: "#" },
-  { icon: "/home/social-2.svg", label: "Social 2", href: "#", highlight: true },
-  { icon: "/home/social-3.svg", label: "Social 3", href: "#" },
-  { icon: "/home/social-4.svg", label: "Social 4", href: "#" },
-  { icon: "/home/social-5.svg", label: "Social 5", href: "#" },
-];
-
-function FooterColumn({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
+function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="flex flex-col">
-      <h3 className="mb-5 font-display text-base font-bold text-accent">
-        {title}
-      </h3>
-
+      <h3 className="mb-5 font-display text-base font-bold text-accent">{title}</h3>
       <div className="flex flex-col gap-3">{children}</div>
     </div>
   );
 }
 
-export function Footer() {
+const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
+
+export function Footer({
+  footer,
+  settings,
+  contactLabel,
+}: {
+  footer: FooterData;
+  settings: SiteSetting;
+  contactLabel: string;
+}) {
+  const { contact } = settings;
+  const logo = mediaUrl(settings.logo);
+  const copyright = footer.copyright?.replace("{year}", String(new Date().getFullYear()));
+
   return (
     <footer className="relative overflow-hidden bg-[#020713] px-6 py-12 lg:px-20 lg:py-16">
       <div className="mx-auto w-full max-w-[1269px]">
-        {/* Main Footer */}
         <div className="grid grid-cols-1 gap-10 md:grid-cols-[1.3fr_1fr_0.8fr_1.2fr] md:gap-8">
-          {/* Brand */}
           <div className="flex flex-col gap-5">
-            <img
-              src="/home/4f0e49a6e733d436853e5c48772d58ef1c454c51.webp"
-              alt="Falah Inovasi Teknologi"
-              className="h-10 w-fit"
-            />
-
-            <p className="max-w-[240px] text-sm leading-5 text-white/80">
-              Immersive simulation and operational technology solutions for
-              government, defense, education, and enterprise sectors.
-            </p>
+            {logo && <img src={logo} alt={mediaAlt(settings.logo, settings.siteName)} className="h-10 w-fit" />}
+            {footer.description && (
+              <p className="max-w-[240px] text-sm leading-5 text-white/80">{footer.description}</p>
+            )}
           </div>
 
-          {/* Solution */}
-          <FooterColumn title="Solution">
-            {solutionLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-sm leading-5 text-white/80 transition-colors hover:text-accent"
-              >
-                {link.label}
-              </a>
-            ))}
-          </FooterColumn>
+          {footer.columns?.map((column) => (
+            <FooterColumn key={column.id ?? column.title} title={column.title}>
+              {column.links?.map((link) => (
+                <LocaleLink
+                  key={link.id ?? link.href}
+                  href={link.href}
+                  className="text-sm leading-5 text-white/80 transition-colors hover:text-accent"
+                >
+                  {link.label}
+                </LocaleLink>
+              ))}
+            </FooterColumn>
+          ))}
 
-          {/* Company */}
-          <FooterColumn title="Company">
-            {companyLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="text-sm leading-5 text-white/80 transition-colors hover:text-accent"
-              >
-                {link.label}
-              </a>
-            ))}
-          </FooterColumn>
-
-          {/* Contact */}
-          <FooterColumn title="Contact">
+          <FooterColumn title={contactLabel}>
             <div className="flex gap-3">
               <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-white" />
-
               <p className="text-sm leading-5 text-white/80">
-                Jl. Mampang Prapatan XII, No.1,
-                <br />
-                Jakarta, 12790
+                <Lines text={contact.shortAddress || contact.address} />
               </p>
             </div>
 
             <a
-              href="mailto:business@falahtech.co.id"
+              href={`mailto:${contact.email}`}
               className="flex items-center gap-3 text-sm text-white/80 transition-colors hover:text-accent"
             >
               <Mail className="h-5 w-5 shrink-0" />
-              business@falahtech.co.id
+              {contact.email}
             </a>
 
             <a
-              href="tel:02126961651"
+              href={telHref(contact.phone)}
               className="flex items-center gap-3 text-sm text-white/80 transition-colors hover:text-accent"
             >
               <Phone className="h-5 w-5 shrink-0" />
-              021 2696 1651
+              {contact.phone}
             </a>
 
-            {/* Social */}
-            <div className="mt-1 flex items-center gap-2">
-              {socials.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="flex h-7 w-7 items-center justify-center"
-                >
-                  <img
-                    src={social.icon}
-                    alt=""
-                    className="h-7 w-7 object-contain"
-                  />
-                </a>
-              ))}
-            </div>
+            {settings.socials?.length ? (
+              <div className="mt-1 flex items-center gap-2">
+                {settings.socials.map((social) => (
+                  <a
+                    key={social.id ?? social.label}
+                    href={social.url}
+                    aria-label={social.label}
+                    {...(social.url.startsWith("https://") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    className="flex h-7 w-7 items-center justify-center"
+                  >
+                    <img src={mediaUrl(social.icon)} alt="" className="h-7 w-7 object-contain" />
+                  </a>
+                ))}
+              </div>
+            ) : null}
           </FooterColumn>
         </div>
 
-        {/* Blue Divider */}
         <div className="mt-10 h-[2px] w-full bg-blue-bright shadow-[0_0_10px_rgba(59,130,246,1)]" />
 
-        {/* Copyright */}
-        <div className="flex justify-center pt-5">
-          <p className="text-xs text-white/80">
-            © 2026 Falah Inovasi Teknologi | All Right Reserved
-          </p>
-        </div>
+        {copyright && (
+          <div className="flex justify-center pt-5">
+            <p className="text-xs text-white/80">{copyright}</p>
+          </div>
+        )}
       </div>
     </footer>
   );

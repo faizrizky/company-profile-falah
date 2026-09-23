@@ -1,6 +1,27 @@
+import path from "node:path";
+
 import type { NextConfig } from "next";
+import type { RemotePattern } from "next/dist/shared/lib/image-config";
 
 const isProduction = process.env.NODE_ENV === "production";
+
+/**
+ * Where CMS media is served from: the CMS itself (local disk) or the public
+ * bucket / CDN URL when S3/R2 storage is enabled.
+ */
+function mediaOrigins(): URL[] {
+  return [process.env.CMS_MEDIA_URL, process.env.CMS_URL]
+    .filter((value): value is string => Boolean(value))
+    .map((value) => new URL(value));
+}
+
+const remotePatterns: RemotePattern[] = mediaOrigins().map((url) => ({
+  protocol: url.protocol.replace(":", "") as "http" | "https",
+  hostname: url.hostname,
+  port: url.port,
+}));
+const mediaSources = [...new Set(mediaOrigins().map((url) => url.origin))];
+const imgSrc = `img-src 'self'${mediaSources.map((origin) => ` ${origin}`).join("")}`;
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -16,30 +37,27 @@ const securityHeaders = [
 if (isProduction) {
   securityHeaders.push(
     { key: "Strict-Transport-Security", value: "max-age=31536000" },
-    // CSP decision (App Router + Turbopack, fully static prerendered site):
-    // - script-src 'unsafe-inline' is REQUIRED: App Router prerenders the RSC
-    //   payload as inline <script>self.__next_f.push(...)</script> tags (28 per
-    //   page). Nonces are infeasible: static HTML is built once with no
-    //   per-request nonce injection; hashes are infeasible: the flight payload
-    //   differs per page and headers() is static (baked at build time), so any
-    //   content change would silently break every page.
-    // - style-src 'unsafe-inline' is REQUIRED: React inline style attributes
-    //   (style="...") can only be allowed via 'unsafe-inline' (no hash/nonce
-    //   support for attributes). No inline <style> tags are emitted.
-    // - img-src/font-src are 'self' only: asset audit found zero data: URIs
-    //   (fonts are self-hosted /_next/static/media/*.woff2 via next/font).
-    // - upgrade-insecure-requests: zero external origins, all resources are
-    //   same-origin relative paths; inert over HTTP, safe over HTTPS.
-    // - No report-uri: the site has no API endpoint to receive reports.
+    // CSP decision (App Router, CMS-driven ISR pages):
+    // - script-src 'unsafe-inline' is REQUIRED: App Router emits the RSC
+    //   payload as inline <script>self.__next_f.push(...)</script> tags. Nonces
+    //   would force every page to render dynamically (no ISR cache); hashes are
+    //   infeasible because the payload changes whenever content changes.
+    // - style-src 'unsafe-inline' is REQUIRED: React inline style attributes.
+    // - img-src: own origin (next/image) + the CMS media origin (plain <img>
+    //   for SVG icons/logos). Nothing else.
+    // - frame-src: only the Google Maps embed on the contact page.
+    // - connect-src 'self': the contact form posts to our own /api/contact;
+    //   the browser never talks to the CMS directly.
     {
       key: "Content-Security-Policy",
       value: [
         "default-src 'self'",
         "script-src 'self' 'unsafe-inline'",
         "style-src 'self' 'unsafe-inline'",
-        "img-src 'self'",
+        imgSrc,
         "font-src 'self'",
         "connect-src 'self'",
+        "frame-src https://www.google.com",
         "object-src 'none'",
         "frame-ancestors 'none'",
         "base-uri 'self'",
@@ -51,6 +69,10 @@ if (isProduction) {
 }
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
+  images: { remotePatterns },
+  // Pin the workspace root (a stray lockfile higher up confuses auto-detection).
+  turbopack: { root: path.resolve(".") },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

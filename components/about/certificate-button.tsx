@@ -5,26 +5,17 @@ import { useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/locale-provider";
+import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { useDelayedUnmount, useModalEffects } from "@/lib/use-animated";
+import type { Certification } from "@/types/cms";
 
 const certBg = "/about/b803afd761809dc0f0f44924cec0a407982bee62-70b324.webp";
+const icon = "/about/icon-certificate.svg";
 
-const CERTS = [
-  {
-    src: "/about/6344c5f997c3d40fc8b7c786d728dedb59c8a904.webp",
-    title: "ISO 9001:2015 QMS",
-  },
-  {
-    src: "/about/c9c4d051832f17cdfd69f36233a943e5aca0b3d6.webp",
-    title: "TKDN Certification",
-  },
-  {
-    src: "/about/c9cab7691bbe1d2ccce3b99a21eb2804f5057079.webp",
-    title: "National Defense Industry",
-  },
-];
-
-export function CertificateButton({ icon }: { icon: string }) {
+export function CertificateButton({ certifications }: { certifications: Certification[] }) {
+  const { t } = useI18n();
+  const items = certifications.filter((c) => mediaUrl(c.certificate));
   const [open, setOpen] = useState(false);
   const rendered = useDelayedUnmount(open, 250);
   useModalEffects(open, () => setOpen(false));
@@ -37,7 +28,7 @@ export function CertificateButton({ icon }: { icon: string }) {
         className="gradient-brand inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg px-6 text-sm font-sans font-medium text-white shadow-[0_0_10px_rgba(59,130,246,0.6)] transition-colors md:w-fit"
       >
         <img src={icon} alt="" className="h-5 w-5" />
-        Show Certificate
+        {t.certificates.show}
       </button>
 
       {rendered &&
@@ -80,20 +71,20 @@ export function CertificateButton({ icon }: { icon: string }) {
                   type="button"
                   onClick={() => setOpen(false)}
                   className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-lg border border-white bg-surface-dark/5 text-white backdrop-blur-[5px]"
-                  aria-label="Close certificate modal"
+                  aria-label={t.certificates.close}
                 >
                   <X className="h-5 w-5" />
                 </button>
 
                 <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
-                  {CERTS.map((c) => (
+                  {items.map((c) => (
                     <div
-                      key={c.title}
+                      key={c.id}
                       className="relative h-[280px] overflow-hidden rounded-lg md:h-[380px]"
                     >
                       <Image
-                        src={c.src}
-                        alt={c.title}
+                        src={mediaUrl(c.certificate)!}
+                        alt={mediaAlt(c.certificate, c.title)}
                         fill
                         className="object-cover"
                         sizes="(min-width:768px) 33vw, 100vw"

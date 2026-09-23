@@ -1,4 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
+
+import { LocaleLink } from "@/components/i18n/locale-link";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -26,6 +28,10 @@ type ButtonProps = {
   href?: string;
   className?: string;
   ariaLabel?: string;
+  type?: "button" | "submit";
+  disabled?: boolean;
+  /** Opens the link in a new tab (external URLs, files). */
+  external?: boolean;
   children: React.ReactNode;
 } & VariantProps<typeof buttonVariants>;
 
@@ -33,22 +39,43 @@ export function Button({
   href,
   className,
   ariaLabel,
+  type = "button",
+  disabled,
+  external,
   children,
   variant,
   size,
 }: ButtonProps) {
   const classes = cn(buttonVariants({ variant, size }), className);
 
+  if (href?.startsWith("/")) {
+    return (
+      <LocaleLink href={href} aria-label={ariaLabel} className={classes}>
+        {children}
+      </LocaleLink>
+    );
+  }
+
   if (href) {
     return (
-      <a href={href} aria-label={ariaLabel} className={classes}>
+      <a
+        href={href}
+        aria-label={ariaLabel}
+        className={classes}
+        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      >
         {children}
       </a>
     );
   }
 
   return (
-    <button type="button" aria-label={ariaLabel} className={classes}>
+    <button
+      type={type}
+      aria-label={ariaLabel}
+      disabled={disabled}
+      className={cn(classes, "disabled:pointer-events-none disabled:opacity-60")}
+    >
       {children}
     </button>
   );

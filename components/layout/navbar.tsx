@@ -3,57 +3,25 @@
 import { useState } from "react";
 import Image from "next/image";
 import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
+
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
+import { LocaleLink } from "@/components/i18n/locale-link";
+import { useI18n } from "@/components/i18n/locale-provider";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { mediaUrl } from "@/lib/cms/media";
 import { useDelayedUnmount } from "@/lib/use-animated";
+import { cn } from "@/lib/utils";
+import type { Media, Navigation } from "@/types/cms";
 
-type SolutionLink = { label: string; href: string; highlight?: boolean };
+export function Navbar({ navigation, logo }: { navigation: Navigation; logo?: Media | null }) {
+  const solutionLinks = navigation.solutionLinks ?? [];
+  const featuredCard = navigation.featured;
+  const solutionCards = navigation.cards ?? [];
+  const navLinks = navigation.links ?? [];
+  const cta = navigation.cta;
+  const logoUrl = mediaUrl(logo);
+  const { t } = useI18n();
 
-const solutionLinks: SolutionLink[] = [
-  { label: "Simulation Training Solution", href: "/solution" },
-  {
-    label: "Advanced Education System Solution",
-    href: "/solution",
-    highlight: true,
-  },
-  { label: "Command Center Solution", href: "/solution" },
-  {
-    label: "Virtual Training Suites Solution",
-    href: "/solution/virtual-training-suite",
-  },
-  { label: "Virtual Connect Suites Solution", href: "/solution" },
-];
-
-const featuredCard = {
-  title: "Smart Campus Enterprise",
-  desc: "Digital learning infrastructure for modern educational institutions",
-  href: "/solution",
-  img: "/solution/megamenu/featured-2dd562.webp",
-};
-
-const solutionCards = [
-  {
-    title: "Education & Training",
-    desc: "Immersive simulation for classrooms and institutional learning",
-    href: "/solution",
-    img: "/solution/megamenu/education-5c3cd6.webp",
-  },
-  {
-    title: "Enterprise Command Center",
-    desc: "Unified operations for mission-critical command environments",
-    href: "/solution",
-    img: "/solution/megamenu/classroom-376645.webp",
-  },
-];
-
-const navLinks = [
-  { label: "About", href: "/about" },
-  // ponytail: "Press Release" placeholder — Figma instance has empty text
-  { label: "Press Release", href: "#" },
-];
-
-export function Navbar() {
   const [mega, setMega] = useState(false);
   const [mobile, setMobile] = useState(false);
   const [solsOpen, setSolsOpen] = useState(false);
@@ -68,15 +36,9 @@ export function Navbar() {
   return (
     <header className="absolute inset-x-0 top-0 z-50 bg-surface-dark/50 backdrop-blur-sm">
       <div className="flex h-[50px] items-center justify-between px-6 lg:px-20">
-        <Link href="/">
-          <Image
-            src="/home/4f0e49a6e733d436853e5c48772d58ef1c454c51.webp"
-            alt="Falah Inovasi Teknologi"
-            width={128}
-            height={30}
-            priority
-          />
-        </Link>
+        <LocaleLink href="/" aria-label={t.nav.home}>
+          {logoUrl && <Image src={logoUrl} alt={logo?.alt || t.nav.home} width={128} height={30} priority />}
+        </LocaleLink>
 
         <nav className="hidden items-center gap-6 lg:flex">
           <button
@@ -85,26 +47,29 @@ export function Navbar() {
             onClick={() => setMega((v) => !v)}
             className="flex items-center gap-1 text-sm text-white hover:text-accent"
           >
-            Our Solutions
+            {navigation.solutionsLabel || "Our Solutions"}
             <ChevronDown className={cn("h-4 w-4 transition-transform duration-300", mega && "rotate-180")} />
           </button>
           {navLinks.map((link) => (
-            <a
-              key={link.label}
+            <LocaleLink
+              key={link.id ?? link.label}
               href={link.href}
               className="text-sm text-white hover:text-accent"
             >
               {link.label}
-            </a>
+            </LocaleLink>
           ))}
-          <Button href="/contact" variant="fill" size="md">
-            Contact Us
-          </Button>
+          <LanguageSwitcher />
+          {cta?.href && (
+            <Button href={cta.href} variant="fill" size="md">
+              {cta.label}
+            </Button>
+          )}
         </nav>
 
         <button
           type="button"
-          aria-label="Toggle menu"
+          aria-label={t.nav.toggleMenu}
           className="text-white lg:hidden"
           onClick={() => setMobile((v) => !v)}
         >
@@ -133,8 +98,8 @@ export function Navbar() {
           <div className="flex items-start gap-8">
             <div className="flex w-[280px] flex-col gap-1">
               {solutionLinks.map((l) => (
-                <a
-                  key={l.label}
+                <LocaleLink
+                  key={l.id ?? l.label}
                   href={l.href}
                   onClick={() => setMega(false)}
                   className={
@@ -144,17 +109,17 @@ export function Navbar() {
                   }
                 >
                   {l.label}
-                </a>
+                </LocaleLink>
               ))}
             </div>
 
-            <a
+            <LocaleLink
               href={featuredCard.href}
               onClick={() => setMega(false)}
               className="group relative h-[400px] w-[458px] overflow-hidden rounded-lg"
             >
               <img
-                src={featuredCard.img}
+                src={mediaUrl(featuredCard.image)}
                 alt=""
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
@@ -167,16 +132,16 @@ export function Navbar() {
                     <ArrowUpRight className="h-4 w-4 text-white" />
                   </div>
                   <span className="text-sm leading-6 text-white/70">
-                    {featuredCard.desc}
+                    {featuredCard.description}
                   </span>
                 </div>
               </div>
-            </a>
+            </LocaleLink>
 
             <div className="flex w-[458px] flex-col gap-4">
               {solutionCards.map((c, i) => (
-                <a
-                  key={c.title}
+                <LocaleLink
+                  key={c.id ?? c.title}
                   href={c.href}
                   onClick={() => setMega(false)}
                   className={
@@ -185,7 +150,7 @@ export function Navbar() {
                   }
                 >
                   <img
-                    src={c.img}
+                    src={mediaUrl(c.image)}
                     alt=""
                     className="h-[100px] w-[100px] shrink-0 rounded-md object-cover transition-transform duration-300 group-hover:scale-105"
                   />
@@ -197,10 +162,10 @@ export function Navbar() {
                       <ArrowUpRight className="h-4 w-4 text-white" />
                     </div>
                     <span className="text-sm leading-6 text-white/70">
-                      {c.desc}
+                      {c.description}
                     </span>
                   </div>
-                </a>
+                </LocaleLink>
               ))}
             </div>
           </div>
@@ -211,27 +176,20 @@ export function Navbar() {
         <div className="fixed inset-0 z-[60] flex flex-col border-b-2 border-blue-bright bg-surface-dark/50 p-6 backdrop-blur-lg lg:hidden">
           <button
             type="button"
-            aria-label="Close menu"
+            aria-label={t.nav.closeMenu}
             className="absolute right-6 top-6 text-white"
             onClick={() => setMobile(false)}
           >
             <X className="h-6 w-6" />
           </button>
           <div className="flex flex-col gap-5">
-            <a
-              href="/about"
-              onClick={closeAll}
-              className="text-lg font-medium text-white"
-            >
-              About
-            </a>
             <button
               type="button"
               aria-expanded={solsOpen}
               onClick={() => setSolsOpen((v) => !v)}
               className="flex items-center justify-between text-lg font-medium text-white"
             >
-              Our Solutions
+              {navigation.solutionsLabel || "Our Solutions"}
               <ChevronDown
                 className={solsOpen ? "h-5 w-5 rotate-180" : "h-5 w-5"}
               />
@@ -239,30 +197,33 @@ export function Navbar() {
             {solsOpen && (
               <div className="flex flex-col gap-3">
                 {solutionLinks.map((l) => (
-                  <a
-                    key={l.label}
+                  <LocaleLink
+                    key={l.id ?? l.label}
                     href={l.href}
                     onClick={closeAll}
                     className="text-base text-white/80"
                   >
                     {l.label}
-                  </a>
+                  </LocaleLink>
                 ))}
               </div>
             )}
             {navLinks.map((link) => (
-              <a
-                key={link.label}
+              <LocaleLink
+                key={link.id ?? link.label}
                 href={link.href}
                 onClick={closeAll}
                 className="text-lg font-medium text-white"
               >
                 {link.label}
-              </a>
+              </LocaleLink>
             ))}
-            <Button href="/contact" variant="fill" size="lg" className="w-full">
-              Contact Us
-            </Button>
+            <LanguageSwitcher className="w-fit" />
+            {cta?.href && (
+              <Button href={cta.href} variant="fill" size="lg" className="w-full">
+                {cta.label}
+              </Button>
+            )}
           </div>
         </div>
       )}

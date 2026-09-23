@@ -2,14 +2,26 @@
 
 ## Scope
 
-`web-falah` is a **fully static, prerendered company profile site** (Next.js App Router; every route is prerendered at build time, no dynamic rendering, served via `next start`). It contains:
+`web-falah` is the public, CMS-driven company profile site (Next.js App Router).
+Pages are statically generated from content in the headless CMS
+(`company-profile-falah-cms`) and revalidated on demand.
 
-- No backend, no API routes, no server actions
-- No database, no authentication, no user sessions
-- No third-party scripts, analytics, or external origins
-- A decorative contact form that does not transmit data
+Server-side surface:
 
-Security-relevant surface is therefore limited to: static asset integrity, security headers (HSTS, CSP, frame protection), dependency versions, and the build pipeline.
+- `POST /api/revalidate` — cache purge webhook. Requires `Authorization: Bearer <REVALIDATE_SECRET>`
+  (timing-safe compare); only known cache tags are accepted.
+- `POST /api/contact` — contact form. Same-origin only, 5 requests / 10 min per IP,
+  10 KB body limit, schema validation, honeypot + minimum fill time. Submissions are
+  forwarded server-to-server to the CMS with `CMS_CONTACT_API_KEY`; the browser never
+  talks to the CMS API.
+
+Content safety:
+
+- CMS content is rendered as text only (no `dangerouslySetInnerHTML`).
+- Links are validated in the CMS (only `/path`, `#anchor`, `https:`, `mailto:`, `tel:`),
+  which blocks `javascript:` URLs.
+- CSP allows images only from this origin and the CMS media origin, and frames only
+  from Google Maps.
 
 ## Supported Versions
 
@@ -27,6 +39,6 @@ We do not offer a bug bounty and make no SLA on response time. Once a valid repo
 ## Branch Policy
 
 - All changes go through a **pull request** against `main`; direct pushes to `main` are not allowed.
-- A PR must pass **all CI checks** (lint, typecheck, product-category validation, security audit, production build) before merge.
+- A PR must pass **all CI checks** (lint, typecheck, security audit, production build) before merge.
 - **Force push to `main` is disabled** on the remote; branch deletion on `main` is disabled.
 - After merging, the production build is generated from `main`.
