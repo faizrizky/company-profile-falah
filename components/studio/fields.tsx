@@ -274,22 +274,22 @@ export function RelationField<T extends { id: number }>({
 /** "Page" panel extras: interface language and (outside the CMS) a way back to it. */
 export function PageSettingsField({
   lang,
+  locale,
   cmsUrl,
   pageId,
   embedded,
   s,
 }: {
   lang: "id" | "en";
+  locale: string;
   cmsUrl: string;
   pageId: number;
   embedded: boolean;
   s: StudioStrings;
 }) {
-  const hrefFor = (ui: "id" | "en") => {
-    const params = new URLSearchParams(typeof window === "undefined" ? "" : window.location.search);
-    params.set("ui", ui);
-    return `?${params}`;
-  };
+  // Built from props (not window.location) so server and client render the same markup.
+  const hrefFor = (ui: "id" | "en") =>
+    `?${new URLSearchParams({ locale, ui, ...(embedded ? { embed: "1" } : {}) })}`;
 
   return (
     <div className="studio-settings">

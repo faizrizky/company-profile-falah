@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Button, Puck, useGetPuck, type Data, type Viewports } from "@puckeditor/core";
+import { ExternalLink, Save } from "lucide-react";
 
 import type { SiteData } from "@/components/blocks/types";
 import { locales, localeNames, type Locale } from "@/lib/i18n/config";
@@ -60,21 +61,27 @@ function HeaderActions({
 
   return (
     <div className="studio-actions">
-      <label className="studio-select" title={s.structureShared}>
+      <label className="studio-select" title={`${s.contentLanguage} — ${s.structureShared}`}>
         <span className="sr-only">{s.contentLanguage}</span>
         <select value={props.locale} onChange={(e) => switchContentLanguage(e.target.value)} aria-label={s.contentLanguage}>
           {locales.map((code) => (
-            <option key={code} value={code}>
-              {localeNames[code]}
+            <option key={code} value={code} title={localeNames[code]}>
+              {code.toUpperCase()}
             </option>
           ))}
         </select>
       </label>
-      <Button variant="secondary" href={pagePath} newTab>
-        {s.viewSite}
+      {/* Labels collapse to icons on narrow screens (see studio.css). */}
+      <Button variant="secondary" href={pagePath} newTab icon={<ExternalLink size={16} />}>
+        <span className="studio-label">{s.viewSite}</span>
       </Button>
-      <Button variant="secondary" disabled={saving} onClick={() => onSave(getPuck().appState.data, false)}>
-        {saving ? s.saving : s.saveDraft}
+      <Button
+        variant="secondary"
+        disabled={saving}
+        icon={<Save size={16} />}
+        onClick={() => onSave(getPuck().appState.data, false)}
+      >
+        <span className="studio-label">{saving ? s.saving : s.saveDraft}</span>
       </Button>
       {children}
     </div>
@@ -86,8 +93,8 @@ export function StudioEditor(props: StudioEditorProps) {
   const s = studioStrings[uiLang];
 
   const config = useMemo(
-    () => createStudioConfig({ lang: uiLang, cmsUrl, data: siteData, pageId: page.id, embedded }),
-    [uiLang, cmsUrl, siteData, page.id, embedded],
+    () => createStudioConfig({ lang: uiLang, locale, cmsUrl, data: siteData, pageId: page.id, embedded }),
+    [uiLang, locale, cmsUrl, siteData, page.id, embedded],
   );
   const initialData = useMemo(() => layoutToPuck(page.layout, page.title), [page.layout, page.title]);
   const metadata = useMemo<StudioMetadata>(
@@ -101,6 +108,23 @@ export function StudioEditor(props: StudioEditorProps) {
       { width: VIEWPORTS.desktop, label: s.desktop, icon: "Monitor" },
     ],
     [s],
+  );
+
+  // On a desktop-sized editor start with both panels open and the desktop preview.
+  const initialUi = useMemo(
+    () =>
+      typeof window !== "undefined" && window.innerWidth >= 1024
+        ? {
+            leftSideBarVisible: true,
+            rightSideBarVisible: true,
+            viewports: {
+              current: { width: VIEWPORTS.desktop, height: "auto" as const },
+              controlsVisible: true,
+              options: [],
+            },
+          }
+        : undefined,
+    [],
   );
 
   const savedRef = useRef(JSON.stringify([page.title, page.layout]));
@@ -148,6 +172,7 @@ export function StudioEditor(props: StudioEditorProps) {
         config={config}
         data={initialData}
         metadata={metadata}
+        ui={initialUi}
         viewports={viewports}
         iframe={{ enabled: true, waitForStyles: true }}
         dictionary={uiLang === "id" ? puckDictionaryId : undefined}

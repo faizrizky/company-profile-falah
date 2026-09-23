@@ -1,16 +1,80 @@
 /*
- * Falah Studio — uses Puck's own look (same as the Puck demo). This file only
- * styles our additions (header actions, custom fields, messages) with Puck's
- * design tokens so they blend in. It is also copied into the canvas iframe,
- * where none of these classes exist and the site renders as-is.
+ * Falah Studio — Puck's own layout (same structure as the Puck demo) in the
+ * Falah theme: deep violet→indigo rail, pastel lavender→blue→cyan workspace,
+ * frosted white panels joined edge to edge, indigo accent (pink / cyan as
+ * secondary). Puck is recoloured through its design tokens; the only
+ * selectors on Puck internals are the `[class*=…]` rules below (gradient and
+ * blur, which tokens can't express). This file is also copied into the
+ * canvas iframe, where none of these classes exist and the site renders as-is.
  */
+
+:root {
+  --falah-rail: linear-gradient(180deg, #7d3fc0 0%, #5b40b3 48%, #3e4aa8 100%);
+  --falah-accent-gradient: linear-gradient(135deg, #6a8cff 0%, #7b5cf6 100%);
+  --falah-pink: #e25fd3;
+  --falah-cyan: #56d4ea;
+
+  /* Puck's accent scale → indigo blue. */
+  --puck-color-azure-01: #1d2170;
+  --puck-color-azure-02: #262c93;
+  --puck-color-azure-03: #3440c0;
+  --puck-color-azure-04: #5b6cf0;
+  --puck-color-azure-05: #7385f3;
+  --puck-color-azure-06: #8e9df6;
+  --puck-color-azure-07: #a9b5f8;
+  --puck-color-azure-08: #c4ccfa;
+  --puck-color-azure-09: #dde2fc;
+  --puck-color-azure-10: #eceffe;
+  --puck-color-azure-11: #f4f6ff;
+  --puck-color-azure-12: #f9faff;
+
+  /* Frosted panels over the pastel workspace. */
+  --puck-color-surface: rgb(255 255 255 / 0.66);
+  --puck-color-surface-subtle: rgb(255 255 255 / 0.45);
+  --puck-color-surface-muted: rgb(248 248 255 / 0.5);
+  --puck-color-border: rgb(255 255 255 / 0.75);
+  --puck-canvas-color-bg: transparent;
+  --puck-header-color-bg: rgb(255 255 255 / 0.5);
+  --puck-sidebar-left-color-bg: rgb(255 255 255 / 0.42);
+  --puck-sidebar-right-color-bg: rgb(255 255 255 / 0.55);
+
+  /* Plugin rail (left): deep violet with white icons, like the reference sidebar. */
+  --puck-pluginbar-color-bg: #5b40b3;
+  --puck-pluginbar-color-text: rgb(255 255 255 / 0.78);
+  --puck-pluginbar-color-text-hover: #fff;
+  --puck-pluginbar-color-text-selected: #fff;
+  --puck-pluginbar-color-bg-hover: rgb(255 255 255 / 0.12);
+}
 
 .studio-body {
   margin: 0;
   min-height: 100vh;
-  background: var(--puck-color-grey-12, #fafafa);
-  color: var(--puck-color-grey-01, #181818);
+  color: #1f2340;
   font-family: var(--puck-font-family, Inter, ui-sans-serif, system-ui, sans-serif);
+  background:
+    radial-gradient(40rem 34rem at 88% 8%, rgb(236 150 230 / 0.45), transparent 62%),
+    radial-gradient(36rem 36rem at 100% 70%, rgb(110 225 245 / 0.55), transparent 60%),
+    radial-gradient(34rem 30rem at 18% 0%, rgb(170 140 240 / 0.45), transparent 62%),
+    linear-gradient(135deg, #e4d8f6 0%, #cddcf7 48%, #bde5f4 100%);
+  background-attachment: fixed;
+}
+
+.studio-body [class*="_PuckLayout-nav_"] {
+  background-image: var(--falah-rail);
+  border-color: transparent;
+}
+
+.studio-body [class*="_PuckHeader_"],
+.studio-body [class*="_Sidebar--"] {
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+}
+
+/* Publish (Puck primary button) uses the accent gradient. */
+.studio-body [class*="_Button--primary_"] {
+  background-image: var(--falah-accent-gradient);
+  border-color: transparent;
+  box-shadow: 0 8px 20px -10px rgb(91 108 240 / 0.8);
 }
 
 /* ── Header actions ────────────────────────────────────────────────────── */
@@ -23,7 +87,7 @@
 
 .studio-select select {
   height: 34px;
-  padding: 0 28px 0 12px;
+  padding: 0 26px 0 10px;
   border: 1px solid var(--puck-color-grey-09, #dcdcdc);
   border-radius: 6px;
   background: #fff
@@ -52,6 +116,18 @@
   border-radius: 8px;
   font-size: 14px;
   box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+}
+
+/* Narrow editor (e.g. embedded next to the CMS sidebar): icon-only buttons. */
+@media (max-width: 1320px) {
+  .studio-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
 }
 
 .studio-toast.is-success {
@@ -383,9 +459,11 @@
   width: min(420px, 100%);
   padding: 28px;
   box-sizing: border-box;
-  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
-  border-radius: 8px;
-  background: #fff;
+  border: 1px solid rgb(255 255 255 / 0.8);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.7);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 18px 50px -18px rgb(76 90 180 / 0.3);
 }
 
 .studio-card h1 {

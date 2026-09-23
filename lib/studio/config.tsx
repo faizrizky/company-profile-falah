@@ -34,9 +34,16 @@ export type StudioMetadata = {
 type Block = Page["layout"][number];
 type AnyProps = Record<string, unknown>;
 
-type StudioContext = { lang: StudioLang; cmsUrl: string; data: SiteData; pageId: number; embedded: boolean };
+type StudioContext = {
+  lang: StudioLang;
+  locale: string;
+  cmsUrl: string;
+  data: SiteData;
+  pageId: number;
+  embedded: boolean;
+};
 
-export function createStudioConfig({ lang, cmsUrl, data, pageId, embedded }: StudioContext): Config {
+export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedded }: StudioContext): Config {
   const s = studioStrings[lang];
   const L = (en: string, id: string) => (lang === "id" ? id : en);
   const rowId = () => crypto.randomUUID().replace(/-/g, "").slice(0, 24);
@@ -517,7 +524,9 @@ export function createStudioConfig({ lang, cmsUrl, data, pageId, embedded }: Stu
         settings: {
           type: "custom",
           label: L("Editor", "Editor"),
-          render: () => <PageSettingsField lang={lang} cmsUrl={cmsUrl} pageId={pageId} embedded={embedded} s={s} />,
+          render: () => (
+            <PageSettingsField lang={lang} locale={locale} cmsUrl={cmsUrl} pageId={pageId} embedded={embedded} s={s} />
+          ),
         },
       },
       render: ({ children, puck }: { children: React.ReactNode; puck: { metadata: unknown } }) => {
