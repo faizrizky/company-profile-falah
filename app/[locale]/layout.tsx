@@ -6,7 +6,14 @@ import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { asMedia, mediaUrl } from "@/lib/cms/media";
 import { fontVariables } from "@/lib/fonts";
-import { getFooter, getNavigation, getSiteSettings } from "@/lib/cms/queries";
+import { buildMegaMenu } from "@/lib/cms/mega-menu";
+import {
+  getFooter,
+  getNavigation,
+  getProducts,
+  getSiteSettings,
+  getSolutionCategories,
+} from "@/lib/cms/queries";
 import { isLocale, locales } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import "../globals.css";
@@ -46,10 +53,12 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const [settings, navigation, footer] = await Promise.all([
+  const [settings, navigation, footer, categories, products] = await Promise.all([
     getSiteSettings(locale),
     getNavigation(locale),
     getFooter(locale),
+    getSolutionCategories(locale),
+    getProducts(locale),
   ]);
   const t = getDictionary(locale);
 
@@ -57,7 +66,13 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body className={`${fontVariables} font-sans antialiased`}>
         <LocaleProvider locale={locale} t={t}>
-          {navigation && <Navbar navigation={navigation} logo={asMedia(settings?.logo)} />}
+          {navigation && (
+            <Navbar
+              navigation={navigation}
+              solutions={buildMegaMenu(categories, products)}
+              logo={asMedia(settings?.logo)}
+            />
+          )}
           <main>{children}</main>
           {footer && settings && <Footer footer={footer} settings={settings} contactLabel={t.footer.contact} />}
         </LocaleProvider>

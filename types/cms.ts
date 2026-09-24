@@ -946,7 +946,7 @@ export interface SolutionCategory {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Kartu produk di Solution Overview. Geser untuk mengatur urutan.
+ * Kartu produk di Solution Overview dan mega menu (produk pertama tiap kategori jadi kartu besar). Geser untuk mengatur urutan.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "products".
@@ -955,6 +955,10 @@ export interface Product {
   id: number;
   _order?: string | null;
   title: string;
+  /**
+   * Deskripsi singkat, tampil di mega menu "Our Solutions".
+   */
+  summary?: string | null;
   category: number | SolutionCategory;
   /**
    * Bagian URL. Huruf kecil, angka, dan tanda "-". Otomatis dari judul bila kosong.
@@ -1954,6 +1958,7 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
 export interface ProductsSelect<T extends boolean = true> {
   _order?: T;
   title?: T;
+  summary?: T;
   category?: T;
   slug?: T;
   image?: T;
@@ -2149,10 +2154,10 @@ export interface SiteSetting {
  */
 export interface Navigation {
   id: number;
-  solutionsLabel?: string | null;
   /**
-   * Menu kiri pada mega menu "Our Solutions".
+   * Isi mega menu diambil otomatis dari Solution Categories & Products.
    */
+  solutionsLabel?: string | null;
   solutionLinks?:
     | {
         label: string;

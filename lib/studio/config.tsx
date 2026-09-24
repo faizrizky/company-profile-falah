@@ -19,6 +19,7 @@ import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
 import { MediaField, PageSettingsField, RelationField, TagsField } from "@/components/studio/fields";
+import { buildMegaMenu } from "@/lib/cms/mega-menu";
 import { asMedia, mediaUrl } from "@/lib/cms/media";
 import { ELEMENT_TYPES } from "@/lib/studio/convert";
 import { studioStrings, type StudioLang } from "@/lib/studio/strings";
@@ -542,7 +543,13 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
         return (
           <div className={`${fontClass} min-h-screen bg-surface-dark font-sans antialiased`}>
             <LocaleProvider locale={ctx.locale} t={ctx.t}>
-              {chrome.navigation && <Navbar navigation={chrome.navigation} logo={asMedia(ctx.data.settings?.logo)} />}
+              {chrome.navigation && (
+                <Navbar
+                  navigation={chrome.navigation}
+                  solutions={buildMegaMenu(ctx.data.categories, ctx.data.products)}
+                  logo={asMedia(ctx.data.settings?.logo)}
+                />
+              )}
               <main>{children}</main>
               {chrome.footer && ctx.data.settings && (
                 <Footer footer={chrome.footer} settings={ctx.data.settings} contactLabel={ctx.t.footer.contact} />

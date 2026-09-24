@@ -188,6 +188,26 @@ body {
 
 /* ── Tab switches (overview & showcase tabs) ────────────────────────────── */
 
+/* Thin blue scrollbar for the mega menu's scrolling columns. */
+.mega-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-blue-bright) rgb(255 255 255 / 0.06);
+}
+
+.mega-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mega-scroll::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.06);
+}
+
+.mega-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--color-blue-bright);
+}
+
 @keyframes tab-panel-in {
   from {
     opacity: 0;
