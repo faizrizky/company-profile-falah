@@ -88,7 +88,8 @@ export function SolutionOverviewTabs({
           );
         })}
       </div>
-      <div role="tabpanel" className="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
+      {/* Keyed by tab: the cards replay their enter animation on every switch. */}
+      <div key={activeId} role="tabpanel" className="tab-panel-in grid w-full grid-cols-1 gap-4 md:grid-cols-3">
         {visible.map((p) => (
           <ProductCard key={p.id} product={p} />
         ))}

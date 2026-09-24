@@ -78,7 +78,11 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
             <Play className="h-6 w-6 translate-x-0.5 fill-white text-white" />
           </span>
         </div>
-        <div className="relative z-10 mx-auto flex min-h-[560px] w-full max-w-[1440px] flex-col items-start justify-end gap-4 px-6 pb-10 pt-28 md:min-h-[810px] md:px-20 md:pb-12">
+        {/* Keyed by tab: the text replays its enter animation on every switch. */}
+        <div
+          key={activeTab}
+          className="tab-panel-in relative z-10 mx-auto flex min-h-[560px] w-full max-w-[1440px] flex-col items-start justify-end gap-4 px-6 pb-10 pt-28 md:min-h-[810px] md:px-20 md:pb-12"
+        >
           <span className={pill}>{category.title}</span>
           <h2 className="font-display text-[28px] font-bold leading-tight text-text-accent md:text-[30px]">{tab.name}</h2>
           {tab.description && (
