@@ -156,3 +156,32 @@ body {
   max-width: none;
   margin: 0;
 }
+
+/* ── Loading skeleton (components/skeleton) ─────────────────────────────── */
+
+.site-sk {
+  position: relative;
+  overflow: hidden;
+  background: rgb(255 255 255 / 0.06);
+}
+
+.site-sk::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(147 197 253 / 0.12), transparent);
+  animation: site-sk-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes site-sk-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-sk::after {
+    animation: none;
+  }
+}

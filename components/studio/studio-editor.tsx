@@ -8,6 +8,8 @@ import type { SiteData } from "@/components/blocks/types";
 import { locales, localeNames, type Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { StudioApiError, savePage } from "@/lib/studio/cms-api";
+import { signalStudioReady } from "./ready-signal";
+import { StudioSkeleton } from "./studio-skeleton";
 import { createStudioConfig, type StudioMetadata } from "@/lib/studio/config";
 import { layoutToPuck, puckTitle, puckToLayout } from "@/lib/studio/convert";
 import { puckDictionaryId, studioStrings, type StudioLang, type StudioStrings } from "@/lib/studio/strings";
@@ -141,7 +143,7 @@ function useHydrated() {
 export function StudioEditor(props: StudioEditorProps) {
   const hydrated = useHydrated();
   if (!hydrated) {
-    return <div className={props.embedded ? "studio-embedded" : "studio-standalone"} aria-busy="true" />;
+    return <StudioSkeleton embedded={props.embedded} />;
   }
   return <StudioEditorClient {...props} />;
 }
@@ -190,6 +192,30 @@ function StudioEditorClient(props: StudioEditorProps) {
   const [generation, setGeneration] = useState(0);
   const remount = useCallback(() => setGeneration((g) => g + 1), []);
   usePreviewFrameGuard(remount, generation);
+
+  // Once Puck's canvas has loaded its styles, tell the CMS to drop its skeleton.
+  useEffect(() => {
+    let done = false;
+    const signal = () => {
+      if (done) return;
+      done = true;
+      observer.disconnect();
+      window.clearTimeout(fallback);
+      signalStudioReady(cmsUrl);
+    };
+    const check = () => {
+      if (document.querySelector('[class*="_PuckCanvas--ready"]')) signal();
+    };
+    const observer = new MutationObserver(check);
+    observer.observe(document.body, { subtree: true, attributes: true, attributeFilter: ["class"] });
+    const fallback = window.setTimeout(signal, 8000);
+    check();
+    return () => {
+      done = true;
+      observer.disconnect();
+      window.clearTimeout(fallback);
+    };
+  }, [cmsUrl]);
 
   const savedRef = useRef(JSON.stringify([page.title, page.layout]));
   const [dirty, setDirty] = useState(false);

@@ -547,12 +547,108 @@ html:has(.studio-embedded),
 }
 
 .studio-brand__mark {
-  display: inline-grid;
-  place-items: center;
+  display: block;
   width: 28px;
   height: 28px;
-  border-radius: 6px;
-  color: #fff;
-  font-size: 14px;
-  background: var(--puck-color-azure-04, #0158ad);
+  object-fit: contain;
+}
+
+/* ── Loading skeleton (StudioSkeleton) ─────────────────────────────────── */
+
+.studio-sk {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 0 16px 16px;
+  box-sizing: border-box;
+}
+
+.studio-sk.studio-standalone {
+  background: linear-gradient(135deg, #e7f5fe 0%, #d6edfb 50%, #c4e6f9 100%);
+}
+
+.studio-sk__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 4px;
+}
+
+.studio-sk__spacer {
+  flex: 1;
+}
+
+.studio-sk__body {
+  display: grid;
+  flex: 1;
+  grid-template-columns: 260px minmax(0, 1fr) 280px;
+  gap: 16px;
+  min-height: 0;
+}
+
+.studio-sk__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.studio-sk__field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.studio-sk__canvas {
+  display: flex;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgb(31 122 224 / 0.04);
+}
+
+.studio-sk__block {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 10px;
+  background: rgb(31 122 224 / 0.08);
+}
+
+.studio-sk__block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.75), transparent);
+  animation: studio-sk-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes studio-sk-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.studio-sk__block--icon { width: 28px; height: 28px; border-radius: 8px; }
+.studio-sk__block--pill { width: 104px; height: 34px; border-radius: 999px; }
+.studio-sk__block--accent { background: rgb(31 122 224 / 0.22); }
+.studio-sk__block--item { height: 40px; border-radius: 12px; }
+.studio-sk__block--label { width: 40%; height: 12px; border-radius: 6px; }
+.studio-sk__block--input { height: 42px; border-radius: 12px; }
+.studio-sk__block--frame { flex: 1; border-radius: 12px; }
+
+@media (max-width: 1023px) {
+  .studio-sk__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .studio-sk__panel {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-sk__block::after {
+    animation: none;
+  }
 }
