@@ -652,3 +652,49 @@ html:has(.studio-embedded),
     animation: none;
   }
 }
+
+/* ── Header controls in the Falah theme (secondary buttons, icons, select) ─ */
+
+.studio-body [class*="_Button--secondary_"] {
+  border: 1px solid rgb(31 122 224 / 0.2);
+  border-radius: 12px;
+  background: #fff;
+  color: #0f2742;
+  box-shadow: 0 1px 2px rgb(6 41 79 / 0.06);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.studio-body [class*="_Button--secondary_"]:hover {
+  border-color: rgb(31 122 224 / 0.4);
+  background: #eef6fd;
+}
+
+.studio-body [class*="_Button--primary_"] {
+  border-radius: 12px;
+}
+
+.studio-body [class*="_PuckHeader_"] [class*="_IconButton_"] {
+  border-radius: 10px;
+  color: #56708f;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.studio-body [class*="_PuckHeader_"] [class*="_IconButton_"]:not([class*="--disabled"]):hover {
+  background: #eef6fd;
+  color: #0f2742;
+}
+
+.studio-body [class*="_PuckHeader_"] [class*="_IconButton--disabled"] {
+  color: #b6c6d8;
+}
+
+.studio-select select {
+  border: 1px solid rgb(31 122 224 / 0.2);
+  border-radius: 12px;
+  color: #0f2742;
+  box-shadow: 0 1px 2px rgb(6 41 79 / 0.06);
+}
+
+.studio-select select:hover {
+  border-color: rgb(31 122 224 / 0.4);
+}
