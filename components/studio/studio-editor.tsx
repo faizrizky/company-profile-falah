@@ -170,22 +170,22 @@ function StudioEditorClient(props: StudioEditorProps) {
     [s],
   );
 
-  // On a desktop-sized editor start with both panels open and the desktop preview.
-  const initialUi = useMemo(
-    () =>
-      window.innerWidth >= 1024
-        ? {
-            leftSideBarVisible: true,
-            rightSideBarVisible: true,
-            viewports: {
-              current: { width: VIEWPORTS.desktop, height: "auto" as const },
-              controlsVisible: true,
-              options: [],
-            },
-          }
-        : undefined,
-    [],
-  );
+  // Panels by editor width: both on desktop, just the blocks panel on
+  // tablets, none on small tablets (the canvas keeps the room; panels open
+  // from the header icons), and Puck's own phone layout below 638px.
+  const initialUi = useMemo(() => {
+    const width = window.innerWidth;
+    if (width < 638) return undefined;
+    return {
+      leftSideBarVisible: width >= 760,
+      rightSideBarVisible: width >= 1000,
+      viewports: {
+        current: { width: VIEWPORTS.desktop, height: "auto" as const },
+        controlsVisible: true,
+        options: [],
+      },
+    };
+  }, []);
 
   // Latest editor data, so a remount (see usePreviewFrameGuard) keeps edits.
   const latestData = useRef<Data>(initialData);
