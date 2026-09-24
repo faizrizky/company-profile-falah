@@ -342,7 +342,8 @@ html:has(.studio-embedded),
   text-align: center;
 }
 
-.studio-media__preview img {
+.studio-media__preview img,
+.studio-media__preview video {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -392,7 +393,8 @@ html:has(.studio-embedded),
   cursor: pointer;
 }
 
-.studio-media__item img {
+.studio-media__item img,
+.studio-media__item video {
   width: 100%;
   height: 100%;
   object-fit: cover;

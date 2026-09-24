@@ -11,6 +11,11 @@ export function mediaUrl(field: MediaField): string | undefined {
   return asMedia(field)?.url ?? undefined;
 }
 
+/** MIME type of a populated media document (e.g. for a <video> <source>). */
+export function mediaType(field: MediaField): string | undefined {
+  return asMedia(field)?.mimeType ?? undefined;
+}
+
 export function mediaAlt(field: MediaField, fallback = ""): string {
   return asMedia(field)?.alt || fallback;
 }

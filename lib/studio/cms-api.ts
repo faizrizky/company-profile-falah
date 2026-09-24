@@ -43,19 +43,30 @@ export function savePage(
   });
 }
 
-export function listImages(cmsUrl: string, { page = 1, search = "" }: { page?: number; search?: string }) {
+export type MediaKind = "image" | "video";
+
+/** What the upload picker accepts for each kind (the CMS re-checks the real type). */
+export const MEDIA_ACCEPT: Record<MediaKind, string> = {
+  image: "image/jpeg,image/png,image/webp,image/avif,image/gif,image/svg+xml",
+  video: "video/mp4,video/webm",
+};
+
+export function listMedia(
+  cmsUrl: string,
+  { page = 1, search = "", kind = "image" }: { page?: number; search?: string; kind?: MediaKind },
+) {
   const params = new URLSearchParams({
     limit: "24",
     page: String(page),
     sort: "-createdAt",
     depth: "0",
-    "where[mimeType][like]": "image",
+    "where[mimeType][like]": kind,
   });
   if (search) params.set("where[or][0][alt][like]", search), params.set("where[or][1][filename][like]", search);
   return request<{ docs: Media[]; hasNextPage: boolean; page: number }>(cmsUrl, `/api/media?${params}`);
 }
 
-export function uploadImage(cmsUrl: string, file: File, alt: string) {
+export function uploadMedia(cmsUrl: string, file: File, alt: string) {
   const form = new FormData();
   form.append("file", file);
   form.append("_payload", JSON.stringify({ alt }));

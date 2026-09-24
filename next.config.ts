@@ -22,6 +22,8 @@ const remotePatterns: RemotePattern[] = mediaOrigins().map((url) => ({
 }));
 const mediaSources = [...new Set(mediaOrigins().map((url) => url.origin))];
 const imgSrc = `img-src 'self'${mediaSources.map((origin) => ` ${origin}`).join("")}`;
+// Videos (showcase, tab backgrounds) stream straight from the media origin.
+const mediaSrc = `media-src 'self'${mediaSources.map((origin) => ` ${origin}`).join("")}`;
 const cmsPublicOrigin = (() => {
   const url = process.env.CMS_PUBLIC_URL ?? process.env.CMS_URL;
   return url ? new URL(url).origin : "";
@@ -47,8 +49,8 @@ if (isProduction) {
     //   would force every page to render dynamically (no ISR cache); hashes are
     //   infeasible because the payload changes whenever content changes.
     // - style-src 'unsafe-inline' is REQUIRED: React inline style attributes.
-    // - img-src: own origin (next/image) + the CMS media origin (plain <img>
-    //   for SVG icons/logos). Nothing else.
+    // - img-src / media-src: own origin (next/image) + the CMS media origin
+    //   (plain <img> for SVG icons/logos, <video>). Nothing else.
     // - frame-src: only the Google Maps embed on the contact page.
     // - connect-src 'self': the contact form posts to our own /api/contact;
     //   the browser never talks to the CMS directly.
@@ -59,6 +61,7 @@ if (isProduction) {
         "script-src 'self' 'unsafe-inline'",
         "style-src 'self' 'unsafe-inline'",
         imgSrc,
+        mediaSrc,
         "font-src 'self'",
         "connect-src 'self'",
         "frame-src https://www.google.com",
@@ -93,6 +96,7 @@ const studioHeaders = [
             "script-src 'self' 'unsafe-inline'",
             "style-src 'self' 'unsafe-inline'",
             `${imgSrc} blob: data:`,
+            `${mediaSrc} blob:`,
             "font-src 'self' data:",
             `connect-src 'self' ${cmsPublicOrigin}`.trim(),
             "frame-src 'self' https://www.google.com",

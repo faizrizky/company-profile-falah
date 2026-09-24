@@ -3,26 +3,37 @@
 import { useCallback, useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
 import { FieldLabel } from "@puckeditor/core";
 
-import { listImages, uploadImage } from "@/lib/studio/cms-api";
+import { listMedia, MEDIA_ACCEPT, uploadMedia, type MediaKind } from "@/lib/studio/cms-api";
 import type { StudioStrings } from "@/lib/studio/strings";
 import type { Media } from "@/types/cms";
 
 type MediaValue = Media | number | null | undefined;
 
-/** Pick an image from the CMS media library, or upload a new one (same validation as the CMS admin). */
+/** Thumbnail for a media item: the image itself, or the first frame of a video. */
+function MediaThumb({ item, alt = "" }: { item: Media; alt?: string }) {
+  if (item.mimeType?.startsWith("video/")) {
+    return <video src={item.url ?? undefined} muted playsInline preload="metadata" aria-label={alt} />;
+  }
+  return <img src={item.thumbnailURL || item.url || ""} alt={alt} loading="lazy" />;
+}
+
+/** Pick an image or video from the CMS media library, or upload a new one (same validation as the CMS admin). */
 export function MediaField({
   label,
   value,
   onChange,
   cmsUrl,
   s,
+  kind = "image",
 }: {
   label: string;
   value: MediaValue;
   onChange: (value: Media | null) => void;
   cmsUrl: string;
   s: StudioStrings;
+  kind?: MediaKind;
 }) {
+  const isVideo = kind === "video";
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<Media[]>([]);
   const [page, setPage] = useState(1);
@@ -38,7 +49,7 @@ export function MediaField({
       setBusy(true);
       setError(null);
       try {
-        const res = await listImages(cmsUrl, { page: nextPage, search: query });
+        const res = await listMedia(cmsUrl, { page: nextPage, search: query, kind });
         setItems((prev) => (nextPage === 1 ? res.docs : [...prev, ...res.docs]));
         setHasMore(res.hasNextPage);
         setPage(nextPage);
@@ -48,7 +59,7 @@ export function MediaField({
         setBusy(false);
       }
     },
-    [cmsUrl],
+    [cmsUrl, kind],
   );
 
   useEffect(() => {
@@ -64,7 +75,7 @@ export function MediaField({
     setBusy(true);
     setError(null);
     try {
-      const { doc } = await uploadImage(cmsUrl, file, file.name.replace(/\.[^.]+$/, ""));
+      const { doc } = await uploadMedia(cmsUrl, file, file.name.replace(/\.[^.]+$/, ""));
       onChange(doc);
       setOpen(false);
     } catch (e) {
@@ -78,11 +89,11 @@ export function MediaField({
     <FieldLabel label={label} el="div">
       <div className="studio-media">
         <div className="studio-media__preview">
-          {current?.url ? <img src={current.thumbnailURL || current.url} alt="" /> : <span>{s.noImage}</span>}
+          {current?.url ? <MediaThumb item={current} /> : <span>{isVideo ? s.noVideo : s.noImage}</span>}
         </div>
         <div className="studio-media__actions">
           <button type="button" className="studio-btn studio-btn--ghost" onClick={() => setOpen((v) => !v)}>
-            {open ? s.close : current ? s.replace : s.choose}
+            {open ? s.close : current ? s.replace : isVideo ? s.chooseVideo : s.choose}
           </button>
           {current && (
             <button type="button" className="studio-btn studio-btn--ghost" onClick={() => onChange(null)}>
@@ -97,7 +108,7 @@ export function MediaField({
           <div className="studio-media__toolbar">
             <input
               className="studio-input"
-              placeholder={s.searchImages}
+              placeholder={isVideo ? s.searchVideos : s.searchImages}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -107,7 +118,7 @@ export function MediaField({
             <input
               ref={fileRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp,image/avif,image/gif,image/svg+xml"
+              accept={MEDIA_ACCEPT[kind]}
               hidden
               onChange={onUpload}
             />
@@ -125,7 +136,7 @@ export function MediaField({
                   setOpen(false);
                 }}
               >
-                <img src={item.thumbnailURL || item.url || ""} alt={item.alt || ""} loading="lazy" />
+                <MediaThumb item={item} alt={item.alt || ""} />
               </button>
             ))}
           </div>

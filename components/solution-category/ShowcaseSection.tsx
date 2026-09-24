@@ -4,9 +4,10 @@ import { useState } from "react";
 import Image from "next/image";
 import { Download, Play } from "lucide-react";
 
+import { BackgroundVideo } from "@/components/common/background-video";
 import { useI18n } from "@/components/i18n/locale-provider";
 import { Button } from "@/components/ui/button";
-import { mediaUrl } from "@/lib/cms/media";
+import { mediaType, mediaUrl } from "@/lib/cms/media";
 import type { SolutionCategory } from "@/types/cms";
 
 import { pill } from "./pill";
@@ -20,6 +21,9 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
   if (!tab) return null;
 
   const background = mediaUrl(showcase.background);
+  // A tab's own clip wins over the shared background video.
+  const videoField = tab.video ?? showcase.backgroundVideo;
+  const video = mediaUrl(videoField);
   const brochure = mediaUrl(showcase.brochure);
 
   return (
@@ -56,6 +60,14 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
 
       <div role="tabpanel" className="relative mt-8 min-h-[560px] w-full overflow-hidden md:mt-0 md:min-h-[810px]">
         {background && <Image src={background} alt="" fill className="object-cover" sizes="100vw" />}
+        {video && (
+          <BackgroundVideo
+            src={video}
+            type={mediaType(videoField)}
+            poster={background}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-surface-dark via-surface-dark/40 to-surface-dark/20" />
         <div className="absolute inset-0 bg-gradient-to-r from-surface-dark/80 via-transparent to-transparent" />
         <div className="absolute left-1/2 top-[36%] -translate-x-1/2 -translate-y-1/2 md:hidden">

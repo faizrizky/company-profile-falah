@@ -79,6 +79,13 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
       <MediaField label={field.label ?? ""} value={value} onChange={onChange} cmsUrl={cmsUrl} s={s} />
     ),
   });
+  const video = (en: string, id: string): Field => ({
+    type: "custom",
+    label: L(en, id),
+    render: ({ field, value, onChange }) => (
+      <MediaField label={field.label ?? ""} value={value} onChange={onChange} cmsUrl={cmsUrl} s={s} kind="video" />
+    ),
+  });
   const tags = (en: string, id: string): Field => ({
     type: "custom",
     label: L(en, id),
@@ -214,9 +221,10 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
         header: header(),
         background: image("Background", "Latar belakang"),
         poster: image("Video poster", "Gambar video"),
+        video: video("Video (MP4 / WebM)", "Video (MP4 / WebM)"),
         captionTitle: text("Caption title", "Judul keterangan"),
         captionDescription: text("Caption text", "Teks keterangan"),
-        videoUrl: plain("Video link (https://…)", "Link video (https://…)"),
+        videoUrl: plain("External video link (if no video above)", "Link video luar (jika video di atas kosong)"),
       },
       defaultProps: { header: headerDefaults },
     }),
@@ -353,7 +361,7 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
         backgroundMobile: image("Background (mobile)", "Latar belakang (ponsel)"),
         buttons: buttons(),
         media: image("Media", "Media"),
-        videoUrl: plain("Video link (https://…)", "Link video (https://…)"),
+        videoUrl: plain("External video link (if no video above)", "Link video luar (jika video di atas kosong)"),
       },
       resolveFields: (item, { fields }) => {
         const { media, videoUrl, ...rest } = fields as Fields<AnyProps>;

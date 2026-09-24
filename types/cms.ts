@@ -149,8 +149,6 @@ export interface UserAuthOperations {
   };
 }
 /**
- * Susun halaman dari section (blocks). Slug "home" = halaman utama.
- *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
@@ -241,6 +239,7 @@ export interface Media {
    * Teks alternatif untuk aksesibilitas & SEO. Kosongkan untuk gambar dekoratif.
    */
   alt?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -324,10 +323,14 @@ export interface VideoShowcaseBlock {
   };
   background?: (number | null) | Media;
   poster: number | Media;
+  /**
+   * Opsional. Video MP4/WebM yang diputar langsung di halaman saat tombol play diklik (poster tampil sebelumnya).
+   */
+  video?: (number | null) | Media;
   captionTitle?: string | null;
   captionDescription?: string | null;
   /**
-   * Opsional. Link video (https://…) yang dibuka saat tombol play diklik.
+   * Opsional. Link video luar (mis. YouTube) — dipakai bila Video di atas kosong.
    */
   videoUrl?: string | null;
   id?: string | null;
@@ -533,12 +536,12 @@ export interface Partner {
   id: number;
   _order?: string | null;
   name: string;
-  logo: number | Media;
   /**
    * Contoh: /contact, /solution/command-center, https://…
    */
   website?: string | null;
   showInHero?: boolean | null;
+  logo: number | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -894,7 +897,14 @@ export interface SolutionCategory {
       | null;
   };
   showcase?: {
+    /**
+     * Latar tab; juga poster video latar di bawah.
+     */
     background?: (number | null) | Media;
+    /**
+     * Opsional. Video latar (tanpa suara, diputar berulang). MP4 720p, ±10 detik, < 4 MB.
+     */
+    backgroundVideo?: (number | null) | Media;
     /**
      * PDF brosur. Kosongkan = tombol mengarah ke halaman contact.
      */
@@ -904,6 +914,10 @@ export interface SolutionCategory {
           name: string;
           description?: string | null;
           tags?: string[] | null;
+          /**
+           * Opsional. Video latar khusus tab ini (menggantikan video latar umum).
+           */
+          video?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
@@ -941,11 +955,11 @@ export interface Product {
   id: number;
   _order?: string | null;
   title: string;
+  category: number | SolutionCategory;
   /**
    * Bagian URL. Huruf kecil, angka, dan tanda "-". Otomatis dari judul bila kosong.
    */
   slug: string;
-  category: number | SolutionCategory;
   image: number | Media;
   imageMobile?: (number | null) | Media;
   layout?: {
@@ -1329,6 +1343,7 @@ export interface VideoShowcaseBlockSelect<T extends boolean = true> {
       };
   background?: T;
   poster?: T;
+  video?: T;
   captionTitle?: T;
   captionDescription?: T;
   videoUrl?: T;
@@ -1787,6 +1802,7 @@ export interface SpacerElementSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1840,9 +1856,9 @@ export interface MediaSelect<T extends boolean = true> {
 export interface PartnersSelect<T extends boolean = true> {
   _order?: T;
   name?: T;
-  logo?: T;
   website?: T;
   showInHero?: T;
+  logo?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1898,6 +1914,7 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
     | T
     | {
         background?: T;
+        backgroundVideo?: T;
         brochure?: T;
         tabs?:
           | T
@@ -1905,6 +1922,7 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
               name?: T;
               description?: T;
               tags?: T;
+              video?: T;
               id?: T;
             };
       };
@@ -1936,8 +1954,8 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
 export interface ProductsSelect<T extends boolean = true> {
   _order?: T;
   title?: T;
-  slug?: T;
   category?: T;
+  slug?: T;
   image?: T;
   imageMobile?: T;
   layout?:
