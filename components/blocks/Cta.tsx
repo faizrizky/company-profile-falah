@@ -2,15 +2,18 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
 import { PlayButton } from "@/components/blocks/VideoShowcase";
+import { InlineVideo } from "@/components/common/inline-video";
 import { Head, ResponsiveBackground, SectionHeader } from "@/components/common/section-ui";
 import { Button } from "@/components/ui/button";
-import { mediaAlt, mediaUrl } from "@/lib/cms/media";
+import { mediaAlt, mediaType, mediaUrl } from "@/lib/cms/media";
 import type { CtaBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
 
 function WithMediaCta({ block, ctx }: BlockProps<Data>) {
   const media = mediaUrl(block.media);
+  const video = mediaUrl(block.video);
+  const cover = media && <Image src={media} alt={mediaAlt(block.media)} fill className="object-cover" />;
   return (
     <section className="relative isolate overflow-hidden px-6 py-12.5 lg:px-20">
       <ResponsiveBackground src={mediaUrl(block.background)} mobileSrc={mediaUrl(block.backgroundMobile)} />
@@ -33,11 +36,19 @@ function WithMediaCta({ block, ctx }: BlockProps<Data>) {
             </div>
           ) : null}
         </div>
-        {media && (
+        {(media || video) && (
           <div className="w-full max-w-[862px] rounded-2xl border border-accent p-10 shadow-[0_0_10px_rgba(147,197,253,1)]">
             <div className="relative aspect-video overflow-hidden">
-              <Image src={media} alt={mediaAlt(block.media)} fill className="object-cover" />
-              <PlayButton videoUrl={block.videoUrl} label={ctx.t.video.play} />
+              {video ? (
+                <InlineVideo src={video} type={mediaType(block.video)} poster={media} label={ctx.t.video.play}>
+                  {cover}
+                </InlineVideo>
+              ) : (
+                <>
+                  {cover}
+                  <PlayButton videoUrl={block.videoUrl} label={ctx.t.video.play} />
+                </>
+              )}
             </div>
           </div>
         )}

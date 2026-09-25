@@ -362,10 +362,11 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
         backgroundMobile: image("Background (mobile)", "Latar belakang (ponsel)"),
         buttons: buttons(),
         media: image("Media", "Media"),
+        video: video("Video (MP4 / WebM)", "Video (MP4 / WebM)"),
         videoUrl: plain("External video link (if no video above)", "Link video luar (jika video di atas kosong)"),
       },
       resolveFields: (item, { fields }) => {
-        const { media, videoUrl, ...rest } = fields as Fields<AnyProps>;
+        const { media, video: _video, videoUrl, ...rest } = fields as Fields<AnyProps>;
         return (item.props.variant === "withMedia" ? fields : rest) as Fields<AnyProps>;
       },
       defaultProps: { variant: "simple", header: headerDefaults, buttons: [] },
