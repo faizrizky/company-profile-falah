@@ -63,7 +63,7 @@ function FeaturedProduct({
     <MaybeLink
       href={href}
       onNavigate={onNavigate}
-      className="group relative block h-full overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10"
+      className="group relative block h-full overflow-hidden rounded-lg bg-white/5"
     >
       {product.image && (
         <Image
@@ -74,10 +74,10 @@ function FeaturedProduct({
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-      {href && <ArrowBadge className="absolute right-5 top-5" />}
-      <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-6">
-        <span className="font-display text-xl font-bold leading-7 text-white">{product.title}</span>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+      {href && <ArrowBadge className="absolute right-4 top-4 h-10 w-10" />}
+      <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-5">
+        <span className="font-display text-base font-bold leading-6 text-white">{product.title}</span>
         {product.summary && (
           <span className="line-clamp-2 max-w-[520px] text-sm leading-6 text-white/75">{product.summary}</span>
         )}
@@ -99,26 +99,26 @@ function ProductItem({
     <MaybeLink
       href={href}
       onNavigate={onNavigate}
-      className="group flex items-center gap-5 rounded-xl p-3 transition-colors duration-300 hover:bg-white/[0.07]"
+      className="group flex items-center gap-4 rounded-lg p-2 transition-colors duration-300 hover:bg-white/[0.06]"
     >
-      <span className="relative h-[100px] w-[100px] shrink-0 overflow-hidden rounded-lg bg-white/5 xl:h-[112px] xl:w-[112px]">
+      <span className="relative h-[78px] w-[78px] shrink-0 overflow-hidden rounded-md bg-white/5">
         {product.image && (
           <Image
             src={product.image}
             alt={product.alt}
             fill
-            sizes="112px"
+            sizes="78px"
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
         )}
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-1">
-        <span className="font-display text-lg font-bold leading-6 text-white">{product.title}</span>
+        <span className="font-display text-lg font-bold leading-6 tracking-wide text-white">{product.title}</span>
         {product.summary && (
-          <span className="line-clamp-2 text-sm leading-6 text-white/70">{product.summary}</span>
+          <span className="line-clamp-2 text-sm leading-6 text-white/85">{product.summary}</span>
         )}
       </span>
-      {href && <ArrowBadge className="self-start opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100" />}
+      {href && <ArrowBadge className="h-10 w-10 self-start opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100" />}
     </MaybeLink>
   );
 }
@@ -142,7 +142,7 @@ function MegaMenu({
     <>
       <div
         className={cn(
-          "fixed inset-0 z-40 hidden bg-black/40 backdrop-blur-[6px] lg:block",
+          "fixed inset-0 z-40 hidden bg-black/20 backdrop-blur-[4px] lg:block",
           open ? "animate-fade-in" : "pointer-events-none animate-fade-out",
         )}
         onClick={onClose}
@@ -151,13 +151,12 @@ function MegaMenu({
       <div
         id="mega-menu"
         className={cn(
-          "absolute inset-x-0 top-[50px] z-50 hidden border-y border-blue-bright/60 bg-[#060a1c]/90 shadow-[0_24px_60px_rgba(0,0,0,0.5)] backdrop-blur-xl lg:block",
-          "bg-[radial-gradient(ellipse_60%_80%_at_85%_0%,rgba(24,102,239,0.22),transparent),radial-gradient(ellipse_50%_70%_at_0%_100%,rgba(24,102,239,0.14),transparent)]",
+          "absolute inset-x-0 top-[50px] z-50 hidden border-b border-blue-bright/60 bg-[#1f1f24]/80 shadow-[0_24px_60px_rgba(0,0,0,0.45)] backdrop-blur-[14px] lg:block",
           open ? "animate-mega-in" : "pointer-events-none animate-mega-out",
         )}
       >
-        <div className="mx-auto grid h-[380px] max-w-[1600px] grid-cols-[220px_minmax(0,1fr)_minmax(0,1fr)] gap-8 px-10 py-10 box-content xl:h-[420px] xl:grid-cols-[280px_minmax(0,1fr)_minmax(0,1fr)] xl:px-20">
-          <ul className="mega-scroll -mr-3 flex flex-col gap-1 overflow-y-auto pr-3">
+        <div className="mx-auto grid h-[320px] max-w-[1600px] grid-cols-[220px_minmax(0,1fr)_minmax(0,1fr)] gap-8 px-10 py-10 box-content xl:h-[340px] xl:grid-cols-[250px_minmax(0,1fr)_minmax(0,1fr)] xl:px-12">
+          <ul className="mega-scroll -mr-3 flex flex-col gap-2 overflow-y-auto pr-3">
             {solutions.map((category) => {
               const selected = category.id === active.id;
               return (
@@ -172,10 +171,10 @@ function MegaMenu({
                     href={category.href}
                     onNavigate={onClose}
                     className={cn(
-                      "flex min-h-12 w-full items-center rounded-lg px-4 py-2.5 text-[15px] leading-6 transition-all duration-300",
+                      "inline-flex items-center rounded-lg px-3 py-2 text-sm leading-6 transition-all duration-300",
                       selected
-                        ? "bg-blue-bright font-semibold text-white shadow-[0_6px_20px_rgba(24,102,239,0.45)]"
-                        : "text-white/80 hover:bg-white/5 hover:text-white",
+                        ? "bg-blue-bright font-semibold text-white"
+                        : "text-white hover:text-accent",
                     )}
                   >
                     {category.title}
@@ -209,7 +208,7 @@ function MegaMenu({
           )}
 
           {featured && rest.length > 0 && (
-            <ul key={`list-${active.id}`} className="tab-panel-in mega-scroll -mr-3 flex min-h-0 flex-col gap-2 overflow-y-auto pr-3">
+            <ul key={`list-${active.id}`} className="tab-panel-in mega-scroll mega-scroll--bold -mr-3 flex min-h-0 flex-col gap-3 overflow-y-auto pr-5">
               {rest.map((product) => (
                 <li key={product.id}>
                   <ProductItem product={product} href={active.href} onNavigate={onClose} />
@@ -263,7 +262,7 @@ export function Navbar({
       <header
         className={cn(
           "absolute inset-x-0 top-0 z-50 backdrop-blur-sm transition-colors duration-300",
-          mega ? "bg-[#060a1c]/95" : "bg-surface-dark/50",
+          mega ? "bg-[#1f1f24]/80" : "bg-surface-dark/50",
         )}
       >
         <div className="flex h-[50px] items-center justify-between px-6 lg:px-20">

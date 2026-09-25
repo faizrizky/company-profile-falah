@@ -208,6 +208,19 @@ body {
   background: var(--color-blue-bright);
 }
 
+/* Product list: the chunkier bar from the design. */
+.mega-scroll--bold {
+  scrollbar-color: var(--color-blue-bright) rgb(0 0 0 / 0.85);
+}
+
+.mega-scroll--bold::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mega-scroll--bold::-webkit-scrollbar-track {
+  background: rgb(0 0 0 / 0.85);
+}
+
 @keyframes tab-panel-in {
   from {
     opacity: 0;
