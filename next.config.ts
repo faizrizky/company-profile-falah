@@ -114,6 +114,12 @@ const studioHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: { remotePatterns },
+  // The CMS may hand out media as /media/<file> (host-independent): proxy it
+  // to the bucket so it loads on localhost, a LAN IP or any domain alike.
+  async rewrites() {
+    const media = process.env.CMS_MEDIA_URL?.replace(/\/$/, "");
+    return media ? [{ source: "/media/:path*", destination: `${media}/:path*` }] : [];
+  },
   // Pin the workspace root (a stray lockfile higher up confuses auto-detection).
   turbopack: { root: path.resolve(".") },
   async headers() {
