@@ -105,7 +105,11 @@ export function Footer({
           </FooterColumn>
         </div>
 
-        <div className="mt-10 h-[2px] w-full bg-blue-bright shadow-[0_0_10px_rgba(59,130,246,1)]" />
+        {/* Thin line that fades out at both ends, with a soft glow under its middle. */}
+        <div aria-hidden className="relative mt-10 h-px w-full">
+          <div className="absolute inset-x-[10%] -top-2 h-4 rounded-full bg-blue-bright/60 blur-[10px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,#1866ef_12%,#4f8dff_50%,#1866ef_88%,transparent)]" />
+        </div>
 
         {copyright && (
           <div className="flex justify-center pt-5">
