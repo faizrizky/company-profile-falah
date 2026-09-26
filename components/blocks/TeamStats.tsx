@@ -21,20 +21,20 @@ export function TeamStatsBlock({ block }: BlockProps<Data>) {
         />
         <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
           {block.items?.map((item, i) => (
-            <div key={item.id ?? item.label} className="relative">
-              <Glow className="-top-[14px] left-1/2 h-[25px] w-[356px] -translate-x-1/2" />
-              <div className="flex h-full flex-col items-center gap-5 p-10">
-                <h3 className="text-center font-display text-lg font-bold leading-6 text-white md:text-2xl md:leading-[30px]">
-                  {item.label}
-                </h3>
-                <div className="flex h-[34px] flex-col justify-center">
-                  <CountUp
-                    value={item.value}
-                    suffix={item.suffix ?? ""}
-                    delay={i * 80}
-                    className="font-display text-[48px] font-bold leading-6 text-[#1866EF]"
-                  />
-                </div>
+            <div
+              key={item.id ?? item.label}
+              className="relative flex flex-col items-start gap-5 overflow-clip rounded-lg border border-accent/50 bg-surface-dark/5 p-10 backdrop-blur-[5px]"
+            >
+              <Glow className="-top-[15px] left-1/2 h-[25px] w-[356px] -translate-x-1/2" />
+              {/* Two lines reserved, so every number sits on the same line. */}
+              <h3 className="min-h-[60px] font-display text-2xl font-bold leading-[30px] text-white">{item.label}</h3>
+              <div className="flex h-[34px] flex-col justify-center">
+                <CountUp
+                  value={item.value}
+                  suffix={item.suffix ?? ""}
+                  delay={i * 80}
+                  className="font-display text-[48px] font-bold leading-6 text-[#1866EF]"
+                />
               </div>
             </div>
           ))}

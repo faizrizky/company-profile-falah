@@ -36,7 +36,7 @@ export function CertificationGallery({
       {background && <Image src={background} alt="" fill className="-z-20 object-fill" />}
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <Head className="max-w-[630px]" pill={header.eyebrow} title={header.title} desc={header.description} />
-        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {items.filter((card) => mediaUrl(card.certificate)).map((card) => {
             const image = mediaUrl(card.certificate);
             return (
@@ -49,7 +49,7 @@ export function CertificationGallery({
                     setOpen(true);
                   }}
                   aria-label={format(t.certificates.view, { title: card.title })}
-                  className="relative block h-[400px] w-full cursor-pointer overflow-hidden rounded-lg transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-accent"
+                  className="relative block h-[400px] w-full cursor-pointer overflow-hidden rounded-lg border border-accent/50 transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-accent"
                 >
                   {image && (
                     <Image
@@ -59,10 +59,10 @@ export function CertificationGallery({
                       className={cn("object-cover", card.certificateFocus === "top" && "object-top")}
                     />
                   )}
-                  <div className="absolute right-6 top-6 flex h-9 w-9 items-center justify-center rounded-lg border border-white bg-surface-dark/5 backdrop-blur-[5px]">
+                  <div className="absolute right-6 top-6 flex h-9 w-9 items-center justify-center rounded-lg border border-white bg-surface-dark/50 backdrop-blur-[5px]">
                     <img src={ICON_MAXIMIZE} alt="" className="h-5 w-5" />
                   </div>
-                  <div className="absolute inset-x-0 bottom-0 flex h-[160px] flex-col justify-end gap-2 bg-[linear-gradient(180deg,rgba(5,4,13,0)_0%,rgba(5,4,13,0.5)_100%)] p-6 backdrop-blur-[5px]">
+                  <div className="absolute inset-x-0 bottom-0 flex h-[160px] flex-col justify-end gap-2 bg-[linear-gradient(180deg,rgba(5,4,13,0)_0%,rgba(5,4,13,0.5)_86%)] p-6 backdrop-blur-[1px]">
                     <h3 className="font-display text-xl font-bold leading-6 text-white">{card.title}</h3>
                   </div>
                 </button>
