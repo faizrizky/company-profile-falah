@@ -818,6 +818,10 @@ select.studio-input {
 
 /* ── Right panel: every top-level field is a card ─────────────────────── */
 
+.studio-body [class*="_PuckFields_"] {
+  padding-inline: 12px;
+}
+
 .studio-body [class*="_PuckFields-field_"] {
   margin: 0 0 12px;
   padding: 14px;
