@@ -9,17 +9,17 @@ import type { Footer as FooterData, SiteSetting } from "@/types/cms";
 function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="flex flex-col">
-      <h3 className="mb-5 font-display text-base font-bold text-accent">{title}</h3>
-      <div className="flex flex-col gap-3">{children}</div>
+      <h3 className="flex h-[55px] items-center font-display text-xl font-bold leading-6 text-accent">{title}</h3>
+      <div className="flex flex-col">{children}</div>
     </div>
   );
 }
 
 function ContactItem({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-1">
-      <span className="text-sm font-semibold leading-5 text-white">{label}</span>
-      <span className="text-sm leading-5 text-white/90">{children}</span>
+    <div className="mb-3 flex flex-col gap-1">
+      <span className="text-sm font-bold leading-5 text-white">{label}</span>
+      <span className="text-sm leading-6 text-white">{children}</span>
     </div>
   );
 }
@@ -56,7 +56,7 @@ export function Footer({
                 <LocaleLink
                   key={link.id ?? link.href}
                   href={link.href}
-                  className="text-sm leading-5 text-white/80 transition-colors hover:text-accent"
+                  className="flex min-h-10 items-center text-sm leading-6 text-white transition-colors hover:text-accent"
                 >
                   {link.label}
                 </LocaleLink>
