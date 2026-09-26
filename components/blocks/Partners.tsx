@@ -21,10 +21,11 @@ export function PartnersBlock({ block }: BlockProps<Data>) {
         <div className="relative h-[300px] w-full overflow-hidden">
           <PartnerMarquee partners={rowOne} trackClassName="h-[100px]" />
           <PartnerMarquee partners={rowTwo} trackClassName="mt-[27px] h-[173px]" reverse />
-          <div className="absolute bottom-[50px] left-1/2 h-[5px] w-[574px] -translate-x-1/2 bg-[#1866EF] shadow-[0_0_10px_rgba(59,130,246,1)]" />
         </div>
       </div>
       <img src="/about/gradasi.svg" alt="" className="pointer-events-none absolute left-0 top-0 h-[600px] w-full" />
+      {/* Figma: glowing ellipse on the section's bottom edge, clear of the logos. */}
+      <div className="absolute bottom-0 left-1/2 h-[5px] w-[min(574px,80%)] -translate-x-1/2 rounded-[50%] bg-blue-bright shadow-[0_0_10px_#3b82f6]" />
     </section>
   );
 }
