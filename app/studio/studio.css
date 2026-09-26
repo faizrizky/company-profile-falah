@@ -756,3 +756,7 @@ html:has(.studio-embedded),
 .studio-relation__create:hover {
   text-decoration: underline;
 }
+
+.studio-link-custom {
+  margin-top: 8px;
+}

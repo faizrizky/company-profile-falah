@@ -8,7 +8,49 @@ import { defaultLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { cmsPublicUrl } from "@/lib/studio/auth";
 import type { StudioLang } from "@/lib/studio/strings";
-import type { Page, User } from "@/types/cms";
+import type { Navigation, Page, User } from "@/types/cms";
+
+/** Grouped link choices for the editor's link fields. */
+export type LinkGroup = { label: string; options: { label: string; href: string }[] };
+
+async function buildLinkGroups(
+  authorization: string,
+  locale: Locale,
+  uiLang: StudioLang,
+  categories: { title: string; slug: string; hasDetailPage?: boolean | null }[],
+  navigation: Navigation | null,
+): Promise<LinkGroup[]> {
+  const url = new URL("/api/pages", env.CMS_URL);
+  url.search = new URLSearchParams({
+    limit: "100",
+    depth: "0",
+    draft: "true",
+    sort: "title",
+    locale,
+    "fallback-locale": defaultLocale,
+    "select[title]": "true",
+    "select[slug]": "true",
+  }).toString();
+  const res = await fetch(url, { headers: { authorization }, cache: "no-store" }).catch(() => null);
+  const pages = res?.ok ? ((await res.json()) as { docs: Pick<Page, "title" | "slug">[] }).docs : [];
+  const L = (en: string, id: string) => (uiLang === "id" ? id : en);
+  const groups: LinkGroup[] = [
+    {
+      label: L("Pages", "Halaman"),
+      options: pages.map((p) => ({ label: p.title, href: p.slug === "home" ? "/" : `/${p.slug}` })),
+    },
+    {
+      label: L("Solutions", "Solusi"),
+      options: categories.filter((c) => c.hasDetailPage).map((c) => ({ label: c.title, href: `/solution/${c.slug}` })),
+    },
+    // "Links per page" from the CMS (Settings → Navigation).
+    ...(navigation?.linkLibrary ?? []).map((g) => ({
+      label: g.group,
+      options: (g.links ?? []).map((l) => ({ label: l.label, href: l.target })),
+    })),
+  ];
+  return groups.filter((g) => g.options.length);
+}
 
 export type StudioLoadResult =
   | { status: "ok"; props: StudioEditorProps }
@@ -55,6 +97,7 @@ export async function loadStudio({
   const page = (await res.json()) as Page;
 
   const [siteData, navigation, footer] = await Promise.all([getSiteData(locale), getNavigation(locale), getFooter(locale)]);
+  const linkGroups = await buildLinkGroups(authorization, locale, uiLang, siteData.categories, navigation);
 
   return {
     status: "ok",
@@ -69,6 +112,7 @@ export async function loadStudio({
       chrome: { navigation, footer },
       dictionary: getDictionary(locale),
       fontClass: fontVariables,
+      linkGroups,
     },
   };
 }

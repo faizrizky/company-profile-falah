@@ -14,6 +14,7 @@ import { createStudioConfig, type StudioMetadata } from "@/lib/studio/config";
 import { layoutToPuck, puckTitle, puckToLayout } from "@/lib/studio/convert";
 import { puckDictionaryId, studioStrings, type StudioLang, type StudioStrings } from "@/lib/studio/strings";
 import type { Footer, Navigation, Page, User } from "@/types/cms";
+import type { LinkGroup } from "@/lib/studio/load";
 
 const VIEWPORTS = { desktop: 1440, tablet: 768, mobile: 375 } as const;
 const IFRAME = { enabled: true, waitForStyles: true };
@@ -35,6 +36,7 @@ export type StudioEditorProps = {
   chrome: { navigation: Navigation | null; footer: Footer | null };
   dictionary: Dictionary;
   fontClass: string;
+  linkGroups: LinkGroup[];
 };
 
 type SaveFn = (data: Data, publish: boolean) => Promise<void>;
@@ -152,12 +154,12 @@ export function StudioEditor(props: StudioEditorProps) {
 }
 
 function StudioEditorClient(props: StudioEditorProps) {
-  const { page, locale, uiLang, embedded, cmsUrl, siteData, chrome, dictionary, fontClass } = props;
+  const { page, locale, uiLang, embedded, cmsUrl, siteData, chrome, dictionary, fontClass, linkGroups } = props;
   const s = studioStrings[uiLang];
 
   const config = useMemo(
-    () => createStudioConfig({ lang: uiLang, locale, cmsUrl, data: siteData, pageId: page.id, embedded }),
-    [uiLang, locale, cmsUrl, siteData, page.id, embedded],
+    () => createStudioConfig({ lang: uiLang, locale, cmsUrl, data: siteData, pageId: page.id, embedded, linkGroups }),
+    [uiLang, locale, cmsUrl, siteData, page.id, embedded, linkGroups],
   );
   const initialData = useMemo(() => layoutToPuck(page.layout, page.title), [page.layout, page.title]);
   const metadata = useMemo<StudioMetadata>(

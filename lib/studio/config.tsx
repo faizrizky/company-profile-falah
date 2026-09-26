@@ -18,7 +18,8 @@ import type { BlockContext, SiteData } from "@/components/blocks/types";
 import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { Footer } from "@/components/layout/footer";
 import { Navbar } from "@/components/layout/navbar";
-import { MediaField, PageSettingsField, RelationField, TagsField } from "@/components/studio/fields";
+import { LinkPickerField, MediaField, PageSettingsField, RelationField, TagsField } from "@/components/studio/fields";
+import type { LinkGroup } from "@/lib/studio/load";
 import { buildMegaMenu } from "@/lib/cms/mega-menu";
 import { asMedia, mediaUrl } from "@/lib/cms/media";
 import { ELEMENT_TYPES } from "@/lib/studio/convert";
@@ -42,9 +43,10 @@ type StudioContext = {
   data: SiteData;
   pageId: number;
   embedded: boolean;
+  linkGroups: LinkGroup[];
 };
 
-export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedded }: StudioContext): Config {
+export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedded, linkGroups }: StudioContext): Config {
   const s = studioStrings[lang];
   const L = (en: string, id: string) => (lang === "id" ? id : en);
   const rowId = () => crypto.randomUUID().replace(/-/g, "").slice(0, 24);
@@ -55,6 +57,14 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
   const text = (en: string, id: string): Field => ({ type: "text", label: L(en, id), contentEditable: true });
   const textarea = (en: string, id: string): Field => ({ type: "textarea", label: L(en, id), contentEditable: true });
   const plain = (en: string, id: string): Field => ({ type: "text", label: L(en, id) });
+  /** Where a button/card leads: picked from a list, not typed. */
+  const link = (en: string, id: string): Field => ({
+    type: "custom",
+    label: L(en, id),
+    render: ({ field, value, onChange }) => (
+      <LinkPickerField label={field.label ?? ""} value={value} onChange={onChange} groups={linkGroups} s={s} />
+    ),
+  });
   const number = (en: string, id: string): Field => ({ type: "number", label: L(en, id), min: 0 });
   const select = (en: string, id: string, options: [string, string, string][]): Field => ({
     type: "select",
@@ -139,7 +149,7 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
     max,
     getItemSummary: (item: AnyProps) => String(item.label || "…"),
     defaultItemProps: () => ({ id: rowId(), label: L("Request Consultation", "Ajukan Konsultasi"), href: "/contact", style: "fill" }),
-    arrayFields: { label: text("Label", "Label"), href: plain("Link", "Link"), style: style() },
+    arrayFields: { label: text("Label", "Label"), href: link("Link", "Link"), style: style() },
   });
   const list = (en: string, id: string, arrayFields: Fields, summaryKey: string, defaults: AnyProps, max?: number): Field => ({
     type: "array",
@@ -245,10 +255,10 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
             description: textarea("Description", "Deskripsi"),
             tagsLabel: text("Tags label", "Label tag"),
             tags: tags("Tags", "Tag"),
-            button: { type: "object", label: L("Button", "Tombol"), objectFields: { label: text("Label", "Label"), href: plain("Link", "Link") } },
+            button: { type: "object", label: L("Button", "Tombol"), objectFields: { label: text("Label", "Label"), href: link("Link", "Link") } },
           },
         },
-        items: list("Small cards", "Kartu kecil", { image: image("Image", "Gambar"), title: text("Title", "Judul"), href: plain("Link", "Link") }, "title", { title: L("Card", "Kartu"), href: "/solution" }, 7),
+        items: list("Small cards", "Kartu kecil", { image: image("Image", "Gambar"), title: text("Title", "Judul"), href: link("Link", "Link") }, "title", { title: L("Card", "Kartu"), href: "/solution" }, 7),
       },
       defaultProps: { header: headerDefaults, featured: { title: L("Featured", "Utama"), tags: [], button: {} }, items: [] },
     }),
@@ -488,7 +498,7 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
     },
     button: {
       label: L("Button", "Tombol"),
-      fields: { label: text("Label", "Label"), href: plain("Link", "Link"), style: style(), align: align() },
+      fields: { label: text("Label", "Label"), href: link("Link", "Link"), style: style(), align: align() },
       defaultProps: { label: L("Request Consultation", "Ajukan Konsultasi"), href: "/contact", style: "fill", align: "left" },
       render: ({ puck: _p, ...props }) => (
         <ElementFrame>
@@ -498,7 +508,7 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
     },
     card: {
       label: L("Card", "Kartu"),
-      fields: { icon: image("Icon", "Ikon"), title: text("Title", "Judul"), description: textarea("Description", "Deskripsi"), href: plain("Link (optional)", "Link (opsional)") },
+      fields: { icon: image("Icon", "Ikon"), title: text("Title", "Judul"), description: textarea("Description", "Deskripsi"), href: link("Link (optional)", "Link (opsional)") },
       defaultProps: { title: L("Card title", "Judul kartu"), description: L("Short supporting text.", "Teks pendukung singkat.") },
       render: ({ puck: _p, ...props }) => (
         <ElementFrame>

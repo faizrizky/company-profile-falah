@@ -215,7 +215,7 @@ export interface HeroBlock {
     | {
         label: string;
         /**
-         * e.g. /contact, /solution/command-center, https://…
+         * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
          */
         href: string;
         style?: ('fill' | 'stroke') | null;
@@ -360,7 +360,7 @@ export interface SolutionHighlightsBlock {
     button: {
       label: string;
       /**
-       * e.g. /contact, /solution/command-center, https://…
+       * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
        */
       href: string;
     };
@@ -370,7 +370,7 @@ export interface SolutionHighlightsBlock {
         image: number | Media;
         title: string;
         /**
-         * e.g. /contact, /solution/command-center, https://…
+         * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
          */
         href: string;
         id?: string | null;
@@ -537,7 +537,7 @@ export interface Partner {
   _order?: string | null;
   name: string;
   /**
-   * e.g. /contact, /solution/command-center, https://…
+   * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
    */
   website?: string | null;
   showInHero?: boolean | null;
@@ -722,7 +722,7 @@ export interface CtaBlock {
     | {
         label: string;
         /**
-         * e.g. /contact, /solution/command-center, https://…
+         * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
          */
         href: string;
         style?: ('fill' | 'stroke') | null;
@@ -828,7 +828,7 @@ export interface ImageElement {
 export interface ButtonElement {
   label: string;
   /**
-   * e.g. /contact, /solution/command-center, https://…
+   * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
    */
   href: string;
   style?: ('fill' | 'stroke') | null;
@@ -940,7 +940,7 @@ export interface SolutionCategory {
     background?: (number | null) | Media;
     buttonLabel?: string | null;
     /**
-     * e.g. /contact, /solution/command-center, https://…
+     * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
      */
     buttonHref: string;
   };
@@ -2166,7 +2166,7 @@ export interface SiteSetting {
         platform: 'facebook' | 'instagram' | 'linkedin' | 'tiktok' | 'youtube' | 'x' | 'whatsapp' | 'other';
         label: string;
         /**
-         * e.g. /contact, /solution/command-center, https://…
+         * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
          */
         url: string;
         icon?: (number | null) | Media;
@@ -2190,7 +2190,7 @@ export interface Navigation {
     | {
         label: string;
         /**
-         * e.g. /contact, /solution/command-center, https://…
+         * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
          */
         href: string;
         highlight?: boolean | null;
@@ -2202,7 +2202,7 @@ export interface Navigation {
     description?: string | null;
     image: number | Media;
     /**
-     * e.g. /contact, /solution/command-center, https://…
+     * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
      */
     href: string;
   };
@@ -2212,7 +2212,7 @@ export interface Navigation {
         description?: string | null;
         image: number | Media;
         /**
-         * e.g. /contact, /solution/command-center, https://…
+         * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
          */
         href: string;
         id?: string | null;
@@ -2222,16 +2222,35 @@ export interface Navigation {
     | {
         label: string;
         /**
-         * e.g. /contact, /solution/command-center, https://…
+         * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
          */
         href: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Extra link choices for the page editor (e.g. a section #faq, an external site), grouped by page. Pages and solution pages are listed automatically.
+   */
+  linkLibrary?:
+    | {
+        group: string;
+        links?:
+          | {
+              label: string;
+              /**
+               * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
+               */
+              target: string;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
   cta: {
     label: string;
     /**
-     * e.g. /contact, /solution/command-center, https://…
+     * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
      */
     href: string;
   };
@@ -2254,7 +2273,7 @@ export interface Footer {
           | {
               label: string;
               /**
-               * e.g. /contact, /solution/command-center, https://…
+               * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
                */
               href: string;
               id?: string | null;
@@ -2339,6 +2358,19 @@ export interface NavigationSelect<T extends boolean = true> {
     | {
         label?: T;
         href?: T;
+        id?: T;
+      };
+  linkLibrary?:
+    | T
+    | {
+        group?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              target?: T;
+              id?: T;
+            };
         id?: T;
       };
   cta?:
