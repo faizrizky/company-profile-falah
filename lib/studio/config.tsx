@@ -101,6 +101,7 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
         value={value}
         onChange={onChange}
         options={data.partners}
+        createHref={`${cmsUrl}/admin/collections/partners/create`}
         toOption={(p) => ({ id: p.id, label: p.name, image: mediaUrl(p.logo) })}
         s={s}
       />
@@ -115,6 +116,7 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
         value={value}
         onChange={onChange}
         options={data.certifications}
+        createHref={`${cmsUrl}/admin/collections/certifications/create`}
         toOption={(c) => ({ id: c.id, label: c.title, image: mediaUrl(c.icon) })}
         s={s}
       />

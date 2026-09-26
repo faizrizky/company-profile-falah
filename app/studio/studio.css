@@ -700,3 +700,16 @@ html:has(.studio-embedded),
 .studio-select select:hover {
   border-color: rgb(31 122 224 / 0.4);
 }
+
+.studio-relation__create {
+  display: inline-block;
+  margin-top: 8px;
+  color: #1f7ae0;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.studio-relation__create:hover {
+  text-decoration: underline;
+}

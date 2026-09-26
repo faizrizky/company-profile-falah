@@ -37,6 +37,7 @@ const en = {
   loading: "Loading…",
   addTag: "Type and press Enter",
   addItem: "+ Add…",
+  createInCms: "New in CMS (opens a new tab) — refresh the editor after saving",
   interfaceLanguage: "Interface language",
   // categories
   catLayout: "Layout",
@@ -80,6 +81,7 @@ const id: StudioStrings = {
   loading: "Memuat…",
   addTag: "Ketik lalu tekan Enter",
   addItem: "+ Tambah…",
+  createInCms: "Buat baru di CMS (tab baru) — refresh editor setelah disimpan",
   interfaceLanguage: "Bahasa tampilan",
   catLayout: "Tata Letak",
   catTypography: "Tipografi",

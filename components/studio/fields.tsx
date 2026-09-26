@@ -214,9 +214,12 @@ export function RelationField<T extends { id: number }>({
   onChange,
   options,
   toOption,
+  createHref,
   s,
 }: {
   label: string;
+  /** Where to add a new item in the CMS; the list only offers existing ones. */
+  createHref?: string;
   value: (number | T)[] | null | undefined;
   onChange: (value: T[]) => void;
   options: T[];
@@ -278,6 +281,11 @@ export function RelationField<T extends { id: number }>({
             );
           })}
       </select>
+      {createHref && (
+        <a className="studio-relation__create" href={createHref} target="_blank" rel="noopener noreferrer">
+          + {s.createInCms}
+        </a>
+      )}
     </FieldLabel>
   );
 }
