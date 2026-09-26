@@ -57,7 +57,7 @@ function HomeHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
       <PartnerMarquee partners={partners} className="mt-[74px]" />
       {block.showScrollHint && (
         <div className="mt-[92px] flex justify-center">
-          <ScrollHint className="opacity-80" />
+          <ScrollHint className="opacity-70" />
         </div>
       )}
     </section>
@@ -91,7 +91,7 @@ function CenteredHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext 
         </div>
       </div>
       {block.showScrollHint && (
-        <ScrollHint className="absolute bottom-0 left-1/2 -translate-x-1/2 opacity-80" />
+        <ScrollHint className="absolute bottom-0 left-1/2 -translate-x-1/2 opacity-70" />
       )}
     </section>
   );
@@ -135,7 +135,7 @@ function PageHero({ block }: { block: HeroBlockData }) {
         </div>
         {block.showScrollHint && (
           <div className="mt-auto flex justify-center pt-[92px]">
-            <ScrollHint className="opacity-80" />
+            <ScrollHint className="opacity-70" />
           </div>
         )}
       </div>
