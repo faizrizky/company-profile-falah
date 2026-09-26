@@ -37,7 +37,7 @@ export function CertificationGallery({
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <Head className="max-w-[630px]" pill={header.eyebrow} title={header.title} desc={header.description} />
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
-          {items.map((card) => {
+          {items.filter((card) => mediaUrl(card.certificate)).map((card) => {
             const image = mediaUrl(card.certificate);
             return (
               <div key={card.id} className="relative">
