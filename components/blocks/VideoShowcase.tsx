@@ -38,11 +38,15 @@ export function VideoShowcaseBlock({ block, ctx }: BlockProps<Data>) {
     <>
       {poster && <Image src={poster} alt={mediaAlt(block.poster)} fill className="object-cover" />}
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,4,13,0)_50%,rgba(5,4,13,1)_100%)]" />
-      <div className="absolute inset-0 flex flex-col items-start justify-end gap-1 p-10">
+      <div className="absolute inset-0 flex flex-col items-start justify-end gap-1 p-6 md:p-10">
         {block.captionTitle && (
-          <h3 className="font-display text-xl font-bold leading-6 text-white">{block.captionTitle}</h3>
+          <h3 className="font-display text-xl font-bold leading-7 text-accent md:text-[30px] md:leading-9">
+            {block.captionTitle}
+          </h3>
         )}
-        {block.captionDescription && <p className="text-sm leading-5 text-white">{block.captionDescription}</p>}
+        {block.captionDescription && (
+          <p className="max-w-[860px] text-sm leading-5 text-white md:text-base md:leading-6">{block.captionDescription}</p>
+        )}
       </div>
     </>
   );
@@ -53,7 +57,8 @@ export function VideoShowcaseBlock({ block, ctx }: BlockProps<Data>) {
         title={block.header.title}
         desc={block.header.description}
       />
-      <div className="w-full max-w-[942px] rounded-2xl border border-accent p-10 shadow-[0_0_10px_rgba(147,197,253,1)]">
+      {/* The poster fills the whole card, edge to edge. */}
+      <div className="w-full max-w-[942px] overflow-hidden rounded-2xl border border-accent shadow-[0_0_10px_rgba(147,197,253,1)]">
         <div className="relative aspect-video overflow-hidden">
           {video ? (
             // Uploaded video: plays in place; nothing but the poster loads until then.

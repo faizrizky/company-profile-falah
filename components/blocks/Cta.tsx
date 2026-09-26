@@ -37,7 +37,7 @@ function WithMediaCta({ block, ctx }: BlockProps<Data>) {
           ) : null}
         </div>
         {(media || video) && (
-          <div className="w-full max-w-[862px] rounded-2xl border border-accent p-10 shadow-[0_0_10px_rgba(147,197,253,1)]">
+          <div className="w-full max-w-[862px] overflow-hidden rounded-2xl border border-accent shadow-[0_0_10px_rgba(147,197,253,1)]">
             <div className="relative aspect-video overflow-hidden">
               {video ? (
                 <InlineVideo src={video} type={mediaType(block.video)} poster={media} label={ctx.t.video.play}>
