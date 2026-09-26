@@ -1,12 +1,11 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
+import { SectionHeader } from "@/components/common/section-ui";
 import { Button } from "@/components/ui/button";
 import { mediaUrl } from "@/lib/cms/media";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { SolutionCategory } from "@/types/cms";
-
-import { pill } from "./pill";
 
 export function CtaSection({ category, t }: { category: SolutionCategory; t: Dictionary }) {
   const cta = category.cta ?? {};
@@ -14,20 +13,14 @@ export function CtaSection({ category, t }: { category: SolutionCategory; t: Dic
   const background = mediaUrl(cta.background);
 
   return (
-    <section className="relative w-full overflow-hidden">
-      <div className="absolute inset-0">
-        {background && <Image src={background} alt="" fill className="object-cover" sizes="100vw" />}
-        <div className="absolute inset-0 bg-gradient-to-t from-surface-dark via-surface-dark/70 to-surface-dark/90" />
-      </div>
-      <div className="relative z-10 mx-auto flex w-full max-w-[800px] flex-col items-center gap-8 px-6 py-24 text-center md:py-28">
-        {cta.eyebrow && <span className={pill}>{cta.eyebrow}</span>}
-        <h2 className="font-display text-[28px] font-bold leading-tight text-text-accent md:text-[30px]">{cta.title}</h2>
-        {cta.description && (
-          <p className="max-w-[640px] text-[15px] leading-relaxed text-white md:text-base">{cta.description}</p>
-        )}
+    <section className="relative w-full overflow-hidden px-6 py-12.5 md:px-20">
+      {background && <Image src={background} alt="" fill className="object-cover" sizes="100vw" />}
+      <div className="absolute inset-0 bg-gradient-to-b from-surface-dark to-surface-dark/0 to-50%" />
+      <div className="relative z-10 mx-auto flex w-full max-w-[800px] flex-col items-center gap-8">
+        <SectionHeader eyebrow={cta.eyebrow} title={cta.title} desc={cta.description} />
         <Button href={cta.buttonHref || "/contact"} variant="fill" size="lg">
           {cta.buttonLabel || t.solutions.requestConsultation}
-          <ArrowRight className="h-5 w-5" />
+          <ArrowRight className="h-6 w-6" />
         </Button>
       </div>
     </section>

@@ -1,2 +1,3 @@
+/** Small tag pill (recommended-for, product tags). */
 export const pill =
-  "rounded-full border border-text-accent/50 bg-surface-dark/5 px-3 py-2 text-sm font-medium text-white backdrop-blur-[5px]";
+  "rounded-full border border-accent bg-surface-dark/5 px-4 py-1 text-xs leading-[18px] text-white backdrop-blur-[5px]";
