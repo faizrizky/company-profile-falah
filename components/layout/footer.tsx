@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Mail, MapPin, Phone } from "lucide-react";
 
 import { Lines } from "@/components/common/section-ui";
+import { SocialIcon } from "@/components/common/social-icon";
 import { LocaleLink } from "@/components/i18n/locale-link";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import type { Footer as FooterData, SiteSetting } from "@/types/cms";
@@ -80,18 +81,26 @@ export function Footer({
             </a>
 
             {settings.socials?.length ? (
-              <div className="mt-1 flex items-center gap-2">
-                {settings.socials.map((social) => (
-                  <a
-                    key={social.id ?? social.label}
-                    href={social.url}
-                    aria-label={social.label}
-                    {...(social.url.startsWith("https://") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    className="flex h-7 w-7 items-center justify-center"
-                  >
-                    <img src={mediaUrl(social.icon)} alt="" className="h-7 w-7 object-contain" />
-                  </a>
-                ))}
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                {settings.socials.map((social) => {
+                  const custom = social.platform === "other" ? mediaUrl(social.icon) : undefined;
+                  return (
+                    <a
+                      key={social.id ?? social.label}
+                      href={social.url}
+                      aria-label={social.label}
+                      title={social.label}
+                      {...(social.url.startsWith("https://") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      className="flex h-8 w-8 items-center justify-center rounded-full border border-white/90 text-white transition-all duration-300 hover:border-blue-bright hover:bg-blue-bright hover:shadow-[0_0_12px_rgba(24,102,239,0.9)]"
+                    >
+                      {custom ? (
+                        <img src={custom} alt="" className="h-4 w-4 object-contain" />
+                      ) : (
+                        <SocialIcon platform={social.platform ?? "other"} className="h-4 w-4" />
+                      )}
+                    </a>
+                  );
+                })}
               </div>
             ) : null}
           </FooterColumn>
