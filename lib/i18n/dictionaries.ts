@@ -6,7 +6,7 @@ import type { Locale } from "@/lib/i18n/config";
  */
 const en = {
   nav: { toggleMenu: "Toggle menu", closeMenu: "Close menu", home: "Home", language: "Language" },
-  footer: { contact: "Contact" },
+  footer: { contact: "Contact", address: "Address", email: "Email", questions: "Got any Questions?" },
   certificates: { show: "Show Certificate", view: "View {title}", close: "Close certificate modal" },
   video: { play: "Play video" },
   solutions: {
@@ -55,7 +55,7 @@ export type Dictionary = typeof en;
 
 const id: Dictionary = {
   nav: { toggleMenu: "Buka/tutup menu", closeMenu: "Tutup menu", home: "Beranda", language: "Bahasa" },
-  footer: { contact: "Kontak" },
+  footer: { contact: "Kontak", address: "Alamat", email: "Email", questions: "Ada pertanyaan?" },
   certificates: { show: "Lihat Sertifikat", view: "Lihat {title}", close: "Tutup sertifikat" },
   video: { play: "Putar video" },
   solutions: {

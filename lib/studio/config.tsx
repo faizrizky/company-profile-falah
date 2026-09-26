@@ -553,7 +553,7 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
               )}
               <main>{children}</main>
               {chrome.footer && ctx.data.settings && (
-                <Footer footer={chrome.footer} settings={ctx.data.settings} contactLabel={ctx.t.footer.contact} />
+                <Footer footer={chrome.footer} settings={ctx.data.settings} labels={ctx.t.footer} />
               )}
             </LocaleProvider>
           </div>

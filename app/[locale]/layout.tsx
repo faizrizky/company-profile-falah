@@ -74,7 +74,7 @@ export default async function LocaleLayout({
             />
           )}
           <main>{children}</main>
-          {footer && settings && <Footer footer={footer} settings={settings} contactLabel={t.footer.contact} />}
+          {footer && settings && <Footer footer={footer} settings={settings} labels={t.footer} />}
         </LocaleProvider>
       </body>
     </html>

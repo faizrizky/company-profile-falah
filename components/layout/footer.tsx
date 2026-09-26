@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { Mail, MapPin, Phone } from "lucide-react";
 
 import { Lines } from "@/components/common/section-ui";
 import { SocialIcon } from "@/components/common/social-icon";
@@ -16,16 +15,25 @@ function FooterColumn({ title, children }: { title: string; children: ReactNode 
   );
 }
 
+function ContactItem({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="text-sm font-semibold leading-5 text-white">{label}</span>
+      <span className="text-sm leading-5 text-white/90">{children}</span>
+    </div>
+  );
+}
+
 const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 
 export function Footer({
   footer,
   settings,
-  contactLabel,
+  labels,
 }: {
   footer: FooterData;
   settings: SiteSetting;
-  contactLabel: string;
+  labels: { contact: string; address: string; email: string; questions: string };
 }) {
   const { contact } = settings;
   const logo = mediaUrl(settings.logo);
@@ -38,7 +46,7 @@ export function Footer({
           <div className="flex flex-col gap-5">
             {logo && <img src={logo} alt={mediaAlt(settings.logo, settings.siteName)} className="h-10 w-fit" />}
             {footer.description && (
-              <p className="max-w-[240px] text-sm leading-5 text-white/80">{footer.description}</p>
+              <p className="max-w-[270px] text-sm leading-6 text-accent">{footer.description}</p>
             )}
           </div>
 
@@ -56,32 +64,23 @@ export function Footer({
             </FooterColumn>
           ))}
 
-          <FooterColumn title={contactLabel}>
-            <div className="flex gap-3">
-              <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-white" />
-              <p className="text-sm leading-5 text-white/80">
-                <Lines text={contact.shortAddress || contact.address} />
-              </p>
-            </div>
-
-            <a
-              href={`mailto:${contact.email}`}
-              className="flex items-center gap-3 text-sm text-white/80 transition-colors hover:text-accent"
-            >
-              <Mail className="h-5 w-5 shrink-0" />
-              {contact.email}
-            </a>
-
-            <a
-              href={telHref(contact.phone)}
-              className="flex items-center gap-3 text-sm text-white/80 transition-colors hover:text-accent"
-            >
-              <Phone className="h-5 w-5 shrink-0" />
-              {contact.phone}
-            </a>
+          <FooterColumn title={labels.contact}>
+            <ContactItem label={labels.address}>
+              <Lines text={contact.shortAddress || contact.address} />
+            </ContactItem>
+            <ContactItem label={labels.email}>
+              <a href={`mailto:${contact.email}`} className="transition-colors hover:text-accent">
+                {contact.email}
+              </a>
+            </ContactItem>
+            <ContactItem label={labels.questions}>
+              <a href={telHref(contact.phone)} className="transition-colors hover:text-accent">
+                {contact.phone}
+              </a>
+            </ContactItem>
 
             {settings.socials?.length ? (
-              <div className="mt-3 flex flex-wrap items-center gap-3">
+              <div className="mt-6 flex flex-wrap items-center gap-3">
                 {settings.socials.map((social) => {
                   const custom = social.platform === "other" ? mediaUrl(social.icon) : undefined;
                   return (
