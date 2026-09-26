@@ -25,6 +25,7 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
   // A tab's own clip wins over the shared background video.
   const videoField = tab.video ?? showcase.backgroundVideo;
   const video = mediaUrl(videoField);
+  const videoMobile = tab.video ? tab.videoMobile : undefined;
   const brochure = mediaUrl(showcase.brochure);
 
   return (
@@ -65,6 +66,8 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
           <BackgroundVideo
             src={video}
             type={mediaType(videoField)}
+            mobileSrc={mediaUrl(videoMobile)}
+            mobileType={mediaType(videoMobile)}
             poster={background}
             className="absolute inset-0 h-full w-full animate-fade-in object-cover"
           />

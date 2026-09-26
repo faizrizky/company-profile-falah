@@ -5,6 +5,9 @@ import { useEffect, useRef, useSyncExternalStore } from "react";
 type Props = {
   src: string;
   type?: string | null;
+  /** Lighter file for phones (e.g. 720p); falls back to `src`. */
+  mobileSrc?: string;
+  mobileType?: string | null;
   /** Shown before the first frame and instead of the video when motion/data is limited. */
   poster?: string;
   className?: string;
@@ -23,10 +26,22 @@ function prefersStill() {
  */
 const noopSubscribe = () => () => {};
 
-export function BackgroundVideo({ src, type, poster, className = "" }: Props) {
+const MOBILE_QUERY = "(max-width: 767px)";
+const subscribeMobile = (onChange: () => void) => {
+  const query = window.matchMedia(MOBILE_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
+
+export function BackgroundVideo({ src, type, mobileSrc, mobileType, poster, className = "" }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
   // Server render: the video (with poster); the client decides after hydration.
   const still = useSyncExternalStore(noopSubscribe, prefersStill, () => false);
+  // Unknown on the server: nothing is fetched until the client picks a file.
+  const mobile = useSyncExternalStore(subscribeMobile, () => window.matchMedia(MOBILE_QUERY).matches, () => null);
+  const usesMobile = Boolean(mobile && mobileSrc);
+  const file = usesMobile ? mobileSrc! : src;
+  const fileType = usesMobile ? mobileType : type;
 
   useEffect(() => {
     if (still) return;
@@ -41,16 +56,16 @@ export function BackgroundVideo({ src, type, poster, className = "" }: Props) {
     );
     observer.observe(video);
     return () => observer.disconnect();
-  }, [src, still]);
+  }, [file, still, mobile]);
 
-  if (still) {
+  if (still || (mobile === null && mobileSrc)) {
     // eslint-disable-next-line @next/next/no-img-element -- poster is a CMS media URL
     return poster ? <img src={poster} alt="" aria-hidden className={className} /> : null;
   }
 
   return (
     <video
-      key={src}
+      key={file}
       ref={ref}
       className={className}
       poster={poster}
@@ -61,7 +76,7 @@ export function BackgroundVideo({ src, type, poster, className = "" }: Props) {
       aria-hidden
       tabIndex={-1}
     >
-      <source src={src} type={type ?? undefined} />
+      <source src={file} type={fileType ?? undefined} />
     </video>
   );
 }
