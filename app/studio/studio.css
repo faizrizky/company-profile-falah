@@ -815,3 +815,149 @@ select.studio-input {
   border-radius: 14px;
   overflow: hidden;
 }
+
+/* ── Right panel: every top-level field is a card ─────────────────────── */
+
+.studio-body [class*="_PuckFields-field_"] {
+  margin: 0 0 12px;
+  padding: 14px;
+  border: 1px solid var(--falah-field-border);
+  border-radius: 16px;
+  background: var(--puck-field-color-surface);
+  box-shadow: 0 6px 18px -16px rgb(15 39 66 / 0.45);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  animation: studio-card-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.studio-body [class*="_PuckFields-field_"]:hover {
+  border-color: var(--falah-field-border-hover);
+  box-shadow: 0 10px 24px -18px rgb(31 122 224 / 0.55);
+}
+
+/* Fields appear one after the other when a block is selected. */
+.studio-body [class*="_PuckFields-field_"]:nth-child(2) { animation-delay: 30ms; }
+.studio-body [class*="_PuckFields-field_"]:nth-child(3) { animation-delay: 60ms; }
+.studio-body [class*="_PuckFields-field_"]:nth-child(4) { animation-delay: 90ms; }
+.studio-body [class*="_PuckFields-field_"]:nth-child(n + 5) { animation-delay: 120ms; }
+
+@keyframes studio-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* A group inside a card: no second frame around it. */
+.studio-body [class*="_PuckFields-field_"] > * > [class*="_Input_"] > [class*="_ObjectField_"],
+.studio-body [class*="_PuckFields-field_"] [class*="_Input_"] > [class*="_ObjectField_"]:first-of-type {
+  border: 0;
+  background: transparent;
+}
+
+.studio-body [class*="_PuckFields-field_"] [class*="_ObjectField_"] > [class*="_ObjectField-fieldset_"] {
+  padding: 4px 0 0;
+}
+
+/* Card title = fold toggle. */
+.studio-card-title {
+  cursor: pointer;
+  user-select: none;
+  border-radius: 8px;
+}
+
+.studio-card-title:focus-visible {
+  outline: 3px solid rgb(31 122 224 / 0.25);
+  outline-offset: 2px;
+}
+
+.studio-card-toggle {
+  width: 16px;
+  height: 16px;
+  margin-inline-start: auto;
+  flex: none;
+  background: #7a93b0;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease;
+}
+
+.studio-card-title:hover .studio-card-toggle {
+  background: #1f7ae0;
+}
+
+[data-collapsed] .studio-card-toggle {
+  transform: rotate(-90deg);
+}
+
+/* Folded: only the title stays. */
+[data-collapsed] .studio-card-title {
+  padding-bottom: 0;
+}
+
+[data-collapsed] .studio-card-title ~ * {
+  display: none !important;
+}
+
+/* ── Micro-interactions ───────────────────────────────────────────────── */
+
+/* List rows (buttons, cards…): new rows slide in, rows respond to hover. */
+.studio-body [class*="_ArrayFieldItem_"] {
+  animation: studio-card-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  transition: background-color 0.2s ease;
+}
+
+.studio-body [class*="_ArrayFieldItem-summary_"] {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.studio-body [class*="_ArrayFieldItem-summary_"]:hover {
+  background: #eef5fe;
+  color: #1f7ae0;
+}
+
+.studio-body [class*="_ArrayField-addButton_"],
+.studio-body [class*="_IconButton_"],
+.studio-btn,
+.studio-body [class*="_Button_"] {
+  transition: transform 0.16s ease, background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+.studio-body [class*="_ArrayField-addButton_"]:active,
+.studio-body [class*="_IconButton_"]:active,
+.studio-btn:active:not(:disabled),
+.studio-body [class*="_Button_"]:active {
+  transform: scale(0.96);
+}
+
+/* Left panel: components to drag and the outline. */
+.studio-body [class*="_DrawerItem-draggable_"] {
+  transition: transform 0.18s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.studio-body [class*="_DrawerItem-draggable_"]:hover {
+  transform: translateX(3px);
+  border-color: var(--falah-field-border-hover);
+  box-shadow: 0 8px 18px -14px rgb(31 122 224 / 0.6);
+}
+
+.studio-body [class*="_DrawerItem-draggable_"]:active {
+  transform: scale(0.98);
+}
+
+.studio-body [class*="_ComponentList-content_"],
+.studio-body [class*="_LayerTree_"] {
+  animation: studio-card-in 0.26s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.studio-body [class*="_ComponentList-titleIcon_"] {
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-body [class*="_PuckFields-field_"],
+  .studio-body [class*="_ArrayFieldItem_"],
+  .studio-body [class*="_ComponentList-content_"],
+  .studio-body [class*="_LayerTree_"] {
+    animation: none;
+  }
+}

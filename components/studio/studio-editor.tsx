@@ -8,6 +8,7 @@ import type { SiteData } from "@/components/blocks/types";
 import { locales, localeNames, type Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { StudioApiError, savePage } from "@/lib/studio/cms-api";
+import { StudioFieldCollapse } from "./field-collapse";
 import { signalStudioReady } from "./ready-signal";
 import { StudioSkeleton } from "./studio-skeleton";
 import { createStudioConfig, type StudioMetadata } from "@/lib/studio/config";
@@ -290,6 +291,7 @@ function StudioEditorClient(props: StudioEditorProps) {
           ),
         }}
       />
+      <StudioFieldCollapse />
       {/* Shown from the click on: saving can take a few seconds. */}
       {status.kind !== "idle" ? (
         <div
