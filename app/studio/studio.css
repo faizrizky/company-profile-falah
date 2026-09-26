@@ -1,0 +1,715 @@
+/*
+ * Falah Studio — Puck's own layout (same structure as the Puck demo) in the
+ * Falah theme: sky-blue→navy rail, sky-blue workspace, frosted white panels
+ * joined edge to edge, blue accent (same as the CMS admin). Puck is recoloured through its design tokens; the only
+ * selectors on Puck internals are the `[class*=…]` rules below (gradient and
+ * blur, which tokens can't express). This file is also copied into the
+ * canvas iframe, where none of these classes exist and the site renders as-is.
+ */
+
+:root {
+  --falah-rail: linear-gradient(180deg, #38bdf8 0%, #1f7ae0 45%, #0b2e7a 100%);
+  --falah-accent-gradient: linear-gradient(135deg, #38bdf8 0%, #1f7ae0 100%);
+
+  /* Puck's accent scale → Falah blue. */
+  --puck-color-azure-01: #06294f;
+  --puck-color-azure-02: #0b3a6e;
+  --puck-color-azure-03: #1455a3;
+  --puck-color-azure-04: #1f7ae0;
+  --puck-color-azure-05: #3b8ee8;
+  --puck-color-azure-06: #5ea3ee;
+  --puck-color-azure-07: #84baf3;
+  --puck-color-azure-08: #aacff7;
+  --puck-color-azure-09: #cde3fa;
+  --puck-color-azure-10: #e3f0fd;
+  --puck-color-azure-11: #f0f7fe;
+  --puck-color-azure-12: #f7fbff;
+
+  /* Frosted panels over the pastel workspace. */
+  --puck-color-surface: rgb(255 255 255 / 0.66);
+  --puck-color-surface-subtle: rgb(255 255 255 / 0.45);
+  --puck-color-surface-muted: rgb(248 248 255 / 0.5);
+  --puck-color-border: rgb(255 255 255 / 0.75);
+  --puck-canvas-color-bg: transparent;
+  --puck-header-color-bg: rgb(255 255 255 / 0.5);
+  --puck-sidebar-left-color-bg: rgb(255 255 255 / 0.42);
+  --puck-sidebar-right-color-bg: rgb(255 255 255 / 0.55);
+
+  /* Plugin rail (left): deep violet with white icons, like the reference sidebar. */
+  --puck-pluginbar-color-bg: #1f7ae0;
+  --puck-pluginbar-color-text: rgb(255 255 255 / 0.78);
+  --puck-pluginbar-color-text-hover: #fff;
+  --puck-pluginbar-color-text-selected: #fff;
+  --puck-pluginbar-color-bg-hover: rgb(255 255 255 / 0.12);
+}
+
+.studio-body {
+  margin: 0;
+  min-height: 100vh;
+  color: #0f2742;
+  font-family: var(--puck-font-family, Inter, ui-sans-serif, system-ui, sans-serif);
+  background:
+    radial-gradient(40rem 34rem at 85% 5%, rgb(125 211 252 / 0.45), transparent 62%),
+    radial-gradient(36rem 36rem at 100% 75%, rgb(56 189 248 / 0.3), transparent 60%),
+    radial-gradient(34rem 30rem at 20% 0%, rgb(224 242 254 / 0.9), transparent 62%),
+    linear-gradient(135deg, #e7f5fe 0%, #d6edfb 50%, #c4e6f9 100%);
+  background-attachment: fixed;
+}
+
+html:has(.studio-body) {
+  color-scheme: light;
+}
+
+.studio-body [class*="_PuckLayout-nav_"] {
+  background-image: var(--falah-rail);
+  border-color: transparent;
+}
+
+/* ── Embedded in the CMS admin ─────────────────────────────────────────
+   The admin already provides the purple sidebar, the page title and the
+   backdrop, so the editor drops its own: transparent page, light rail,
+   header without title or bar. */
+
+html:has(.studio-embedded),
+.studio-body:has(.studio-embedded) {
+  background: transparent;
+}
+
+.studio-embedded {
+  --puck-header-color-bg: transparent;
+  --puck-pluginbar-color-bg: rgb(255 255 255 / 0.4);
+  --puck-pluginbar-color-text: #56708f;
+  --puck-pluginbar-color-text-hover: #0f2742;
+  --puck-pluginbar-color-text-selected: #1f7ae0;
+  --puck-pluginbar-color-bg-hover: rgb(31 122 224 / 0.08);
+}
+
+.studio-embedded [class*="_PuckLayout-nav_"] {
+  background-image: none;
+  border-color: var(--puck-color-border);
+}
+
+.studio-embedded [class*="_PuckHeader_"] {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.studio-embedded [class*="_PuckHeader-inner_"] {
+  border-inline-start: 0;
+}
+
+/* The admin already shows the page title above the editor. */
+.studio-embedded [class*="_PuckHeader-title_"] {
+  visibility: hidden;
+}
+
+/* Deliberately no backdrop-filter anywhere in the editor chrome: on narrow
+   screens the sidebars overlay the preview iframe, and Chrome stops painting
+   an iframe under a blurred layer (blank white canvas). */
+@media (max-width: 1023px) {
+  /* Panels overlay the preview here, so they need a solid fill instead. */
+  :root {
+    --puck-header-color-bg: rgb(247 251 255 / 0.96);
+    --puck-sidebar-left-color-bg: #f3f9ff;
+    --puck-sidebar-right-color-bg: #f7fbff;
+  }
+}
+
+/* Publish (Puck primary button) uses the accent gradient. */
+.studio-body [class*="_Button--primary_"] {
+  background-image: var(--falah-accent-gradient);
+  border-color: transparent;
+  box-shadow: 0 8px 20px -10px rgb(31 122 224 / 0.8);
+}
+
+/* ── Header actions ────────────────────────────────────────────────────── */
+
+.studio-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.studio-select select {
+  height: 34px;
+  padding: 0 26px 0 10px;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 6px;
+  background: #fff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='m1 1 4 4 4-4' stroke='%23767676' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    no-repeat right 10px center;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  appearance: none;
+  cursor: pointer;
+}
+
+.studio-select select:focus-visible {
+  outline: 2px solid var(--puck-color-azure-05, #3479be);
+  outline-offset: 1px;
+}
+
+.studio-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  z-index: 50;
+  transform: translateX(-50%);
+  max-width: min(560px, 90vw);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.12);
+}
+
+/* Narrow editor (e.g. embedded next to the CMS sidebar): icon-only buttons. */
+@media (max-width: 1320px) {
+  .studio-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+.studio-toast {
+  animation: studio-toast-in 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+@keyframes studio-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px) scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-toast {
+    animation: none;
+  }
+}
+
+.studio-toast.is-success {
+  background: #181818;
+  color: #fff;
+}
+
+.studio-toast.is-error {
+  background: #fff1f0;
+  color: #9f1b1b;
+  border: 1px solid #f5c2bf;
+}
+
+/* ── Shared small controls ─────────────────────────────────────────────── */
+
+.studio-segment {
+  display: inline-flex;
+  width: 100%;
+  padding: 2px;
+  border-radius: 6px;
+  background: var(--puck-color-grey-11, #f5f5f5);
+}
+
+.studio-segment a {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 4px;
+  color: var(--puck-color-grey-04, #5a5a5a);
+  font-size: 13px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.studio-segment a.is-active {
+  background: #fff;
+  color: var(--puck-color-azure-04, #0158ad);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+}
+
+.studio-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.studio-btn--ghost {
+  color: var(--puck-color-grey-02, #292929);
+  background: #fff;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+}
+
+.studio-btn--ghost:hover:not(:disabled) {
+  background: var(--puck-color-grey-11, #f5f5f5);
+}
+
+.studio-btn--primary {
+  border: 0;
+  color: #fff;
+  background: var(--puck-color-azure-04, #0158ad);
+}
+
+.studio-btn--primary:hover:not(:disabled) {
+  background: var(--puck-color-azure-03, #014292);
+}
+
+.studio-btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.studio-input {
+  width: 100%;
+  height: 36px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 4px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+}
+
+.studio-input:focus {
+  outline: 2px solid var(--puck-color-azure-05, #3479be);
+  outline-offset: 0;
+}
+
+.studio-muted,
+.studio-note {
+  color: var(--puck-color-grey-05, #767676);
+}
+
+.studio-note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.studio-link {
+  color: var(--puck-color-azure-04, #0158ad);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.studio-link:hover {
+  text-decoration: underline;
+}
+
+.studio-error {
+  margin: 0;
+  font-size: 12px;
+  color: #b42318;
+}
+
+.studio-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Image field ───────────────────────────────────────────────────────── */
+
+.studio-media {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.studio-media__preview {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 64px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 4px;
+  background: repeating-conic-gradient(#efefef 0% 25%, #fff 0% 50%) 50% / 12px 12px;
+  font-size: 11px;
+  color: var(--puck-color-grey-05, #767676);
+  text-align: center;
+}
+
+.studio-media__preview img,
+.studio-media__preview video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.studio-media__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.studio-media__library {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 4px;
+  background: var(--puck-color-grey-12, #fafafa);
+}
+
+.studio-media__toolbar {
+  display: flex;
+  gap: 6px;
+}
+
+.studio-media__toolbar .studio-btn {
+  height: 36px;
+}
+
+.studio-media__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.studio-media__item {
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  background: repeating-conic-gradient(#efefef 0% 25%, #fff 0% 50%) 50% / 10px 10px;
+  cursor: pointer;
+}
+
+.studio-media__item img,
+.studio-media__item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.studio-media__item:hover,
+.studio-media__item.is-active {
+  border-color: var(--puck-color-azure-04, #0158ad);
+}
+
+/* ── Tags field ────────────────────────────────────────────────────────── */
+
+.studio-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 4px;
+  background: #fff;
+}
+
+.studio-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 4px 2px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  background: var(--puck-color-azure-10, #e7eef7);
+  color: var(--puck-color-azure-03, #014292);
+}
+
+.studio-tag button {
+  width: 18px;
+  height: 18px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.studio-tags__input {
+  flex: 1;
+  min-width: 90px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+}
+
+/* ── Relation field (partners / certifications) ────────────────────────── */
+
+.studio-relation {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.studio-relation__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border-radius: 4px;
+  background: #fff;
+  font-size: 14px;
+}
+
+.studio-relation__item img {
+  width: 36px;
+  height: 20px;
+  object-fit: contain;
+  border-radius: 2px;
+  background: #0b0f24;
+}
+
+.studio-relation__item span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.studio-relation__item button {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--puck-color-grey-05, #767676);
+  cursor: pointer;
+}
+
+.studio-relation__item button:hover:not(:disabled) {
+  background: var(--puck-color-grey-11, #f5f5f5);
+  color: var(--puck-color-grey-01, #181818);
+}
+
+.studio-relation__item button:disabled {
+  opacity: 0.3;
+}
+
+/* ── Login / not found ─────────────────────────────────────────────────── */
+
+.studio-center {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.studio-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: min(420px, 100%);
+  padding: 28px;
+  box-sizing: border-box;
+  border: 1px solid rgb(255 255 255 / 0.8);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.7);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 18px 50px -18px rgb(76 90 180 / 0.3);
+}
+
+.studio-card h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.studio-card p {
+  margin: 0 0 4px;
+  line-height: 1.55;
+}
+
+.studio-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.studio-brand__mark {
+  display: block;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/* ── Loading skeleton (StudioSkeleton) ─────────────────────────────────── */
+
+.studio-sk {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 0 16px 16px;
+  box-sizing: border-box;
+}
+
+.studio-sk.studio-standalone {
+  background: linear-gradient(135deg, #e7f5fe 0%, #d6edfb 50%, #c4e6f9 100%);
+}
+
+.studio-sk__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 4px;
+}
+
+.studio-sk__spacer {
+  flex: 1;
+}
+
+.studio-sk__body {
+  display: grid;
+  flex: 1;
+  grid-template-columns: 260px minmax(0, 1fr) 280px;
+  gap: 16px;
+  min-height: 0;
+}
+
+.studio-sk__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.studio-sk__field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.studio-sk__canvas {
+  display: flex;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgb(31 122 224 / 0.04);
+}
+
+.studio-sk__block {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 10px;
+  background: rgb(31 122 224 / 0.08);
+}
+
+.studio-sk__block::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.75), transparent);
+  animation: studio-sk-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes studio-sk-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.studio-sk__block--icon { width: 28px; height: 28px; border-radius: 8px; }
+.studio-sk__block--pill { width: 104px; height: 34px; border-radius: 999px; }
+.studio-sk__block--accent { background: rgb(31 122 224 / 0.22); }
+.studio-sk__block--item { height: 40px; border-radius: 12px; }
+.studio-sk__block--label { width: 40%; height: 12px; border-radius: 6px; }
+.studio-sk__block--input { height: 42px; border-radius: 12px; }
+.studio-sk__block--frame { flex: 1; border-radius: 12px; }
+
+@media (max-width: 1023px) {
+  .studio-sk__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .studio-sk__panel {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-sk__block::after {
+    animation: none;
+  }
+}
+
+/* ── Header controls in the Falah theme (secondary buttons, icons, select) ─ */
+
+.studio-body [class*="_Button--secondary_"] {
+  border: 1px solid rgb(31 122 224 / 0.2);
+  border-radius: 12px;
+  background: #fff;
+  color: #0f2742;
+  box-shadow: 0 1px 2px rgb(6 41 79 / 0.06);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.studio-body [class*="_Button--secondary_"]:hover {
+  border-color: rgb(31 122 224 / 0.4);
+  background: #eef6fd;
+}
+
+.studio-body [class*="_Button--primary_"] {
+  border-radius: 12px;
+}
+
+.studio-body [class*="_PuckHeader_"] [class*="_IconButton_"] {
+  border-radius: 10px;
+  color: #56708f;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.studio-body [class*="_PuckHeader_"] [class*="_IconButton_"]:not([class*="--disabled"]):hover {
+  background: #eef6fd;
+  color: #0f2742;
+}
+
+.studio-body [class*="_PuckHeader_"] [class*="_IconButton--disabled"] {
+  color: #b6c6d8;
+}
+
+.studio-select select {
+  border: 1px solid rgb(31 122 224 / 0.2);
+  border-radius: 12px;
+  color: #0f2742;
+  box-shadow: 0 1px 2px rgb(6 41 79 / 0.06);
+}
+
+.studio-select select:hover {
+  border-color: rgb(31 122 224 / 0.4);
+}
+
+.studio-relation__create {
+  display: inline-block;
+  margin-top: 8px;
+  color: #1f7ae0;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.studio-relation__create:hover {
+  text-decoration: underline;
+}

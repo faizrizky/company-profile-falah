@@ -8,18 +8,21 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "validate:product-category": "node scripts/validate-product-category.mjs",
     "security:audit": "node scripts/security-audit.mjs",
-    "security:http-check": "node scripts/security-http-check.mjs"
+    "security:http-check": "node scripts/security-http-check.mjs",
+    "sync:cms-types": "node scripts/sync-cms-types.mjs"
   },
   "dependencies": {
+    "@puckeditor/core": "0.23.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.38.0",
     "next": "15.5.25",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "tailwind-merge": "^3.6.0"
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

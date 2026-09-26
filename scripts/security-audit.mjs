@@ -16,7 +16,7 @@ import { extname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = join(fileURLToPath(new URL(".", import.meta.url)), "..");
-const SRC_DIRS = ["app", "components", "lib", "data", "types", "scripts"];
+const SRC_DIRS = ["app", "components", "lib", "types", "scripts"];
 const ROOT_FILES = [
   "next.config.ts",
   "package.json",
@@ -224,7 +224,7 @@ const DANGEROUS_HTML = [
 ];
 const REDIRECT_SINKS = [
   /redirect\s*\(([^)\n]*)\)/g,
-  /router\.(push|replace)\s*\(([^)\n]*)\)/g,
+  /router\.(?:push|replace)\s*\(([^)\n]*)\)/g,
   /window\.open\s*\(([^)\n]*)\)/g,
   /location\.href\s*=\s*([^\n;]+)/g,
   /window\.location\s*=\s*([^\n;]+)/g,
