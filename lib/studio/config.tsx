@@ -248,7 +248,7 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
             button: { type: "object", label: L("Button", "Tombol"), objectFields: { label: text("Label", "Label"), href: plain("Link", "Link") } },
           },
         },
-        items: list("Small cards", "Kartu kecil", { image: image("Image", "Gambar"), title: text("Title", "Judul"), href: plain("Link", "Link") }, "title", { title: L("Card", "Kartu"), href: "/solution" }, 4),
+        items: list("Small cards", "Kartu kecil", { image: image("Image", "Gambar"), title: text("Title", "Judul"), href: plain("Link", "Link") }, "title", { title: L("Card", "Kartu"), href: "/solution" }, 7),
       },
       defaultProps: { header: headerDefaults, featured: { title: L("Featured", "Utama"), tags: [], button: {} }, items: [] },
     }),

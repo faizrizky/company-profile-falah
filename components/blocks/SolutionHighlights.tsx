@@ -20,14 +20,14 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
         title={block.header.title}
         desc={block.header.description}
       />
-      <div className="grid w-full grid-cols-1 gap-4 md:h-[677px] md:grid-cols-3">
-        <div className="relative h-[480px] rounded-lg border border-accent/50 bg-surface-dark/5 backdrop-blur-sm transition-transform duration-300 hover:scale-[1.03] md:col-span-2 md:h-full">
+      <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:auto-rows-[329px] lg:grid-cols-3">
+        <div className="relative h-[329px] rounded-lg border border-accent/50 bg-surface-dark/5 backdrop-blur-[5px] transition-transform duration-300 hover:scale-[1.02] md:col-span-2 md:h-full">
           <Glow className="-top-[9px] left-0 h-[25px] w-[416px]" />
           <div className="relative h-full overflow-hidden rounded-lg">
             {featuredImage && (
               <Image src={featuredImage} alt={mediaAlt(featured.image)} fill className="object-cover" />
             )}
-            <div className="absolute inset-0 bg-accent/25" />
+            <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/70 via-surface-dark/10 to-transparent" />
             <div className="relative flex h-full flex-col items-start justify-end gap-4 p-5">
               <div className="flex flex-col gap-1">
                 <h3 className="font-display text-xl font-bold leading-5 text-white">{featured.title}</h3>
@@ -65,7 +65,7 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
           return (
             <div
               key={c.id ?? c.title}
-              className="relative h-[330px] rounded-lg border border-accent/50 bg-accent/5 backdrop-blur-sm transition-transform duration-300 hover:scale-[1.03] md:h-full"
+              className="relative h-[329px] rounded-lg border border-accent/50 bg-accent/5 backdrop-blur-[5px] transition-transform duration-300 hover:scale-[1.02] md:h-full"
             >
               <Glow className="-top-[9px] left-0 h-[25px] w-[416px]" />
               <div className="relative h-full overflow-hidden rounded-lg">
@@ -75,7 +75,7 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
                   <Button href={c.href} variant="stroke" size="md" ariaLabel={c.title} className="w-10 px-0">
                     <ArrowUpRight className="h-6 w-6" />
                   </Button>
-                  <h3 className="text-xl font-bold leading-[30px] text-white">{c.title}</h3>
+                  <h3 className="w-full font-display text-base font-bold leading-5 text-white">{c.title}</h3>
                 </div>
               </div>
             </div>
