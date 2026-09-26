@@ -242,3 +242,25 @@ body {
     animation: none;
   }
 }
+
+/* Scroll hint: each chevron drops and springs back, one after another. */
+@keyframes scroll-hint-bump {
+  0%,
+  45%,
+  100% {
+    transform: translateY(0);
+  }
+  18% {
+    transform: translateY(6px);
+  }
+}
+
+.scroll-hint__chevron {
+  animation: scroll-hint-bump 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint__chevron {
+    animation: none;
+  }
+}

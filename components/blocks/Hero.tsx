@@ -8,8 +8,8 @@ import { mediaUrl } from "@/lib/cms/media";
 import type { HeroBlock as HeroBlockData } from "@/types/cms";
 
 import type { BlockContext, BlockProps } from "./types";
+import { ScrollHint } from "@/components/common/scroll-hint";
 
-const SWIPE_ICON = "/home/swipe.svg";
 
 function HeroButtons({ buttons, className }: { buttons: HeroBlockData["buttons"]; className?: string }) {
   if (!buttons?.length) return null;
@@ -57,7 +57,7 @@ function HomeHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
       <PartnerMarquee partners={partners} className="mt-[74px]" />
       {block.showScrollHint && (
         <div className="mt-[92px] flex justify-center">
-          <img src={SWIPE_ICON} alt="" className="h-[58px] w-[58px] opacity-70" />
+          <ScrollHint className="opacity-80" />
         </div>
       )}
     </section>
@@ -91,11 +91,7 @@ function CenteredHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext 
         </div>
       </div>
       {block.showScrollHint && (
-        <img
-          src={SWIPE_ICON}
-          alt=""
-          className="absolute bottom-0 left-1/2 h-[58px] w-[58px] -translate-x-1/2 opacity-70"
-        />
+        <ScrollHint className="absolute bottom-0 left-1/2 -translate-x-1/2 opacity-80" />
       )}
     </section>
   );
@@ -139,7 +135,7 @@ function PageHero({ block }: { block: HeroBlockData }) {
         </div>
         {block.showScrollHint && (
           <div className="mt-auto flex justify-center pt-[92px]">
-            <img src={SWIPE_ICON} alt="" className="h-[58px] w-[58px] opacity-70" />
+            <ScrollHint className="opacity-80" />
           </div>
         )}
       </div>
