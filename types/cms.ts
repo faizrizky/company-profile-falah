@@ -156,7 +156,7 @@ export interface Page {
   id: number;
   title: string;
   /**
-   * Bagian URL. Huruf kecil, angka, dan tanda "-". Otomatis dari judul bila kosong.
+   * URL part. Lowercase letters, numbers and "-". Generated from the title when empty.
    */
   slug: string;
   layout: (
@@ -186,7 +186,7 @@ export interface Page {
     | SpacerElement
   )[];
   /**
-   * Kosongkan untuk memakai judul halaman & deskripsi default situs.
+   * Leave empty to use the page title & the site's default description.
    */
   meta?: {
     title?: string | null;
@@ -208,14 +208,14 @@ export interface HeroBlock {
   description?: string | null;
   background: number | Media;
   /**
-   * Opsional. Dipakai di layar < 768px.
+   * Optional. Used on screens < 768px.
    */
   backgroundMobile?: (number | null) | Media;
   buttons?:
     | {
         label: string;
         /**
-         * Contoh: /contact, /solution/command-center, https://…
+         * e.g. /contact, /solution/command-center, https://…
          */
         href: string;
         style?: ('fill' | 'stroke') | null;
@@ -236,7 +236,7 @@ export interface HeroBlock {
 export interface Media {
   id: number;
   /**
-   * Teks alternatif untuk aksesibilitas & SEO. Kosongkan untuk gambar dekoratif.
+   * Alternative text for accessibility & SEO. Leave empty for decorative images.
    */
   alt?: string | null;
   _objectKey?: string | null;
@@ -286,14 +286,14 @@ export interface ProblemShowcaseBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
   };
   background?: (number | null) | Media;
   /**
-   * Item dengan deskripsi akan tampil lebih menonjol.
+   * Items with a description stand out more.
    */
   items?:
     | {
@@ -316,7 +316,7 @@ export interface VideoShowcaseBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
@@ -324,13 +324,13 @@ export interface VideoShowcaseBlock {
   background?: (number | null) | Media;
   poster: number | Media;
   /**
-   * Opsional. Video MP4/WebM yang diputar langsung di halaman saat tombol play diklik (poster tampil sebelumnya).
+   * Optional. MP4/WebM video played right on the page when play is clicked (the poster shows before).
    */
   video?: (number | null) | Media;
   captionTitle?: string | null;
   captionDescription?: string | null;
   /**
-   * Opsional. Link video luar (mis. YouTube) — dipakai bila Video di atas kosong.
+   * Optional. External video link (e.g. YouTube), used when Video above is empty.
    */
   videoUrl?: string | null;
   id?: string | null;
@@ -345,7 +345,7 @@ export interface SolutionHighlightsBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
@@ -360,7 +360,7 @@ export interface SolutionHighlightsBlock {
     button: {
       label: string;
       /**
-       * Contoh: /contact, /solution/command-center, https://…
+       * e.g. /contact, /solution/command-center, https://…
        */
       href: string;
     };
@@ -370,7 +370,7 @@ export interface SolutionHighlightsBlock {
         image: number | Media;
         title: string;
         /**
-         * Contoh: /contact, /solution/command-center, https://…
+         * e.g. /contact, /solution/command-center, https://…
          */
         href: string;
         id?: string | null;
@@ -388,7 +388,7 @@ export interface ExpertiseBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
@@ -398,7 +398,7 @@ export interface ExpertiseBlock {
     | {
         value: number;
         /**
-         * Contoh: +, %, K+ Hour
+         * e.g. +, %, K+ Hour
          */
         suffix?: string | null;
         label: string;
@@ -427,14 +427,14 @@ export interface FeatureGridBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
   };
   background?: (number | null) | Media;
   /**
-   * Layer gambar kedua di atas background.
+   * Second image layer on top of the background.
    */
   backgroundOverlay?: (number | null) | Media;
   quote?: string | null;
@@ -458,7 +458,7 @@ export interface LeadershipBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
@@ -469,7 +469,7 @@ export interface LeadershipBlock {
         photo: number | Media;
         name: string;
         /**
-         * Contoh: Founder, CEO
+         * e.g. Founder, CEO
          */
         roles?: string[] | null;
         bio?: string | null;
@@ -488,7 +488,7 @@ export interface TeamStatsBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
@@ -498,7 +498,7 @@ export interface TeamStatsBlock {
     | {
         value: number;
         /**
-         * Contoh: +, %, K+ Hour
+         * e.g. +, %, K+ Hour
          */
         suffix?: string | null;
         label: string;
@@ -517,7 +517,7 @@ export interface PartnersBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
@@ -537,7 +537,7 @@ export interface Partner {
   _order?: string | null;
   name: string;
   /**
-   * Contoh: /contact, /solution/command-center, https://…
+   * e.g. /contact, /solution/command-center, https://…
    */
   website?: string | null;
   showInHero?: boolean | null;
@@ -554,14 +554,14 @@ export interface CertificationsBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
   };
   background?: (number | null) | Media;
   /**
-   * Kosongkan untuk menampilkan semua sertifikasi sesuai urutan.
+   * Leave empty to show all certifications in order.
    */
   items?: (number | Certification)[] | null;
   id?: string | null;
@@ -581,7 +581,7 @@ export interface Certification {
   icon: number | Media;
   iconShape?: ('square' | 'wide' | 'narrow') | null;
   /**
-   * Opsional. Tanpa gambar, sertifikasi tidak tampil di galeri sertifikat.
+   * Optional. Without it, the certification is left out of the certificate gallery.
    */
   certificate?: (number | null) | Media;
   certificateFocus?: ('center' | 'top') | null;
@@ -596,7 +596,7 @@ export interface SolutionOverviewBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
@@ -614,7 +614,7 @@ export interface FaqBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
@@ -639,13 +639,13 @@ export interface WorkflowBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
   };
   /**
-   * Nomor (01, 02, …) dibuat otomatis sesuai urutan.
+   * Numbers (01, 02, …) follow the order automatically.
    */
   steps?:
     | {
@@ -672,7 +672,7 @@ export interface ContactFormBlock {
   submitLabel?: string | null;
   responseNote?: string | null;
   /**
-   * Pilihan dropdown "Consultation Interest".
+   * Options of the "Consultation Interest" dropdown.
    */
   interestOptions?: string[] | null;
   whatsappText?: string | null;
@@ -689,7 +689,7 @@ export interface OfficeMapBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
@@ -708,21 +708,21 @@ export interface CtaBlock {
   header: {
     eyebrow?: string | null;
     /**
-     * Enter untuk pindah baris.
+     * Press Enter for a new line.
      */
     title: string;
     description?: string | null;
   };
   background: number | Media;
   /**
-   * Opsional. Dipakai di layar < 768px.
+   * Optional. Used on screens < 768px.
    */
   backgroundMobile?: (number | null) | Media;
   buttons?:
     | {
         label: string;
         /**
-         * Contoh: /contact, /solution/command-center, https://…
+         * e.g. /contact, /solution/command-center, https://…
          */
         href: string;
         style?: ('fill' | 'stroke') | null;
@@ -731,11 +731,11 @@ export interface CtaBlock {
     | null;
   media?: (number | null) | Media;
   /**
-   * Opsional. Video MP4/WebM yang diputar langsung di halaman (gambar Media jadi poster).
+   * Optional. MP4/WebM video played right on the page (the Media image is its poster).
    */
   video?: (number | null) | Media;
   /**
-   * Opsional. Link video luar (mis. YouTube) — dipakai bila Video di atas kosong.
+   * Optional. External video link (e.g. YouTube), used when Video above is empty.
    */
   videoUrl?: string | null;
   id?: string | null;
@@ -828,7 +828,7 @@ export interface ImageElement {
 export interface ButtonElement {
   label: string;
   /**
-   * Contoh: /contact, /solution/command-center, https://…
+   * e.g. /contact, /solution/command-center, https://…
    */
   href: string;
   style?: ('fill' | 'stroke') | null;
@@ -846,7 +846,7 @@ export interface CardElement {
   title: string;
   description?: string | null;
   /**
-   * Opsional. Kartu jadi bisa diklik.
+   * Optional. Makes the card clickable.
    */
   href?: string | null;
   id?: string | null;
@@ -864,7 +864,7 @@ export interface SpacerElement {
   blockType: 'spacer';
 }
 /**
- * Setiap kategori punya halaman detail di /solution/<slug>. Geser untuk mengatur urutan tab.
+ * Each category has a detail page at /solution/<slug>. Drag to reorder the tabs.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "solution-categories".
@@ -874,16 +874,16 @@ export interface SolutionCategory {
   _order?: string | null;
   title: string;
   /**
-   * Bagian URL. Huruf kecil, angka, dan tanda "-". Otomatis dari judul bila kosong.
+   * URL part. Lowercase letters, numbers and "-". Generated from the title when empty.
    */
   slug: string;
   /**
-   * Nonaktifkan bila konten detail belum siap (halaman akan 404).
+   * Turn off while the detail content is not ready (the page returns 404).
    */
   hasDetailPage?: boolean | null;
   hero?: {
     /**
-     * Kosongkan = judul kategori.
+     * Empty = the category title.
      */
     title?: string | null;
     description?: string | null;
@@ -905,15 +905,15 @@ export interface SolutionCategory {
   };
   showcase?: {
     /**
-     * Latar tab; juga poster video latar di bawah.
+     * Tab background; also the poster of the background video below.
      */
     background?: (number | null) | Media;
     /**
-     * Opsional. Video latar (tanpa suara, diputar berulang). MP4 720p, ±10 detik, < 4 MB.
+     * Optional. Background video (muted, looping). MP4 720p, ~10 s, < 4 MB.
      */
     backgroundVideo?: (number | null) | Media;
     /**
-     * PDF brosur. Kosongkan = tombol mengarah ke halaman contact.
+     * Brochure PDF. Empty = the button links to the contact page.
      */
     brochure?: (number | null) | Media;
     tabs?:
@@ -922,11 +922,11 @@ export interface SolutionCategory {
           description?: string | null;
           tags?: string[] | null;
           /**
-           * Opsional. Video latar khusus tab ini (menggantikan video latar umum). MP4 1080p, ±25 detik, tanpa suara, ≤ 15 MB.
+           * Optional. Background video for this tab (replaces the shared one). MP4 1080p, ~25 s, no audio, ≤ 15 MB.
            */
           video?: (number | null) | Media;
           /**
-           * Opsional. Versi ringan untuk HP: MP4 720p, ≤ 4 MB. Kosong = pakai video desktop.
+           * Optional. Lighter version for phones: MP4 720p, ≤ 4 MB. Empty = the desktop video.
            */
           videoMobile?: (number | null) | Media;
           id?: string | null;
@@ -940,12 +940,12 @@ export interface SolutionCategory {
     background?: (number | null) | Media;
     buttonLabel?: string | null;
     /**
-     * Contoh: /contact, /solution/command-center, https://…
+     * e.g. /contact, /solution/command-center, https://…
      */
     buttonHref: string;
   };
   /**
-   * Kosongkan untuk memakai judul halaman & deskripsi default situs.
+   * Leave empty to use the page title & the site's default description.
    */
   meta?: {
     title?: string | null;
@@ -957,7 +957,7 @@ export interface SolutionCategory {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Kartu produk di Solution Overview dan mega menu (produk pertama tiap kategori jadi kartu besar). Geser untuk mengatur urutan.
+ * Product cards in Solution Overview and the mega menu (each category's first product is the big card). Drag to reorder.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "products".
@@ -967,12 +967,12 @@ export interface Product {
   _order?: string | null;
   title: string;
   /**
-   * Deskripsi singkat, tampil di mega menu "Our Solutions".
+   * Short description, shown in the "Our Solutions" mega menu.
    */
   summary?: string | null;
   category: number | SolutionCategory;
   /**
-   * Bagian URL. Huruf kecil, angka, dan tanda "-". Otomatis dari judul bila kosong.
+   * URL part. Lowercase letters, numbers and "-". Generated from the title when empty.
    */
   slug: string;
   image: number | Media;
@@ -1013,7 +1013,7 @@ export interface User {
   id: number;
   name?: string | null;
   /**
-   * Admin: kelola user & pengaturan. Editor: kelola konten saja.
+   * Admin: manage users & settings. Editor: content only.
    */
   roles: ('admin' | 'editor')[];
   updatedAt: string;
@@ -1037,7 +1037,7 @@ export interface User {
   collection: 'users';
 }
 /**
- * Riwayat perubahan & login. Tidak bisa diubah atau dihapus.
+ * History of changes & logins. Cannot be edited or deleted.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "audit-logs".
@@ -2129,44 +2129,44 @@ export interface SiteSetting {
   logo: number | Media;
   contact: {
     /**
-     * Alamat lengkap (ditampilkan di peta website).
+     * Full address (shown on the website map).
      */
     address: string;
     /**
-     * Terisi otomatis dari peta.
+     * Filled in from the map.
      */
     latitude?: number | null;
     /**
-     * Terisi otomatis dari peta.
+     * Filled in from the map.
      */
     longitude?: number | null;
     /**
-     * Versi singkat untuk footer. Enter = baris baru.
+     * Short version for the footer. Enter = new line.
      */
     shortAddress?: string | null;
     email: string;
     /**
-     * Format tampilan, mis. 021 2696 1651
+     * Display format, e.g. 021 2696 1651
      */
     phone: string;
     /**
-     * Nomor yang dihubungi saat pengunjung klik WhatsApp. Boleh ditulis 0812…, +62 812… atau 62812…
+     * Number visitors reach when they click WhatsApp. You can type 0812…, +62 812… or 62812…
      */
     whatsappNumber?: string | null;
     /**
-     * Opsional. Teks yang sudah terisi saat chat terbuka.
+     * Optional. Text already typed in when the chat opens.
      */
     whatsappMessage?: string | null;
   };
   socials?:
     | {
         /**
-         * Ikonnya otomatis sesuai platform.
+         * The icon follows the platform.
          */
         platform: 'facebook' | 'instagram' | 'linkedin' | 'tiktok' | 'youtube' | 'x' | 'whatsapp' | 'other';
         label: string;
         /**
-         * Contoh: /contact, /solution/command-center, https://…
+         * e.g. /contact, /solution/command-center, https://…
          */
         url: string;
         icon?: (number | null) | Media;
@@ -2183,14 +2183,14 @@ export interface SiteSetting {
 export interface Navigation {
   id: number;
   /**
-   * Isi mega menu diambil otomatis dari Solution Categories & Products.
+   * The mega menu is filled automatically from Solution Categories & Products.
    */
   solutionsLabel?: string | null;
   solutionLinks?:
     | {
         label: string;
         /**
-         * Contoh: /contact, /solution/command-center, https://…
+         * e.g. /contact, /solution/command-center, https://…
          */
         href: string;
         highlight?: boolean | null;
@@ -2202,7 +2202,7 @@ export interface Navigation {
     description?: string | null;
     image: number | Media;
     /**
-     * Contoh: /contact, /solution/command-center, https://…
+     * e.g. /contact, /solution/command-center, https://…
      */
     href: string;
   };
@@ -2212,7 +2212,7 @@ export interface Navigation {
         description?: string | null;
         image: number | Media;
         /**
-         * Contoh: /contact, /solution/command-center, https://…
+         * e.g. /contact, /solution/command-center, https://…
          */
         href: string;
         id?: string | null;
@@ -2222,7 +2222,7 @@ export interface Navigation {
     | {
         label: string;
         /**
-         * Contoh: /contact, /solution/command-center, https://…
+         * e.g. /contact, /solution/command-center, https://…
          */
         href: string;
         id?: string | null;
@@ -2231,7 +2231,7 @@ export interface Navigation {
   cta: {
     label: string;
     /**
-     * Contoh: /contact, /solution/command-center, https://…
+     * e.g. /contact, /solution/command-center, https://…
      */
     href: string;
   };
@@ -2239,7 +2239,7 @@ export interface Navigation {
   createdAt?: string | null;
 }
 /**
- * Alamat, email, telepon & sosial media diatur di Site Settings.
+ * Address, email, phone & social media are set in Site Settings.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "footer".
@@ -2254,7 +2254,7 @@ export interface Footer {
           | {
               label: string;
               /**
-               * Contoh: /contact, /solution/command-center, https://…
+               * e.g. /contact, /solution/command-center, https://…
                */
               href: string;
               id?: string | null;
@@ -2264,7 +2264,7 @@ export interface Footer {
       }[]
     | null;
   /**
-   * Gunakan {year} untuk tahun berjalan.
+   * Use {year} for the current year.
    */
   copyright?: string | null;
   updatedAt?: string | null;
