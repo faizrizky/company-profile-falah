@@ -1,13 +1,10 @@
 import { StudioEditor } from "@/components/studio/studio-editor";
 import { StudioMessage, loginAction } from "@/components/studio/studio-message";
-import { getFooter, getNavigation, getSiteData } from "@/lib/cms/queries";
-import { env } from "@/lib/env";
-import { fontVariables } from "@/lib/fonts";
+import { StudioTokenGate } from "@/components/studio/studio-token-gate";
 import { defaultLocale, isLocale } from "@/lib/i18n/config";
-import { getDictionary } from "@/lib/i18n/dictionaries";
 import { cmsPublicUrl, getStudioSession } from "@/lib/studio/auth";
+import { loadStudio } from "@/lib/studio/load";
 import { studioStrings, type StudioLang } from "@/lib/studio/strings";
-import type { Page } from "@/types/cms";
 
 // Per-user and always fresh: never cached.
 export const dynamic = "force-dynamic";
@@ -21,38 +18,21 @@ export default async function StudioPage({ params, searchParams }: Props) {
   const [{ id }, query] = await Promise.all([params, searchParams]);
   const locale = isLocale(query.locale) ? query.locale : defaultLocale;
   const uiLang: StudioLang = query.ui === "en" ? "en" : "id";
+  const embedded = query.embed === "1";
   const s = studioStrings[uiLang];
   const cmsUrl = cmsPublicUrl();
+  const pageId = Number(id);
 
   const session = await getStudioSession();
-  if (!session)
+  if (!session) {
+    // Embedded in the CMS on another domain: the session comes by postMessage.
+    if (embedded) return <StudioTokenGate pageId={pageId} locale={locale} uiLang={uiLang} cmsUrl={cmsUrl} />;
     return <StudioMessage title={s.loginTitle} body={s.loginBody} action={loginAction(cmsUrl, s)} cmsUrl={cmsUrl} />;
+  }
 
-  const pageId = Number(id);
-  if (!Number.isInteger(pageId) || pageId <= 0 || !env.CMS_URL) return <StudioMessage title={s.notFoundTitle} cmsUrl={cmsUrl} />;
-
-  // Latest draft, fetched with the editor's own session so CMS access rules apply.
-  const url = new URL(`/api/pages/${pageId}`, env.CMS_URL);
-  url.search = new URLSearchParams({ draft: "true", depth: "2", locale, "fallback-locale": defaultLocale }).toString();
-  const res = await fetch(url, { headers: { authorization: session.authorization }, cache: "no-store" });
-  if (!res.ok) return <StudioMessage title={s.notFoundTitle} cmsUrl={cmsUrl} />;
-  const page = (await res.json()) as Page;
-
-  const [siteData, navigation, footer] = await Promise.all([getSiteData(locale), getNavigation(locale), getFooter(locale)]);
-
-  return (
-    <StudioEditor
-      key={`${locale}-${uiLang}`}
-      page={{ id: page.id, title: page.title, slug: page.slug, layout: page.layout, _status: page._status }}
-      locale={locale}
-      uiLang={uiLang}
-      embedded={query.embed === "1"}
-      user={{ email: session.user.email, name: session.user.name }}
-      cmsUrl={cmsUrl}
-      siteData={siteData}
-      chrome={{ navigation, footer }}
-      dictionary={getDictionary(locale)}
-      fontClass={fontVariables}
-    />
-  );
+  const result = await loadStudio({ pageId, locale, uiLang, embedded, authorization: session.authorization, user: session.user });
+  if (result.status === "ok") return <StudioEditor key={`${locale}-${uiLang}`} {...result.props} />;
+  if (result.status === "login")
+    return <StudioMessage title={s.loginTitle} body={s.loginBody} action={loginAction(cmsUrl, s)} cmsUrl={cmsUrl} />;
+  return <StudioMessage title={s.notFoundTitle} cmsUrl={cmsUrl} />;
 }

@@ -2,9 +2,12 @@
 
 import type { Media, Page } from "@/types/cms";
 
+import { requestStudioToken, studioToken } from "./token";
+
 /**
  * Browser → CMS calls made by the visual editor. They carry the editor's CMS
- * session cookie; every permission check happens in the CMS.
+ * session — the handed-over token when embedded across domains, else the
+ * shared session cookie; every permission check happens in the CMS.
  */
 export class StudioApiError extends Error {
   constructor(
@@ -15,8 +18,19 @@ export class StudioApiError extends Error {
   }
 }
 
+function send(cmsUrl: string, path: string, init: RequestInit, token: string | null) {
+  const headers = new Headers(init.headers);
+  if (token) headers.set("authorization", `JWT ${token}`);
+  return fetch(new URL(path, cmsUrl), { ...init, headers, credentials: token ? "omit" : "include" });
+}
+
 async function request<T>(cmsUrl: string, path: string, init: RequestInit = {}): Promise<T> {
-  const res = await fetch(new URL(path, cmsUrl), { ...init, credentials: "include" });
+  let res = await send(cmsUrl, path, init, studioToken());
+  // An expired handed-over token: ask the CMS for a fresh one and retry once.
+  if (res.status === 401 && studioToken()) {
+    const fresh = await requestStudioToken(cmsUrl);
+    if (fresh) res = await send(cmsUrl, path, init, fresh);
+  }
   const body = (await res.json().catch(() => ({}))) as {
     errors?: { message?: string; data?: { errors?: { message?: string; path?: string }[] } }[];
   };
