@@ -194,8 +194,9 @@ export function ContactForm({ interestOptions, submitLabel, responseNote, succes
             error={errorFor("phone")}
           />
         </div>
-        <div className="flex h-[73px] items-center gap-8">
-          <div className="flex w-1/2 flex-col gap-2">
+        {/* Figma: interest and detail each take a full row. */}
+        <div className="flex flex-col gap-4 md:gap-3">
+          <div className="flex flex-col gap-2">
             <Label htmlFor={`${id}-interest`}>{t.contact.interest}</Label>
             <div className="relative">
               <select
@@ -213,7 +214,7 @@ export function ContactForm({ interestOptions, submitLabel, responseNote, succes
               <img src={ICONS.dropdown} alt="" className="pointer-events-none absolute right-5 top-1/2 h-4 w-4 -translate-y-1/2" />
             </div>
           </div>
-          <div className="flex w-1/2 flex-col gap-2">
+          <div className="flex flex-col gap-2">
             <Label htmlFor={`${id}-message`}>{t.contact.message}</Label>
             <textarea
               id={`${id}-message`}
@@ -221,7 +222,7 @@ export function ContactForm({ interestOptions, submitLabel, responseNote, succes
               maxLength={2000}
               placeholder={t.contact.messagePlaceholder}
               aria-invalid={Boolean(errors.message)}
-              className="h-[66px] w-full resize-none rounded-lg border border-white bg-surface-dark/50 p-5 text-sm leading-4 text-white outline-none backdrop-blur-[14.7px] placeholder:text-white/50"
+              className="h-[88px] w-full resize-none rounded-lg border border-white bg-surface-dark/50 p-5 text-sm leading-4 text-white outline-none backdrop-blur-[14.7px] placeholder:text-white/50"
             />
             <FieldError id={`${id}-message-error`} message={errorFor("message")} />
           </div>

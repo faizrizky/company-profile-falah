@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { ScrollHint } from "@/components/common/scroll-hint";
 import { ContactForm } from "@/components/contact/contact-form";
 import { WhatsAppButton, whatsappHref } from "@/components/contact/whatsapp-button";
 import { mediaUrl } from "@/lib/cms/media";
@@ -58,7 +59,7 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
       </div>
 
       {/* Desktop */}
-      <div className="hidden w-[574px] shrink-0 flex-col md:flex">
+      <div className="hidden w-[574px] shrink-0 flex-col gap-4 md:flex">
         {block.eyebrow && (
           <span className="inline-flex w-fit items-center rounded-full border border-white bg-surface-dark/5 px-4 py-1 text-base font-medium leading-6 text-white backdrop-blur-[5px]">
             {block.eyebrow}
@@ -79,9 +80,9 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
             block.whatsappText ? (
               <>
                 <div className="flex h-5 items-center gap-2">
-                  <span className="h-px flex-1 bg-accent" />
+                  <span className="h-px flex-1 bg-gradient-to-r from-accent/0 via-accent/70 to-accent/70" />
                   <span className="text-sm leading-5 text-accent">{ctx.t.contact.or}</span>
-                  <span className="h-px flex-1 bg-accent" />
+                  <span className="h-px flex-1 bg-gradient-to-l from-accent/0 via-accent/70 to-accent/70" />
                 </div>
                 <div className="flex h-20 items-center gap-4 rounded-lg bg-surface-dark/50 p-4">
                   <p className="flex-1 whitespace-pre-line text-sm leading-6 text-white">{block.whatsappText}</p>
@@ -93,7 +94,7 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
         />
       </div>
 
-      <img src="/home/swipe.svg" alt="" className="absolute bottom-0 left-1/2 -translate-x-1/2 opacity-70" />
+      <ScrollHint className="absolute bottom-0 left-1/2 -translate-x-1/2 opacity-70" />
     </section>
   );
 }
