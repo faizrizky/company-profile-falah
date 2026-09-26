@@ -192,6 +192,49 @@ html:has(.studio-embedded),
   }
 }
 
+.studio-toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.studio-toast.is-saving {
+  background: #0f2742;
+  color: #fff;
+}
+
+.studio-spinner {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border: 2px solid rgb(255 255 255 / 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: studio-spin 0.7s linear infinite;
+}
+
+@keyframes studio-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-spinner {
+    animation-duration: 1.6s;
+  }
+}
+
+/* Publish button while saving. */
+.studio-busy {
+  display: contents;
+}
+
+.studio-busy > * {
+  pointer-events: none;
+  opacity: 0.55;
+}
+
 .studio-toast.is-success {
   background: #181818;
   color: #fff;

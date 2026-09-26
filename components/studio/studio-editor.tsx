@@ -20,7 +20,7 @@ const IFRAME = { enabled: true, waitForStyles: true };
 
 type Status =
   | { kind: "idle" }
-  | { kind: "saving" }
+  | { kind: "saving"; publish: boolean }
   | { kind: "success"; message: string }
   | { kind: "error"; message: string };
 
@@ -86,7 +86,10 @@ function HeaderActions({
       >
         <span className="studio-label">{saving ? s.saving : s.saveDraft}</span>
       </Button>
-      {children}
+      {/* Puck's Publish button: locked while a save is in flight (no double submit). */}
+      <span className={saving ? "studio-busy" : undefined} aria-disabled={saving || undefined}>
+        {children}
+      </span>
     </div>
   );
 }
@@ -246,7 +249,8 @@ function StudioEditorClient(props: StudioEditorProps) {
   const save: SaveFn = async (data, publish) => {
     const title = puckTitle(data, page.title);
     const layout = puckToLayout(data);
-    setStatus({ kind: "saving" });
+    if (status.kind === "saving") return;
+    setStatus({ kind: "saving", publish });
     try {
       await savePage(cmsUrl, page.id, { title, layout }, { locale, publish });
       savedRef.current = JSON.stringify([title, layout]);
@@ -284,9 +288,16 @@ function StudioEditorClient(props: StudioEditorProps) {
           ),
         }}
       />
-      {status.kind === "success" || status.kind === "error" ? (
-        <div role={status.kind === "error" ? "alert" : "status"} className={`studio-toast is-${status.kind}`}>
-          {status.message}
+      {/* Shown from the click on: saving can take a few seconds. */}
+      {status.kind !== "idle" ? (
+        <div
+          key={status.kind}
+          role={status.kind === "error" ? "alert" : "status"}
+          aria-live="polite"
+          className={`studio-toast is-${status.kind}`}
+        >
+          {status.kind === "saving" ? <span className="studio-spinner" aria-hidden /> : null}
+          {status.kind === "saving" ? (status.publish ? s.publishing : s.savingDraft) : status.message}
         </div>
       ) : null}
     </div>
