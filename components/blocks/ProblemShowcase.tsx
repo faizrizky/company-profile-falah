@@ -30,26 +30,23 @@ export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
             <p className="max-w-[720px] text-base leading-6 text-white">{header.description}</p>
           )}
         </div>
-        <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-[600px_1fr]">
+        <div className="grid w-full grid-cols-1 gap-4 lg:h-[530px] lg:grid-cols-[600px_1fr]">
           <div className="flex flex-col gap-4">
             {block.items?.map((p) => (
               <div
                 key={p.id ?? p.title}
                 className={cn(
-                  "relative rounded-lg border border-accent/50 p-7 backdrop-blur-sm transition-transform duration-300 hover:scale-[1.03]",
+                  "relative flex flex-col justify-center overflow-clip rounded-lg border border-accent/50 p-7 backdrop-blur-[5px] transition-transform duration-300 hover:scale-[1.02] lg:flex-1",
                   p.description ? "bg-accent/15" : "bg-surface-dark/5",
                 )}
               >
                 <Glow className="-top-[7px] left-1/2 h-[15px] w-[416px] -translate-x-1/2" />
                 <div className="flex items-center gap-[31px]">
-                  <img
-                    src={mediaUrl(p.icon)}
-                    alt=""
-                    className="h-7 w-7 shrink-0 shadow-[0_0_4px_rgba(24,102,239,1)]"
-                  />
-                  <div className="flex flex-col gap-1">
+                  {/* Figma icons carry their own glow, drawn around a 28px glyph. */}
+                  <img src={mediaUrl(p.icon)} alt="" className="-m-1 h-[37px] w-9 shrink-0 object-contain" />
+                  <div className="flex flex-col gap-2.5">
                     <h3 className="font-display text-xl font-bold leading-6 text-white">{p.title}</h3>
-                    {p.description && <p className="text-sm leading-5 text-white/80">{p.description}</p>}
+                    {p.description && <p className="text-base font-medium leading-5 text-white">{p.description}</p>}
                   </div>
                 </div>
               </div>
@@ -58,7 +55,7 @@ export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
 
           <div className="relative">
             <Glow className="left-0 top-0 h-[25px] w-[600px]" />
-            <div className="relative h-full min-h-[300px] overflow-hidden rounded-lg border border-accent/50">
+            <div className="relative h-full min-h-[300px] overflow-hidden rounded-lg border border-accent/50 lg:min-h-0">
               {image && <Image src={image} alt={mediaAlt(block.image)} fill className="object-cover" />}
             </div>
           </div>
