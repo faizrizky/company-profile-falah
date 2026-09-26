@@ -41,6 +41,27 @@
   --puck-pluginbar-color-text-hover: #fff;
   --puck-pluginbar-color-text-selected: #fff;
   --puck-pluginbar-color-bg-hover: rgb(255 255 255 / 0.12);
+
+  /* Form fields (right panel): solid white inputs with a visible light-blue
+     border, rounded like the CMS; labels in navy. Panels keep the glass look,
+     fields must not (the glass border is invisible on white). */
+  --falah-field-border: #d3e2f3;
+  --falah-field-border-hover: #9cc5ef;
+  --falah-field-radius: 12px;
+  --puck-field-color-bg: #fff;
+  --puck-field-color-border: var(--falah-field-border);
+  --puck-field-color-border-hover: var(--falah-field-border-hover);
+  --puck-field-color-border-focus: rgb(31 122 224 / 0.35);
+  --puck-field-radius: var(--falah-field-radius);
+  --puck-field-space-y: 10px;
+  --puck-field-space-x: 14px;
+  --puck-field-font-size: 14px;
+  --puck-field-label-color-text: #0f2742;
+  --puck-field-label-color-icon: #7a93b0;
+  --puck-field-label-font-size: 13px;
+  --puck-field-label-font-weight: 600;
+  --puck-field-label-space-y: 8px;
+  --puck-field-color-surface: #f5f9ff;
 }
 
 .studio-body {
@@ -289,7 +310,7 @@ html:has(.studio-embedded),
 .studio-btn--ghost {
   color: var(--puck-color-grey-02, #292929);
   background: #fff;
-  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
+  border: 1px solid var(--falah-field-border);
 }
 
 .studio-btn--ghost:hover:not(:disabled) {
@@ -313,20 +334,32 @@ html:has(.studio-embedded),
 
 .studio-input {
   width: 100%;
-  height: 36px;
-  padding: 0 12px;
+  height: 40px;
+  padding: 0 14px;
   box-sizing: border-box;
-  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
-  border-radius: 4px;
+  border: 1px solid var(--falah-field-border);
+  border-radius: var(--falah-field-radius);
   background: #fff;
   color: inherit;
   font: inherit;
   font-size: 14px;
 }
 
+.studio-input:hover {
+  border-color: var(--falah-field-border-hover);
+}
+
 .studio-input:focus {
-  outline: 2px solid var(--puck-color-azure-05, #3479be);
+  border-color: var(--falah-field-border-hover);
+  outline: 3px solid rgb(31 122 224 / 0.18);
   outline-offset: 0;
+}
+
+select.studio-input {
+  padding-right: 38px;
+  appearance: none;
+  cursor: pointer;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a93b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center / 16px;
 }
 
 .studio-muted,
@@ -377,8 +410,8 @@ html:has(.studio-embedded),
   height: 64px;
   flex-shrink: 0;
   overflow: hidden;
-  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
-  border-radius: 4px;
+  border: 1px solid var(--falah-field-border);
+  border-radius: var(--falah-field-radius);
   background: repeating-conic-gradient(#efefef 0% 25%, #fff 0% 50%) 50% / 12px 12px;
   font-size: 11px;
   color: var(--puck-color-grey-05, #767676);
@@ -404,8 +437,8 @@ html:has(.studio-embedded),
   gap: 8px;
   margin-top: 8px;
   padding: 8px;
-  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
-  border-radius: 4px;
+  border: 1px solid var(--falah-field-border);
+  border-radius: var(--falah-field-radius);
   background: var(--puck-color-grey-12, #fafafa);
 }
 
@@ -455,8 +488,8 @@ html:has(.studio-embedded),
   flex-wrap: wrap;
   gap: 6px;
   padding: 6px;
-  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
-  border-radius: 4px;
+  border: 1px solid var(--falah-field-border);
+  border-radius: var(--falah-field-radius);
   background: #fff;
 }
 
@@ -507,8 +540,8 @@ html:has(.studio-embedded),
   align-items: center;
   gap: 8px;
   padding: 6px 8px;
-  border: 1px solid var(--puck-color-grey-09, #dcdcdc);
-  border-radius: 4px;
+  border: 1px solid var(--falah-field-border);
+  border-radius: 10px;
   background: #fff;
   font-size: 14px;
 }
@@ -759,4 +792,26 @@ html:has(.studio-embedded),
 
 .studio-link-custom {
   margin-top: 8px;
+}
+
+/* Grouped fields (Section heading, Featured card…): a soft card with its
+   title as a header, instead of a bare border. */
+.studio-body [class*="_ObjectField_"] {
+  border-color: var(--falah-field-border);
+  border-radius: 14px;
+}
+
+.studio-body [class*="_ObjectField-fieldset_"] {
+  padding: 14px;
+}
+
+.studio-body [class*="_Input-label_"] {
+  letter-spacing: 0.01em;
+}
+
+/* List rows (Buttons, Cards…) match the field cards. */
+.studio-body [class*="_ArrayField_"] {
+  border-color: var(--falah-field-border);
+  border-radius: 14px;
+  overflow: hidden;
 }
