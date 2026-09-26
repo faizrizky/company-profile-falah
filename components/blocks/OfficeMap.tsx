@@ -7,7 +7,11 @@ import type { OfficeMapBlock as Data } from "@/types/cms";
 import type { BlockProps } from "./types";
 
 export function OfficeMapBlock({ block, ctx }: BlockProps<Data>) {
-  const address = ctx.data.settings?.contact.address;
+  const contact = ctx.data.settings?.contact;
+  const address = contact?.address;
+  // The pin picked on the CMS map is exact; the address text is the fallback.
+  const hasPin = typeof contact?.latitude === "number" && typeof contact?.longitude === "number";
+  const query = hasPin ? `${contact!.latitude},${contact!.longitude}` : address;
   const bg = mediaUrl(block.background);
 
   return (
@@ -20,7 +24,7 @@ export function OfficeMapBlock({ block, ctx }: BlockProps<Data>) {
         <div className="relative h-[177px] w-full overflow-hidden md:h-[480px] md:w-[853px] md:rounded-lg md:border md:border-accent md:shadow-[0_0_4px_2px_rgba(147,197,253,1)]">
           <iframe
             title={ctx.t.map.title}
-            src={`https://www.google.com/maps?q=${encodeURIComponent(address)}&z=16&output=embed`}
+            src={`https://www.google.com/maps?q=${encodeURIComponent(query!)}&z=17&output=embed`}
             className="h-full w-full border-0"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
