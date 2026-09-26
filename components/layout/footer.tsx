@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { Lines } from "@/components/common/section-ui";
 import { SocialIcon } from "@/components/common/social-icon";
+import { whatsappHref } from "@/components/contact/whatsapp-button";
 import { LocaleLink } from "@/components/i18n/locale-link";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import type { Footer as FooterData, SiteSetting } from "@/types/cms";
@@ -83,13 +84,18 @@ export function Footer({
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 {settings.socials.map((social) => {
                   const custom = social.platform === "other" ? mediaUrl(social.icon) : undefined;
+                  // WhatsApp without its own link opens a chat with the CMS WhatsApp number.
+                  const href =
+                    social.platform === "whatsapp" && (!social.url || social.url === "#")
+                      ? (whatsappHref(contact.whatsappNumber, contact.whatsappMessage) ?? social.url)
+                      : social.url;
                   return (
                     <a
                       key={social.id ?? social.label}
-                      href={social.url}
+                      href={href}
                       aria-label={social.label}
                       title={social.label}
-                      {...(social.url.startsWith("https://") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      {...(href.startsWith("https://") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                       className="flex h-8 w-8 items-center justify-center rounded-full border border-white/90 text-white transition-all duration-300 hover:border-blue-bright hover:bg-blue-bright hover:shadow-[0_0_12px_rgba(24,102,239,0.9)]"
                     >
                       {custom ? (

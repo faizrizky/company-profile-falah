@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 
+/** Direct chat link (wa.me) for the CMS WhatsApp number, with an optional prefilled message. */
 export function whatsappHref(number?: string | null, message?: string | null) {
-  if (!number) return undefined;
+  const digits = number?.replace(/\D/g, "");
+  if (!digits) return undefined;
+  const international = digits.startsWith("0") ? `62${digits.slice(1)}` : digits;
   const text = message ? `?text=${encodeURIComponent(message)}` : "";
-  return `https://wa.me/${number}${text}`;
+  return `https://wa.me/${international}${text}`;
 }
 
 export function WhatsAppButton({ href, label }: { href?: string; label: string }) {
