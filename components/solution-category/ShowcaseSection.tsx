@@ -49,7 +49,8 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
                 )}
               >
                 {active && (
-                  <span className="absolute left-1/2 top-[-3px] h-[5px] w-[170px] -translate-x-1/2 rounded-full bg-blue-bright shadow-[0_0_10px_rgba(59,130,246,1)]" />
+                  // Figma: a thin ellipse (pointed ends), not a pill, with a soft glow.
+                  <span className="absolute left-1/2 top-[-3px] h-[5px] w-[170px] -translate-x-1/2 rounded-[50%] bg-blue-bright shadow-[0_0_10px_#3b82f6]" />
                 )}
                 {t.name}
               </button>
@@ -65,7 +66,7 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
             src={video}
             type={mediaType(videoField)}
             poster={background}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full animate-fade-in object-cover"
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/80 via-transparent to-transparent" />
