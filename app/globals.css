@@ -264,3 +264,20 @@ body {
     animation: none;
   }
 }
+
+/* CountUp: a soft glow flashes as the number lands. */
+@keyframes count-up-land {
+  0% {
+    text-shadow: 0 0 0 transparent;
+  }
+  35% {
+    text-shadow: 0 0 18px rgb(59 130 246 / 0.85);
+  }
+  100% {
+    text-shadow: 0 0 0 transparent;
+  }
+}
+
+.count-up--landed {
+  animation: count-up-land 0.9s ease-out;
+}
