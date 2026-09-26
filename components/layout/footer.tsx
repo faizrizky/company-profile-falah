@@ -105,10 +105,9 @@ export function Footer({
           </FooterColumn>
         </div>
 
-        {/* Thin line that fades out at both ends, with a soft glow under its middle. */}
-        <div aria-hidden className="relative mt-10 h-px w-full">
-          <div className="absolute inset-x-[10%] -top-2 h-4 rounded-full bg-blue-bright/60 blur-[10px]" />
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,#1866ef_12%,#4f8dff_50%,#1866ef_88%,transparent)]" />
+        {/* Glowing line: thickest in the middle, tapering to a point at both ends. */}
+        <div aria-hidden className="mt-10 w-full drop-shadow-[0_0_6px_rgba(24,102,239,0.9)]">
+          <div className="h-[4px] w-full bg-[linear-gradient(90deg,#1c4fd8,#2f6bff_50%,#1c4fd8)] [clip-path:polygon(0_50%,6%_25%,50%_0,94%_25%,100%_50%,94%_75%,50%_100%,6%_75%)]" />
         </div>
 
         {copyright && (
