@@ -1003,7 +1003,8 @@ select.studio-input {
   .studio-body [class*="_Sidebar--right_"] {
     display: flex !important;
     min-width: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     visibility: hidden;
     transition: visibility 0s linear 0.42s;
   }
