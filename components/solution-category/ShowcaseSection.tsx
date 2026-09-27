@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Download } from "lucide-react";
 
@@ -8,24 +8,17 @@ import { SoundVideo } from "@/components/common/sound-video";
 import { useI18n } from "@/components/i18n/locale-provider";
 import { Button } from "@/components/ui/button";
 import { mediaType, mediaUrl } from "@/lib/cms/media";
-import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/lib/use-media";
 import type { SolutionCategory } from "@/types/cms";
 
-import { pill } from "./pill";
-import { GlowLine } from "@/components/common/glow-line";
-
-const MOBILE_QUERY = "(max-width: 767px)";
-const subscribeMobile = (onChange: () => void) => {
-  const query = window.matchMedia(MOBILE_QUERY);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-};
+import { Pill } from "@/components/ui/pill";
+import { TabButton } from "@/components/ui/tab-button";
 
 export function ShowcaseSection({ category }: { category: SolutionCategory }) {
   const { t } = useI18n();
   const [activeTab, setActiveTab] = useState(0);
   // Only one video element is mounted, for the current screen size.
-  const isMobile = useSyncExternalStore(subscribeMobile, () => window.matchMedia(MOBILE_QUERY).matches, () => null);
+  const isMobile = useIsMobile();
   const showcase = category.showcase ?? {};
   const tabs = showcase.tabs ?? [];
   const tab = tabs[activeTab];
@@ -55,23 +48,9 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
           {tabs.map((t, i) => {
             const active = i === activeTab;
             return (
-              <button
-                key={t.id ?? t.name}
-                type="button"
-                role="tab"
-                aria-selected={active}
-                onClick={() => setActiveTab(i)}
-                className={cn(
-                  "relative flex h-12 w-[243px] shrink-0 items-center justify-center rounded-lg border p-4 text-center text-sm font-bold leading-4 text-white backdrop-blur-[5px] transition-colors duration-300",
-                  active ? "border-accent/50 bg-accent/5" : "border-[#3d3d3d]/50 bg-surface-dark/5 hover:border-accent/30",
-                )}
-              >
-                {active && (
-                  // Figma: a thin ellipse (pointed ends), not a pill, with a soft glow.
-                  <GlowLine width={170} thickness={5} className="absolute left-1/2 top-[-3px] -translate-x-1/2" />
-                )}
+              <TabButton key={t.id ?? t.name} active={active} onClick={() => setActiveTab(i)}>
                 {t.name}
-              </button>
+              </TabButton>
             );
           })}
         </div>
@@ -81,9 +60,9 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
       <div role="tabpanel" className="md:hidden">
         <div key={activeTab} className="tab-panel-in flex flex-col gap-8 px-6">
           <div className="flex flex-col items-start gap-3">
-            <span className="rounded-full border border-white bg-surface-dark/5 px-4 py-1 text-xs leading-[18px] text-white backdrop-blur-[5px]">
+            <Pill size="xs">
               {category.title}
-            </span>
+            </Pill>
             <div className="flex flex-col gap-1">
               <h2 className="font-display text-xl font-bold leading-6 text-accent">{tab.name}</h2>
               {tab.description && <p className="text-sm leading-5 text-white">{tab.description}</p>}
@@ -130,9 +109,9 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
         >
           <div className="flex max-w-[682px] flex-col items-start gap-4">
             <div className="flex flex-col items-start gap-3">
-              <span className="rounded-full border border-white bg-surface-dark/5 px-4 py-1 text-base leading-[30px] text-white backdrop-blur-[5px]">
+              <Pill size="md" className="font-normal leading-[30px]">
                 {category.title}
-              </span>
+              </Pill>
               <div className="flex flex-col gap-1">
                 <h2 className="font-display text-[30px] font-bold leading-9 text-accent">{tab.name}</h2>
                 {tab.description && <p className="text-base leading-6 text-white">{tab.description}</p>}
@@ -141,9 +120,9 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
             {tab.tags?.length ? (
               <div className="flex flex-wrap gap-1">
                 {tab.tags.map((p) => (
-                  <span key={p} className={pill}>
+                  <Pill key={p} tone="tag" size="xs">
                     {p}
-                  </span>
+                  </Pill>
                 ))}
               </div>
             ) : null}

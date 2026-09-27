@@ -7,6 +7,7 @@ import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import type { SolutionHighlightsBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
+import { Pill } from "@/components/ui/pill";
 
 export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
   const { featured } = block;
@@ -42,12 +43,12 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
                   )}
                   <div className="flex flex-wrap gap-1">
                     {featured.tags.map((chip) => (
-                      <span
+                      <Pill
                         key={chip}
-                        className="rounded-full border border-white bg-surface-dark/5 px-2 py-1 text-xs leading-4 text-white backdrop-blur-sm"
+                        size="xs" className="px-2 leading-4"
                       >
                         {chip}
-                      </span>
+                      </Pill>
                     ))}
                   </div>
                 </div>

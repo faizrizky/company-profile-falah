@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 
+import { prefersStill } from "@/lib/use-media";
 import { cn } from "@/lib/utils";
+import { PlayIcon } from "@/components/ui/play-icon";
 
 type Props = {
   src: string;
@@ -16,12 +18,6 @@ type Props = {
   soundOffLabel: string;
   className?: string;
 };
-
-/** True when the visitor asked for less motion or less data. */
-function prefersStill() {
-  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches || Boolean(connection?.saveData);
-}
 
 /**
  * Looping video with its sound on. Browsers refuse to autoplay audio before
@@ -100,7 +96,7 @@ export function SoundVideo({ src, type, poster, autoPlay = false, playLabel, sou
           }}
           className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 hover:scale-105"
         >
-          <img src="/home/play.svg" alt="" className="h-[119px] w-[119px]" />
+          <PlayIcon />
         </button>
       )}
       {playing && (

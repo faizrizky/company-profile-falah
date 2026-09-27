@@ -7,7 +7,7 @@ import { mediaUrl } from "@/lib/cms/media";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { SolutionCategory } from "@/types/cms";
 
-import { pill } from "./pill";
+import { Pill } from "@/components/ui/pill";
 
 export function HeroSection({ category, t }: { category: SolutionCategory; t: Dictionary }) {
   const hero = category.hero ?? {};
@@ -30,9 +30,9 @@ export function HeroSection({ category, t }: { category: SolutionCategory; t: Di
               <span className="text-base font-medium leading-[30px] text-white">{t.solutions.recommendedFor}</span>
               <div className="flex flex-wrap gap-2">
                 {hero.recommendedFor.map((r) => (
-                  <span key={r} className={pill}>
+                  <Pill key={r} tone="tag" size="xs">
                     {r}
-                  </span>
+                  </Pill>
                 ))}
               </div>
             </div>

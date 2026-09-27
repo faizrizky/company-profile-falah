@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
 import type { LayoutSectionBlock } from "@/types/cms";
+import { Pill } from "@/components/ui/pill";
 
 export type Element = NonNullable<LayoutSectionBlock["column1"]>[number];
 
@@ -42,9 +43,9 @@ const SPACER = { sm: "h-4", md: "h-8", lg: "h-14", xl: "h-24" };
 export function BadgeView({ el }: { el: Of<"badge"> }) {
   return (
     <div className={cn("flex w-full", JUSTIFY[el.align ?? "left"])}>
-      <span className="inline-flex w-fit items-center rounded-full border border-white bg-surface-dark/5 px-4 py-1 text-sm text-white backdrop-blur-sm">
+      <Pill>
         {el.text}
-      </span>
+      </Pill>
     </div>
   );
 }

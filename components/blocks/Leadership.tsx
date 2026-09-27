@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import type { LeadershipBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
+import { Pill } from "@/components/ui/pill";
 
 export function LeadershipBlock({ block }: BlockProps<Data>) {
   const bg = mediaUrl(block.background);
@@ -44,12 +45,12 @@ export function LeadershipBlock({ block }: BlockProps<Data>) {
                     {leader.roles?.length ? (
                       <div className="flex flex-wrap items-center gap-1">
                         {leader.roles.map((role) => (
-                          <span
+                          <Pill
                             key={role}
-                            className="rounded-full border border-white bg-surface-dark/5 px-4 py-1 text-xs leading-[18px] text-white"
+                            size="xs"
                           >
                             {role}
-                          </span>
+                          </Pill>
                         ))}
                       </div>
                     ) : null}

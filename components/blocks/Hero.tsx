@@ -9,6 +9,7 @@ import type { HeroBlock as HeroBlockData } from "@/types/cms";
 
 import type { BlockContext, BlockProps } from "./types";
 import { ScrollHint } from "@/components/common/scroll-hint";
+import { Pill } from "@/components/ui/pill";
 
 
 function HeroButtons({ buttons, className }: { buttons: HeroBlockData["buttons"]; className?: string }) {
@@ -72,9 +73,9 @@ function CenteredHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext 
       <div className="relative flex flex-1 flex-col items-center justify-center gap-9 px-6 py-12.5 md:px-20 md:py-40">
         <div className="flex flex-col items-center gap-4">
           {block.eyebrow && (
-            <span className="inline-flex items-center rounded-full border border-white bg-surface-dark/5 px-4 py-1 text-base font-medium leading-6 text-white backdrop-blur-[5px]">
+            <Pill size="md">
               {block.eyebrow}
-            </span>
+            </Pill>
           )}
           <div className="flex flex-col items-center">
             <h1 className="max-w-[768px] font-display text-[32px] font-bold leading-[1.25] text-white md:text-[48px] md:leading-[60px]">
@@ -106,9 +107,9 @@ function PageHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
         <div className="flex flex-col items-start gap-8 md:gap-9">
           <div className="flex w-full max-w-[768px] flex-col gap-2 md:gap-4">
             {block.eyebrow && (
-              <span className="flex w-fit items-center rounded-full border border-white bg-surface-dark/5 px-2 py-1 text-xs leading-[18px] text-white backdrop-blur-sm md:px-4 md:text-base md:leading-6">
+              <Pill size="xs" className="px-2 md:px-4 md:text-base md:leading-6">
                 {block.eyebrow}
-              </span>
+              </Pill>
             )}
             <h1 className="font-display text-[20px] font-bold leading-6 text-white md:text-[48px] md:leading-[60px]">
               {block.title}

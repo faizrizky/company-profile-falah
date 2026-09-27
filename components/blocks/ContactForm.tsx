@@ -7,6 +7,7 @@ import { mediaUrl } from "@/lib/cms/media";
 import type { ContactFormBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
+import { Pill } from "@/components/ui/pill";
 
 export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
   const { settings, categories } = ctx.data;
@@ -32,9 +33,9 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
       <div className="flex flex-col gap-8 bg-[#0A0A0A]/50 pt-[120px] md:hidden">
         <div className="flex flex-col gap-2 px-6">
           {block.eyebrow && (
-            <span className="inline-flex w-fit items-center rounded-full border border-white bg-surface-dark/5 px-2 py-1 text-xs leading-[18px] text-white backdrop-blur-[5px]">
+            <Pill size="xs" className="px-2">
               {block.eyebrow}
-            </span>
+            </Pill>
           )}
           <h1 className="font-display text-[20px] font-bold leading-6 text-white">
             {block.titleMobile || block.title}
@@ -61,9 +62,9 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
       {/* Desktop */}
       <div className="hidden w-[574px] shrink-0 flex-col gap-4 md:flex">
         {block.eyebrow && (
-          <span className="inline-flex w-fit items-center rounded-full border border-white bg-surface-dark/5 px-4 py-1 text-base font-medium leading-6 text-white backdrop-blur-[5px]">
+          <Pill size="md">
             {block.eyebrow}
-          </span>
+          </Pill>
         )}
         <div className="flex flex-col">
           <h1 className="font-display text-5xl font-bold leading-[60px] text-white">{block.title}</h1>

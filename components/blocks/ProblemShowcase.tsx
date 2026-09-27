@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import type { ProblemShowcaseBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
+import { Pill } from "@/components/ui/pill";
 
 export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
   const { header } = block;
@@ -19,9 +20,9 @@ export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
       <div className="relative mx-auto flex w-full max-w-[1269px] flex-col items-center gap-8">
         <div className="flex w-full max-w-[564px] flex-col items-center gap-3 text-center">
           {header.eyebrow && (
-            <span className="hidden items-center gap-1 rounded-full border border-white bg-surface-dark/5 px-4 py-1 text-sm text-white backdrop-blur-sm lg:flex">
+            <Pill className="hidden gap-1 lg:inline-flex">
               {header.eyebrow}
-            </span>
+            </Pill>
           )}
           <h2 className="max-w-[900px] font-display text-[30px] font-bold leading-9 text-accent">
             <Lines text={header.title} />

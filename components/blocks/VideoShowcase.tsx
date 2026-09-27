@@ -6,15 +6,10 @@ import { mediaAlt, mediaType, mediaUrl } from "@/lib/cms/media";
 import type { VideoShowcaseBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
+import { PlayIcon } from "@/components/ui/play-icon";
 
 export function PlayButton({ videoUrl, label }: { videoUrl?: string | null; label: string }) {
-  const icon = (
-    <img
-      src="/home/play.svg"
-      alt={videoUrl ? "" : label}
-      className="h-[119px] w-[119px]"
-    />
-  );
+  const icon = <PlayIcon alt={videoUrl ? "" : label} />;
   const position = "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2";
 
   if (!videoUrl) return <span className={position}>{icon}</span>;

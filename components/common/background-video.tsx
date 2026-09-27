@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore } from "react";
+import { useEffect, useRef } from "react";
+
+import { useIsMobile, usePrefersStill } from "@/lib/use-media";
 
 type Props = {
   src: string;
@@ -13,32 +15,17 @@ type Props = {
   className?: string;
 };
 
-/** True when the visitor asked for less motion or less data. */
-function prefersStill() {
-  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches || Boolean(connection?.saveData);
-}
-
 /**
  * Muted, looping decorative video. Loads only its metadata up front, plays
  * only while on screen, and falls back to the poster for visitors who prefer
  * reduced motion or have data saver on.
  */
-const noopSubscribe = () => () => {};
-
-const MOBILE_QUERY = "(max-width: 767px)";
-const subscribeMobile = (onChange: () => void) => {
-  const query = window.matchMedia(MOBILE_QUERY);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-};
-
 export function BackgroundVideo({ src, type, mobileSrc, mobileType, poster, className = "" }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
   // Server render: the video (with poster); the client decides after hydration.
-  const still = useSyncExternalStore(noopSubscribe, prefersStill, () => false);
+  const still = usePrefersStill();
   // Unknown on the server: nothing is fetched until the client picks a file.
-  const mobile = useSyncExternalStore(subscribeMobile, () => window.matchMedia(MOBILE_QUERY).matches, () => null);
+  const mobile = useIsMobile();
   const usesMobile = Boolean(mobile && mobileSrc);
   const file = usesMobile ? mobileSrc! : src;
   const fileType = usesMobile ? mobileType : type;

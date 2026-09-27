@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
 import type { Product, SolutionCategory } from "@/types/cms";
-import { GlowLine } from "@/components/common/glow-line";
+import { TabButton } from "@/components/ui/tab-button";
 
 function ProductCard({ product }: { product: Product }) {
   const image = mediaUrl(product.image);
@@ -70,22 +70,9 @@ export function SolutionOverviewTabs({
         {categories.map((c) => {
           const active = c.id === activeId;
           return (
-            <button
-              key={c.id}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              onClick={() => setActiveId(c.id)}
-              className={cn(
-                "relative flex h-12 w-[243px] shrink-0 items-center justify-center rounded-lg border px-4 text-sm font-bold leading-4 text-white backdrop-blur-sm transition-all duration-300 hover:scale-[1.03]",
-                active ? "border-accent/50 bg-accent/5" : "border-[#3d3d3d]/50 bg-surface-dark/5",
-              )}
-            >
+            <TabButton key={c.id} active={active} onClick={() => setActiveId(c.id)} className="hover:scale-[1.03]">
               {c.title}
-              {active && (
-                <GlowLine width={170} thickness={5} className="absolute -top-0.5 left-1/2 -translate-x-1/2" />
-              )}
-            </button>
+            </TabButton>
           );
         })}
       </div>

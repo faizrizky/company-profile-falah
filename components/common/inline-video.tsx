@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { PlayIcon } from "@/components/ui/play-icon";
 
 type Props = {
   src: string;
@@ -10,11 +11,6 @@ type Props = {
   children: ReactNode;
   label: string;
 };
-
-function PlayIcon() {
-  // eslint-disable-next-line @next/next/no-img-element -- static icon
-  return <img src="/home/play.svg" alt="" className="h-[119px] w-[119px]" />;
-}
 
 const centered =
   "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 hover:scale-105";

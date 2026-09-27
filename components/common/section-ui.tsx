@@ -2,6 +2,7 @@ import { Fragment, type ReactNode } from "react";
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
+import { Pill } from "@/components/ui/pill";
 
 /**
  * Renders CMS text with its line breaks preserved. In the visual editor the
@@ -49,9 +50,9 @@ export function Head({
   return (
     <div className={cn("flex w-full flex-col items-center gap-3 text-center", className)}>
       {pill && (
-        <span className="hidden items-center rounded-full border border-white bg-surface-dark/5 px-4 py-1 text-sm leading-6 text-white backdrop-blur-sm md:inline-flex">
+        <Pill className="hidden md:inline-flex">
           {pill}
-        </span>
+        </Pill>
       )}
       <h2 className="max-w-[900px] font-display text-[20px] font-bold leading-6 text-accent md:text-[30px] md:leading-9">
         <Lines text={title} />
@@ -80,9 +81,9 @@ export function SectionHeader({
   return (
     <div className={cn("flex w-full max-w-[682px] flex-col items-center gap-3 text-center", className)}>
       {eyebrow && (
-        <span className="flex items-center gap-1 rounded-full border border-white bg-surface-dark/5 px-4 py-1 text-sm font-medium leading-6 text-white backdrop-blur-sm">
+        <Pill className="gap-1 font-medium">
           {eyebrow}
-        </span>
+        </Pill>
       )}
       <div className="flex w-full flex-col items-center gap-1">
         <h2 className="font-display text-[30px] font-bold leading-9 text-accent">
