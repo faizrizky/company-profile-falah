@@ -6,10 +6,10 @@ import { ArrowUpRight } from "lucide-react";
 
 import { useI18n } from "@/components/i18n/locale-provider";
 import { Button } from "@/components/ui/button";
+import { TabButton } from "@/components/ui/tab-button";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
 import type { Product, SolutionCategory } from "@/types/cms";
-import { TabButton } from "@/components/ui/tab-button";
 
 function ProductCard({ product }: { product: Product }) {
   const image = mediaUrl(product.image);

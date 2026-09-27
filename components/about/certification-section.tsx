@@ -7,8 +7,8 @@ import { X } from "lucide-react";
 
 import { Glow, ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
 import { useI18n } from "@/components/i18n/locale-provider";
-import { format } from "@/lib/i18n/dictionaries";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
+import { format } from "@/lib/i18n/dictionaries";
 import { useDelayedUnmount, useModalEffects } from "@/lib/use-animated";
 import { cn } from "@/lib/utils";
 import type { Certification, CertificationsBlock } from "@/types/cms";

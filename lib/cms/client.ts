@@ -1,7 +1,7 @@
 import "server-only";
 
-import { env } from "@/lib/env";
 import type { CmsTag } from "@/lib/cms/tags";
+import { env } from "@/lib/env";
 
 export class CmsError extends Error {
   constructor(

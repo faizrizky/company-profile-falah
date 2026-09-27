@@ -7,12 +7,11 @@ import { Download } from "lucide-react";
 import { SoundVideo } from "@/components/common/sound-video";
 import { useI18n } from "@/components/i18n/locale-provider";
 import { Button } from "@/components/ui/button";
+import { Pill } from "@/components/ui/pill";
+import { TabButton } from "@/components/ui/tab-button";
 import { mediaType, mediaUrl } from "@/lib/cms/media";
 import { useIsMobile } from "@/lib/use-media";
 import type { SolutionCategory } from "@/types/cms";
-
-import { Pill } from "@/components/ui/pill";
-import { TabButton } from "@/components/ui/tab-button";
 
 export function ShowcaseSection({ category }: { category: SolutionCategory }) {
   const { t } = useI18n();

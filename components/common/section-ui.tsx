@@ -1,8 +1,8 @@
 import { Fragment, type ReactNode } from "react";
 import Image from "next/image";
 
-import { cn } from "@/lib/utils";
 import { Pill } from "@/components/ui/pill";
+import { cn } from "@/lib/utils";
 
 /**
  * Renders CMS text with its line breaks preserved. In the visual editor the

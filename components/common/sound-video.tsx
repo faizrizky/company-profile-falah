@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 
+import { PlayIcon } from "@/components/ui/play-icon";
 import { prefersStill } from "@/lib/use-media";
 import { cn } from "@/lib/utils";
-import { PlayIcon } from "@/components/ui/play-icon";
 import { watchVisibility } from "@/lib/visibility";
 
 type Props = {

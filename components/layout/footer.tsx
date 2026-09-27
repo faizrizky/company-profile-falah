@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 
+import { GlowLine } from "@/components/common/glow-line";
 import { Lines } from "@/components/common/section-ui";
 import { SocialIcon } from "@/components/common/social-icon";
 import { whatsappHref } from "@/components/contact/whatsapp-button";
 import { LocaleLink } from "@/components/i18n/locale-link";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import type { Footer as FooterData, SiteSetting } from "@/types/cms";
-import { GlowLine } from "@/components/common/glow-line";
 
 function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
   return (

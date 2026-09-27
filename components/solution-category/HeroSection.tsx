@@ -3,11 +3,10 @@ import { ArrowRight } from "lucide-react";
 
 import { ScrollHint } from "@/components/common/scroll-hint";
 import { Button } from "@/components/ui/button";
+import { Pill } from "@/components/ui/pill";
 import { mediaUrl } from "@/lib/cms/media";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { SolutionCategory } from "@/types/cms";
-
-import { Pill } from "@/components/ui/pill";
 
 export function HeroSection({ category, t }: { category: SolutionCategory; t: Dictionary }) {
   const hero = category.hero ?? {};
