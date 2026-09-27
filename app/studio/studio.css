@@ -981,7 +981,7 @@ select.studio-input {
     grid-template-columns: var(--puck-pluginbar-width) var(--falah-left) minmax(0, 1fr) var(--falah-right) !important;
     transition:
       grid-template-columns 0.42s cubic-bezier(0.22, 1, 0.36, 1),
-      grid-template-rows var(--puck-duration-medium) var(--puck-ease-exit);
+      grid-template-rows var(--puck-duration-medium) var(--puck-ease-exit) !important;
   }
 
   .studio-body [class*="_PuckLayout--leftSideBarVisible_"] [class*="_PuckLayout-inner_"] {
@@ -994,7 +994,7 @@ select.studio-input {
 
   /* Dragging a panel's edge to resize it: follow the pointer directly. */
   .studio-body:has([class*="_Sidebar-resizeHandle_"]:active) [class*="_PuckLayout-inner_"] {
-    transition: none;
+    transition: none !important;
   }
 
   /* Panels stay rendered while their column closes (clipped by it), and are
