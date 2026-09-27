@@ -1,6 +1,5 @@
-import Image from "next/image";
 
-import { SectionTitle } from "@/components/common/section-ui";
+import { ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
 import { mediaUrl } from "@/lib/cms/media";
 import type { OfficeMapBlock as Data } from "@/types/cms";
 
@@ -16,7 +15,7 @@ export function OfficeMapBlock({ block, ctx }: BlockProps<Data>) {
 
   return (
     <section className="relative isolate flex flex-col items-center gap-8 overflow-hidden bg-[#0A0A0A] pt-[50px] md:bg-transparent md:p-[50px_80px]">
-      {bg && <Image src={bg} alt="" fill className="-z-30 hidden object-cover md:block" />}
+      <ResponsiveBackground src={bg} className="-z-30 hidden object-cover md:block" />
       <div className="absolute inset-0 -z-20 hidden bg-[linear-gradient(180deg,rgba(5,4,13,1)_0%,rgba(5,4,13,0.97)_0%,rgba(5,4,13,0)_32%)] md:block" />
       <div className="absolute inset-0 -z-10 hidden bg-[linear-gradient(0deg,rgba(5,4,13,1)_0%,rgba(5,4,13,0)_40%)] md:block" />
       <SectionTitle variant="contact" eyebrow={block.header.eyebrow} title={block.header.title} desc={block.header.description} />

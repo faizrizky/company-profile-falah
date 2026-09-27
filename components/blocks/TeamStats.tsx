@@ -1,6 +1,5 @@
-import Image from "next/image";
 
-import { Glow, SectionTitle } from "@/components/common/section-ui";
+import { Glow, ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
 import { Card } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/count-up";
 import { mediaUrl } from "@/lib/cms/media";
@@ -12,7 +11,7 @@ export function TeamStatsBlock({ block }: BlockProps<Data>) {
   const bg = mediaUrl(block.background);
   return (
     <section className="relative isolate overflow-hidden px-6 py-12.5 md:px-20">
-      {bg && <Image src={bg} alt="" fill className="-z-20 object-fill" />}
+      <ResponsiveBackground src={bg} className="-z-20 object-fill" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <SectionTitle
           variant="page"

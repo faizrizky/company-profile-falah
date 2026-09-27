@@ -110,7 +110,7 @@ export function Section({
     <section
       className={cn("relative isolate overflow-hidden px-6 py-12.5 lg:px-20", className)}
     >
-      {bg && <Image src={bg} alt="" fill className="-z-20 object-cover" />}
+      <ResponsiveBackground src={bg} />
       <div className="absolute inset-0 -z-10 bg-surface-dark/60" />
       <div className="relative mx-auto flex w-full max-w-[1269px] flex-col items-center gap-8">
         {children}

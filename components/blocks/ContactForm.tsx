@@ -1,6 +1,6 @@
-import Image from "next/image";
 
 import { ScrollHint } from "@/components/common/scroll-hint";
+import { ResponsiveBackground } from "@/components/common/section-ui";
 import { ContactForm } from "@/components/contact/contact-form";
 import { WhatsAppButton, whatsappHref } from "@/components/contact/whatsapp-button";
 import { Card } from "@/components/ui/card";
@@ -27,7 +27,7 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
 
   return (
     <section className="relative isolate overflow-hidden bg-surface-dark md:flex md:items-center md:gap-8 md:px-20 md:py-[100px]">
-      {bg && <Image src={bg} alt="" fill className="-z-20 hidden object-cover md:block" />}
+      <ResponsiveBackground src={bg} className="-z-20 hidden object-cover md:block" />
       <div className="absolute inset-0 -z-10 hidden bg-[linear-gradient(180deg,rgba(5,4,13,0)_51%,rgba(5,4,13,1)_100%)] md:block" />
 
       {/* Mobile */}

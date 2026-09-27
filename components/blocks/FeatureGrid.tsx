@@ -1,7 +1,6 @@
-import Image from "next/image";
 
 import { GlowLine } from "@/components/common/glow-line";
-import { Glow, SectionTitle } from "@/components/common/section-ui";
+import { Glow, ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
 import { Card } from "@/components/ui/card";
 import { mediaUrl } from "@/lib/cms/media";
 import type { FeatureGridBlock as Data } from "@/types/cms";
@@ -14,7 +13,7 @@ function CardsVariant({ block }: { block: Data }) {
   const bg = mediaUrl(block.background);
   return (
     <section className="relative isolate overflow-hidden px-6 pt-25 pb-12.5 md:px-20">
-      {bg && <Image src={bg} alt="" fill className="-z-20 object-fill" />}
+      <ResponsiveBackground src={bg} className="-z-20 object-fill" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <SectionTitle
           variant="page"
@@ -57,8 +56,8 @@ function ValuesVariant({ block }: { block: Data }) {
   return (
     <section className="relative isolate overflow-hidden bg-[#0A0A0A] px-6 py-12.5 md:bg-transparent md:px-20">
       {/* Phones (Figma mobile): a plain dark section, no background art. */}
-      {bg && <Image src={bg} alt="" fill className="-z-30 hidden object-fill md:block" />}
-      {overlay && <Image src={overlay} alt="" fill className="-z-20 hidden object-fill md:block" />}
+      <ResponsiveBackground src={bg} className="-z-30 hidden object-fill md:block" />
+      <ResponsiveBackground src={overlay} className="-z-20 hidden object-fill md:block" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <SectionTitle
           variant="page"

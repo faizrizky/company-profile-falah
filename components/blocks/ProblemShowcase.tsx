@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Glow, Lines } from "@/components/common/section-ui";
+import { Glow, Lines, ResponsiveBackground } from "@/components/common/section-ui";
 import { Card } from "@/components/ui/card";
 import { Pill } from "@/components/ui/pill";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
@@ -16,7 +16,7 @@ export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
 
   return (
     <section className="relative isolate overflow-hidden px-6 pt-12.5 lg:px-20 lg:pt-25 lg:pb-12">
-      {bg && <Image src={bg} alt="" fill className="-z-20 object-cover" />}
+      <ResponsiveBackground src={bg} />
       <div className="absolute inset-0 -z-10 bg-[#0A0A0A] lg:bg-surface-dark/60" />
       <div className="relative mx-auto flex w-full max-w-[1269px] flex-col items-center gap-8">
         <div className="flex w-full max-w-[564px] flex-col items-center gap-3 text-center">
