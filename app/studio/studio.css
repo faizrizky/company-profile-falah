@@ -966,32 +966,47 @@ select.studio-input {
   }
 }
 
-/* Toggling the left / right panels (header buttons): the panel content
-   slides in from its own side instead of popping in. */
-.studio-body [class*="_Sidebar--left_"][class*="_Sidebar--isVisible_"] > * {
-  animation: studio-panel-left 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
-}
+/* Toggling the left / right panels (header buttons): the columns
+   themselves glide — the panel slides in from the edge while the page
+   canvas shrinks/grows with it. Puck sizes the canvas column \`auto\`, which
+   browsers can't animate; \`1fr\` fills the same space and can. */
+@media (min-width: 638px) {
+  .studio-body [class*="_PuckLayout-inner_"] {
+    --puck-frame-width: 1fr;
+    transition:
+      grid-template-columns 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      grid-template-rows var(--puck-duration-medium) var(--puck-ease-exit);
+  }
 
-.studio-body [class*="_Sidebar--right_"][class*="_Sidebar--isVisible_"] > * {
-  animation: studio-panel-right 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
-}
+  /* Dragging a panel's edge to resize it: follow the pointer directly. */
+  .studio-body:has([class*="_Sidebar-resizeHandle_"]:active) [class*="_PuckLayout-inner_"] {
+    transition: none;
+  }
 
-/* The canvas settles into its new width. */
-.studio-body [class*="_PuckCanvas-inner_"] {
-  transition: padding 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
+  /* While a panel opens its content keeps its full width and is revealed
+     (clipped), rather than squeezed. */
+  .studio-body [class*="_Sidebar--left_"],
+  .studio-body [class*="_Sidebar--right_"] {
+    overflow: hidden;
+  }
 
-@keyframes studio-panel-left {
-  from {
-    opacity: 0;
-    transform: translateX(-24px);
+  .studio-body [class*="_Sidebar--left_"] > * {
+    min-width: var(--puck-sidebar-left-width);
+  }
+
+  .studio-body [class*="_Sidebar--right_"] > * {
+    min-width: var(--puck-sidebar-right-width);
+  }
+
+  /* A light fade on top of the slide. */
+  .studio-body [class*="_Sidebar--isVisible_"] > * {
+    animation: studio-panel-fade 0.4s ease backwards;
   }
 }
 
-@keyframes studio-panel-right {
+@keyframes studio-panel-fade {
   from {
     opacity: 0;
-    transform: translateX(24px);
   }
 }
 
@@ -1007,5 +1022,9 @@ select.studio-input {
 @media (prefers-reduced-motion: reduce) {
   .studio-body [class*="_Sidebar--isVisible_"] > * {
     animation: none;
+  }
+
+  .studio-body [class*="_PuckLayout-inner_"] {
+    transition: none;
   }
 }
