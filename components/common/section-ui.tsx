@@ -78,16 +78,18 @@ export function SectionHeader({
   className?: string;
 }) {
   return (
-    <div className={cn("flex w-full flex-col items-center gap-3 text-center", className)}>
+    <div className={cn("flex w-full max-w-[682px] flex-col items-center gap-3 text-center", className)}>
       {eyebrow && (
-        <span className="flex items-center gap-1 rounded-full border border-white bg-surface-dark/5 px-4 py-1 text-sm text-white backdrop-blur-sm">
+        <span className="flex items-center gap-1 rounded-full border border-white bg-surface-dark/5 px-4 py-1 text-sm font-medium leading-6 text-white backdrop-blur-sm">
           {eyebrow}
         </span>
       )}
-      <h2 className="max-w-[900px] font-display text-[30px] font-bold leading-9 text-accent">
-        <Lines text={title} />
-      </h2>
-      {desc && <p className="max-w-[720px] text-base leading-6 text-white">{desc}</p>}
+      <div className="flex w-full flex-col items-center gap-1">
+        <h2 className="font-display text-[30px] font-bold leading-9 text-accent">
+          <Lines text={title} />
+        </h2>
+        {desc && <p className="text-base leading-6 text-white">{desc}</p>}
+      </div>
     </div>
   );
 }

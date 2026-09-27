@@ -51,14 +51,15 @@ export function VideoShowcaseBlock({ block, ctx }: BlockProps<Data>) {
     </>
   );
   return (
-    <Section bg={mediaUrl(block.background)} className="py-25">
+    <Section bg={mediaUrl(block.background)}>
       <SectionHeader
         eyebrow={block.header.eyebrow}
         title={block.header.title}
         desc={block.header.description}
+        className="max-w-[560px]"
       />
       {/* The poster fills the whole card, edge to edge. */}
-      <div className="w-full max-w-[942px] overflow-hidden rounded-2xl border border-accent shadow-[0_0_10px_rgba(147,197,253,1)]">
+      <div className="w-full max-w-[864px] overflow-hidden rounded-2xl border border-accent shadow-[0_0_10px_rgba(147,197,253,1)]">
         <div className="relative aspect-video overflow-hidden">
           {video ? (
             // Uploaded video: plays in place; nothing but the poster loads until then.

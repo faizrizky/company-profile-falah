@@ -24,7 +24,7 @@ function CertificationCards({ block, items }: { block: Data; items: Certificatio
         {items.map((c) => (
           <div
             key={c.id}
-            className="relative flex flex-col items-center gap-4 overflow-clip rounded-lg border border-accent/50 bg-surface-dark/5 px-10 pb-8 pt-4 text-center backdrop-blur-sm transition-transform duration-300 hover:scale-[1.03]"
+            className="relative flex flex-col items-center gap-4 overflow-clip rounded-lg border border-accent/50 bg-surface-dark/5 px-6 pb-8 pt-4 text-center backdrop-blur-sm transition-transform duration-300 hover:scale-[1.03]"
           >
             <Glow className="-top-3.5 left-0 h-[25px] w-[322px]" />
             <div className="flex h-[98px] items-center justify-center">
@@ -33,7 +33,7 @@ function CertificationCards({ block, items }: { block: Data; items: Certificatio
             <div className="flex flex-col items-center gap-4">
               <h3 className="font-display text-xl font-bold leading-7 text-white">{c.title}</h3>
               {c.subtitle && (
-                <span className="rounded-full border border-accent px-4 py-1 text-xs leading-[18px] text-white backdrop-blur-sm">
+                <span className="whitespace-nowrap rounded-full border border-accent px-3 py-1 text-xs leading-[18px] text-white backdrop-blur-sm">
                   {c.subtitle}
                 </span>
               )}

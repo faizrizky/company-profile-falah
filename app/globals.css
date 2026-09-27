@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
-@theme {
+/* inline: utilities read the next/font variables where they are set (on
+   <body>, or the editor iframe), not a copy resolved on :root, where they
+   don't exist. */
+@theme inline {
   --font-sans: var(--font-poppins);
   --font-display: var(--font-oxanium);
+}
 
+@theme {
   --color-background: #05040d;
   --color-foreground: #ffffff;
 

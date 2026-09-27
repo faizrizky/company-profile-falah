@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import { MoveRight } from "lucide-react";
 
 import { PlayButton } from "@/components/blocks/VideoShowcase";
 import { InlineVideo } from "@/components/common/inline-video";
@@ -30,7 +30,7 @@ function WithMediaCta({ block, ctx }: BlockProps<Data>) {
               {block.buttons.map((b) => (
                 <Button key={b.id ?? b.href} href={b.href} variant={b.style ?? "fill"} size="lg">
                   {b.label}
-                  {(b.style ?? "fill") === "fill" && <ArrowUpRight className="h-6 w-6" />}
+                  {(b.style ?? "fill") === "fill" && <MoveRight className="h-6 w-6" strokeWidth={1.5} />}
                 </Button>
               ))}
             </div>
