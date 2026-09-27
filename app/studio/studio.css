@@ -965,3 +965,47 @@ select.studio-input {
     animation: none;
   }
 }
+
+/* Toggling the left / right panels (header buttons): the panel content
+   slides in from its own side instead of popping in. */
+.studio-body [class*="_Sidebar--left_"][class*="_Sidebar--isVisible_"] > * {
+  animation: studio-panel-left 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+.studio-body [class*="_Sidebar--right_"][class*="_Sidebar--isVisible_"] > * {
+  animation: studio-panel-right 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+/* The canvas settles into its new width. */
+.studio-body [class*="_PuckCanvas-inner_"] {
+  transition: padding 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes studio-panel-left {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+@keyframes studio-panel-right {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+/* Header icon buttons (panel toggles…): a small press. */
+.studio-body [class*="_PuckHeader_"] button {
+  transition: transform 0.16s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.studio-body [class*="_PuckHeader_"] button:active {
+  transform: scale(0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-body [class*="_Sidebar--isVisible_"] > * {
+    animation: none;
+  }
+}
