@@ -1,5 +1,5 @@
 import { CertificationGallery } from "@/components/about/certification-section";
-import { Glow, Section, SectionHeader } from "@/components/common/section-ui";
+import { Glow, Section, SectionTitle } from "@/components/common/section-ui";
 import { mediaUrl, populated } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
 import type { Certification, CertificationsBlock as Data } from "@/types/cms";
@@ -15,7 +15,7 @@ const ICON_CLASS: Record<NonNullable<Certification["iconShape"]>, string> = {
 function CertificationCards({ block, items }: { block: Data; items: Certification[] }) {
   return (
     <Section bg={mediaUrl(block.background)}>
-      <SectionHeader
+      <SectionTitle
         eyebrow={block.header.eyebrow}
         title={block.header.title}
         desc={block.header.description}

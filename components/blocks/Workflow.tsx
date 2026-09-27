@@ -1,4 +1,4 @@
-import { ContactHead } from "@/components/contact/contact-head";
+import { SectionTitle } from "@/components/common/section-ui";
 import { cn } from "@/lib/utils";
 import type { WorkflowBlock as Data } from "@/types/cms";
 
@@ -8,7 +8,7 @@ export function WorkflowBlock({ block }: BlockProps<Data>) {
   const steps = (block.steps ?? []).map((s, i) => ({ ...s, n: String(i + 1).padStart(2, "0") }));
   const last = steps.length - 1;
   const head = (
-    <ContactHead pill={block.header.eyebrow} title={block.header.title} desc={block.header.description} />
+    <SectionTitle variant="contact" eyebrow={block.header.eyebrow} title={block.header.title} desc={block.header.description} />
   );
 
   return (

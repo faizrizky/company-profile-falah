@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Glow, Head } from "@/components/common/section-ui";
+import { Glow, SectionTitle } from "@/components/common/section-ui";
 import { mediaUrl } from "@/lib/cms/media";
 import type { FeatureGridBlock as Data } from "@/types/cms";
 
@@ -15,9 +15,10 @@ function CardsVariant({ block }: { block: Data }) {
     <section className="relative isolate overflow-hidden px-6 pt-25 pb-12.5 md:px-20">
       {bg && <Image src={bg} alt="" fill className="-z-20 object-fill" />}
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
-        <Head
+        <SectionTitle
+          variant="page"
           className="max-w-[564px]"
-          pill={block.header.eyebrow}
+          eyebrow={block.header.eyebrow}
           title={block.header.title}
           desc={block.header.description}
         />
@@ -58,9 +59,10 @@ function ValuesVariant({ block }: { block: Data }) {
       {bg && <Image src={bg} alt="" fill className="-z-30 hidden object-fill md:block" />}
       {overlay && <Image src={overlay} alt="" fill className="-z-20 hidden object-fill md:block" />}
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
-        <Head
+        <SectionTitle
+          variant="page"
           className="max-w-[564px] items-start text-left md:items-center md:text-center"
-          pill={block.header.eyebrow}
+          eyebrow={block.header.eyebrow}
           title={block.header.title}
           desc={block.header.description}
         />

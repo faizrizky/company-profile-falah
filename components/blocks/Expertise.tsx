@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Glow, Section, SectionHeader } from "@/components/common/section-ui";
+import { Glow, Section, SectionTitle } from "@/components/common/section-ui";
 import { CountUp } from "@/components/ui/count-up";
 import { mediaUrl } from "@/lib/cms/media";
 import type { ExpertiseBlock as Data } from "@/types/cms";
@@ -10,7 +10,7 @@ import type { BlockProps } from "./types";
 export function ExpertiseBlock({ block }: BlockProps<Data>) {
   return (
     <Section bg={mediaUrl(block.background)}>
-      <SectionHeader
+      <SectionTitle
         eyebrow={block.header.eyebrow}
         title={block.header.title}
         desc={block.header.description}

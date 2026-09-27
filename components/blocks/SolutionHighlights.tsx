@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
-import { Glow, Section, SectionHeader } from "@/components/common/section-ui";
+import { Glow, Section, SectionTitle } from "@/components/common/section-ui";
 import { Button } from "@/components/ui/button";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import type { SolutionHighlightsBlock as Data } from "@/types/cms";
@@ -15,7 +15,7 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
 
   return (
     <Section bg={mediaUrl(block.background)}>
-      <SectionHeader
+      <SectionTitle
         className="max-w-[574px]"
         eyebrow={block.header.eyebrow}
         title={block.header.title}

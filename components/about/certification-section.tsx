@@ -5,7 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 
-import { Glow, Head } from "@/components/common/section-ui";
+import { Glow, SectionTitle } from "@/components/common/section-ui";
 import { useI18n } from "@/components/i18n/locale-provider";
 import { format } from "@/lib/i18n/dictionaries";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
@@ -35,7 +35,7 @@ export function CertificationGallery({
     <section id="certificate" className="relative isolate overflow-hidden px-6 py-12.5 md:px-20">
       {background && <Image src={background} alt="" fill className="-z-20 object-fill" />}
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
-        <Head className="max-w-[630px]" pill={header.eyebrow} title={header.title} desc={header.description} />
+        <SectionTitle variant="page" className="max-w-[630px]" eyebrow={header.eyebrow} title={header.title} desc={header.description} />
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {items.filter((card) => mediaUrl(card.certificate)).map((card) => {
             const image = mediaUrl(card.certificate);

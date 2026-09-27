@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { InlineVideo } from "@/components/common/inline-video";
-import { Section, SectionHeader } from "@/components/common/section-ui";
+import { Section, SectionTitle } from "@/components/common/section-ui";
 import { mediaAlt, mediaType, mediaUrl } from "@/lib/cms/media";
 import type { VideoShowcaseBlock as Data } from "@/types/cms";
 
@@ -47,7 +47,7 @@ export function VideoShowcaseBlock({ block, ctx }: BlockProps<Data>) {
   );
   return (
     <Section bg={mediaUrl(block.background)}>
-      <SectionHeader
+      <SectionTitle
         eyebrow={block.header.eyebrow}
         title={block.header.title}
         desc={block.header.description}

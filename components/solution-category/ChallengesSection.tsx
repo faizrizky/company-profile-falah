@@ -1,6 +1,6 @@
 import { CircleDollarSign, ClipboardList, Clock, UserX } from "lucide-react";
 
-import { Glow, SectionHeader } from "@/components/common/section-ui";
+import { Glow, SectionTitle } from "@/components/common/section-ui";
 import type { SolutionCategory } from "@/types/cms";
 
 type ChallengeIcon = NonNullable<NonNullable<SolutionCategory["challenges"]>["items"]>[number]["icon"];
@@ -19,7 +19,7 @@ export function ChallengesSection({ category }: { category: SolutionCategory }) 
   return (
     <section className="w-full bg-surface-dark px-6 pb-12.5 pt-25 md:px-20">
       <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
-        <SectionHeader
+        <SectionTitle
           eyebrow={challenges.eyebrow}
           title={challenges.title ?? ""}
           desc={challenges.description}
