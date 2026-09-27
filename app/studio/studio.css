@@ -967,15 +967,29 @@ select.studio-input {
 }
 
 /* Toggling the left / right panels (header buttons): the columns
-   themselves glide — the panel slides in from the edge while the page
-   canvas shrinks/grows with it. Puck sizes the canvas column \`auto\`, which
-   browsers can't animate; \`1fr\` fills the same space and can. */
+   themselves glide — the panel slides in/out at the edge while the page
+   canvas shrinks/grows with it, both ways and for either panel.
+
+   Puck's own column sizes can't be animated (\`auto\`, \`minmax()\`, and a
+   hidden panel is \`display: none\` at once), so the columns are driven here
+   with plain lengths: 0 when a panel is closed, its width when open. */
 @media (min-width: 638px) {
   .studio-body [class*="_PuckLayout-inner_"] {
-    --puck-frame-width: 1fr;
+    --falah-sidebar-w: 260px;
+    --falah-left: 0px;
+    --falah-right: 0px;
+    grid-template-columns: var(--puck-pluginbar-width) var(--falah-left) minmax(0, 1fr) var(--falah-right) !important;
     transition:
-      grid-template-columns 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      grid-template-columns 0.42s cubic-bezier(0.22, 1, 0.36, 1),
       grid-template-rows var(--puck-duration-medium) var(--puck-ease-exit);
+  }
+
+  .studio-body [class*="_PuckLayout--leftSideBarVisible_"] [class*="_PuckLayout-inner_"] {
+    --falah-left: var(--puck-user-sidebar-left-width, var(--falah-sidebar-w));
+  }
+
+  .studio-body [class*="_PuckLayout--rightSideBarVisible_"] [class*="_PuckLayout-inner_"] {
+    --falah-right: var(--puck-user-sidebar-right-width, var(--falah-sidebar-w));
   }
 
   /* Dragging a panel's edge to resize it: follow the pointer directly. */
@@ -983,24 +997,51 @@ select.studio-input {
     transition: none;
   }
 
-  /* While a panel opens its content keeps its full width and is revealed
-     (clipped), rather than squeezed. */
+  /* Panels stay rendered while their column closes (clipped by it), and are
+     hidden from focus/screen readers once it has. */
   .studio-body [class*="_Sidebar--left_"],
   .studio-body [class*="_Sidebar--right_"] {
+    display: flex !important;
+    min-width: 0;
     overflow: hidden;
+    visibility: hidden;
+    transition: visibility 0s linear 0.42s;
   }
 
+  .studio-body [class*="_Sidebar--left_"][class*="_Sidebar--isVisible_"],
+  .studio-body [class*="_Sidebar--right_"][class*="_Sidebar--isVisible_"] {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  /* Content keeps its full width and is revealed, not squeezed. */
   .studio-body [class*="_Sidebar--left_"] > * {
-    min-width: var(--puck-sidebar-left-width);
+    min-width: var(--puck-user-sidebar-left-width, var(--falah-sidebar-w));
   }
 
   .studio-body [class*="_Sidebar--right_"] > * {
-    min-width: var(--puck-sidebar-right-width);
+    min-width: var(--puck-user-sidebar-right-width, var(--falah-sidebar-w));
   }
 
-  /* A light fade on top of the slide. */
+  /* Right panel content is anchored to the right edge while it slides. */
+  .studio-body [class*="_Sidebar--right_"] {
+    align-items: flex-end;
+  }
+
   .studio-body [class*="_Sidebar--isVisible_"] > * {
-    animation: studio-panel-fade 0.4s ease backwards;
+    animation: studio-panel-fade 0.42s ease backwards;
+  }
+}
+
+@media (min-width: 1198px) {
+  .studio-body [class*="_PuckLayout-inner_"] {
+    --falah-sidebar-w: 290px;
+  }
+}
+
+@media (min-width: 1598px) {
+  .studio-body [class*="_PuckLayout-inner_"] {
+    --falah-sidebar-w: 320px;
   }
 }
 
