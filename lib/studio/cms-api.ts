@@ -76,7 +76,10 @@ export function listMedia(
     depth: "0",
     "where[mimeType][like]": kind,
   });
-  if (search) params.set("where[or][0][alt][like]", search), params.set("where[or][1][filename][like]", search);
+  if (search) {
+    params.set("where[or][0][alt][like]", search);
+    params.set("where[or][1][filename][like]", search);
+  }
   return request<{ docs: Media[]; hasNextPage: boolean; page: number }>(cmsUrl, `/api/media?${params}`);
 }
 
