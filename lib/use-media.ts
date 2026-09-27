@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 /** Below Tailwind's `md` breakpoint. */
-export const MOBILE_QUERY = "(max-width: 767px)";
+const MOBILE_QUERY = "(max-width: 767px)";
 
 const subscribeMobile = (onChange: () => void) => {
   const query = window.matchMedia(MOBILE_QUERY);
@@ -23,11 +23,4 @@ export function useIsMobile(): boolean | null {
 export function prefersStill() {
   const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches || Boolean(connection?.saveData);
-}
-
-const noopSubscribe = () => () => {};
-
-/** `prefersStill()` as a hook: false on the server, decided after hydration. */
-export function usePrefersStill(): boolean {
-  return useSyncExternalStore(noopSubscribe, prefersStill, () => false);
 }

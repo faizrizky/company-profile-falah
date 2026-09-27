@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 /** Message the CMS waits for before removing its editor skeleton. */
-export const STUDIO_READY_MESSAGE = "falah-studio:ready";
+const STUDIO_READY_MESSAGE = "falah-studio:ready";
 
 /** Tell the embedding CMS (if any) that the studio has something to show. */
 export function signalStudioReady(cmsUrl: string) {

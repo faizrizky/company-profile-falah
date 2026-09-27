@@ -1,7 +1,8 @@
 "use server";
 
 import { isLocale, defaultLocale } from "@/lib/i18n/config";
-import { loadStudio, verifyStudioAuth, type StudioLoadResult } from "@/lib/studio/load";
+import { verifyStudioAuth } from "@/lib/studio/auth";
+import { loadStudio, type StudioLoadResult } from "@/lib/studio/load";
 
 /**
  * Loads the editor with a session token handed over by the embedding CMS

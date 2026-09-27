@@ -57,19 +57,6 @@ export type StudioLoadResult =
   | { status: "login" }
   | { status: "notFound" };
 
-/** The CMS user behind an `Authorization: JWT …` value, or null. */
-export async function verifyStudioAuth(authorization: string): Promise<User | null> {
-  if (!env.CMS_URL) return null;
-  const res = await fetch(new URL("/api/users/me", env.CMS_URL), {
-    headers: { authorization },
-    cache: "no-store",
-    signal: AbortSignal.timeout(10_000),
-  });
-  if (!res.ok) return null;
-  const { user } = (await res.json()) as { user: User | null };
-  return user ?? null;
-}
-
 /** Everything the editor needs for one page, fetched with the editor's own session. */
 export async function loadStudio({
   pageId,

@@ -14,8 +14,8 @@
  * Messages are only sent to, and only accepted from, the CMS origin. The
  * token lives in memory only and goes to the CMS as an Authorization header.
  */
-export const TOKEN_REQUEST = "falah-studio:token-request";
-export const TOKEN_RESPONSE = "falah-studio:token";
+const TOKEN_REQUEST = "falah-studio:token-request";
+const TOKEN_RESPONSE = "falah-studio:token";
 
 const TIMEOUT_MS = 10_000;
 

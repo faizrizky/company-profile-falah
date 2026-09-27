@@ -1,12 +1,12 @@
 import { Oxanium, Poppins } from "next/font/google";
 
-export const oxanium = Oxanium({
+const oxanium = Oxanium({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-oxanium",
 });
 
-export const poppins = Poppins({
+const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-poppins",

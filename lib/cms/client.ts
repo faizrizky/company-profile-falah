@@ -3,7 +3,7 @@ import "server-only";
 import type { CmsTag } from "@/lib/cms/tags";
 import { env } from "@/lib/env";
 
-export class CmsError extends Error {
+class CmsError extends Error {
   constructor(
     message: string,
     readonly status?: number,

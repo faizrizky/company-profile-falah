@@ -6,7 +6,7 @@ import { env } from "@/lib/env";
 import type { User } from "@/types/cms";
 
 /** Payload's session cookie (set by the CMS on login). */
-export const CMS_SESSION_COOKIE = "payload-token";
+const CMS_SESSION_COOKIE = "payload-token";
 
 /**
  * The visual editor has no login of its own: it reuses the CMS session.
@@ -22,6 +22,13 @@ export async function getStudioSession(): Promise<{ user: User; authorization: s
   // cookie together with an allowed Origin (CSRF protection), which is right
   // for browsers but not for this call.
   const authorization = `JWT ${token}`;
+  const user = await verifyStudioAuth(authorization);
+  return user ? { user, authorization } : null;
+}
+
+/** The CMS user behind an `Authorization: JWT …` value, or null. */
+export async function verifyStudioAuth(authorization: string): Promise<User | null> {
+  if (!env.CMS_URL) return null;
   const res = await fetch(new URL("/api/users/me", env.CMS_URL), {
     headers: { authorization },
     cache: "no-store",
@@ -29,7 +36,7 @@ export async function getStudioSession(): Promise<{ user: User; authorization: s
   });
   if (!res.ok) return null;
   const { user } = (await res.json()) as { user: User | null };
-  return user ? { user, authorization } : null;
+  return user ?? null;
 }
 
 export const cmsPublicUrl = () => env.CMS_PUBLIC_URL ?? env.CMS_URL ?? "";
