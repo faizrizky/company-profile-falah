@@ -6,11 +6,14 @@ export function PartnerMarquee({
   partners,
   className,
   trackClassName,
+  logoClassName = "mr-[45px] h-8 opacity-70",
   reverse,
 }: {
   partners: Partner[];
   className?: string;
   trackClassName?: string;
+  /** Size and spacing of each logo. */
+  logoClassName?: string;
   reverse?: boolean;
 }) {
   const logos = partners.filter((p) => mediaUrl(p.logo));
@@ -31,7 +34,7 @@ export function PartnerMarquee({
             src={mediaUrl(p.logo)}
             alt={i < logos.length ? mediaAlt(p.logo, p.name) : ""}
             aria-hidden={i >= logos.length || undefined}
-            className="mr-[45px] h-8 w-auto opacity-70"
+            className={cn("w-auto", logoClassName)}
           />
         ))}
       </div>

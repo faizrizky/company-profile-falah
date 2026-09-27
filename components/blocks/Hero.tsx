@@ -97,13 +97,14 @@ function CenteredHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext 
   );
 }
 
-function PageHero({ block }: { block: HeroBlockData }) {
+function PageHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
+  const certifications = block.showCertificates ? ctx.data.certifications : [];
   return (
     <section className="relative isolate flex min-h-[570px] flex-col overflow-hidden pb-[25px] md:min-h-0 md:pb-25">
       <Background block={block} />
       <div className="relative flex flex-1 flex-col px-6 pt-[50px] md:px-20 md:pt-40">
         <div className="flex flex-col items-start gap-8 md:gap-9">
-          <div className="flex w-full max-w-[735px] flex-col gap-2 md:gap-4">
+          <div className="flex w-full max-w-[768px] flex-col gap-2 md:gap-4">
             {block.eyebrow && (
               <span className="flex w-fit items-center rounded-full border border-white bg-surface-dark/5 px-2 py-1 text-xs leading-[18px] text-white backdrop-blur-sm md:px-4 md:text-base md:leading-6">
                 {block.eyebrow}
@@ -132,6 +133,7 @@ function PageHero({ block }: { block: HeroBlockData }) {
               ))}
             </div>
           ) : null}
+          {certifications.length > 0 && <CertificateButton certifications={certifications} />}
         </div>
         {block.showScrollHint && (
           <div className="mt-auto flex justify-center pt-[92px]">
@@ -148,7 +150,7 @@ export function HeroBlock({ block, ctx }: BlockProps<HeroBlockData>) {
     case "centered":
       return <CenteredHero block={block} ctx={ctx} />;
     case "page":
-      return <PageHero block={block} />;
+      return <PageHero block={block} ctx={ctx} />;
     default:
       return <HomeHero block={block} ctx={ctx} />;
   }

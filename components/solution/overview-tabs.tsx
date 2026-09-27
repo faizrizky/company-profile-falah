@@ -39,7 +39,7 @@ function ProductCard({ product }: { product: Product }) {
         </Button>
         <h3
           className={cn(
-            "font-display font-bold text-white md:text-right",
+            "w-full font-display font-bold text-white",
             largeTitle ? "text-xl leading-5" : "text-base leading-5",
           )}
         >
@@ -76,7 +76,7 @@ export function SolutionOverviewTabs({
               aria-selected={active}
               onClick={() => setActiveId(c.id)}
               className={cn(
-                "relative flex h-12 w-[243px] shrink-0 items-center justify-center rounded-lg border px-4 text-sm font-bold leading-7 text-white backdrop-blur-sm transition-all duration-300 hover:scale-[1.03]",
+                "relative flex h-12 w-[243px] shrink-0 items-center justify-center rounded-lg border px-4 text-sm font-bold leading-4 text-white backdrop-blur-sm transition-all duration-300 hover:scale-[1.03]",
                 active ? "border-accent/50 bg-accent/5" : "border-[#3d3d3d]/50 bg-surface-dark/5",
               )}
             >

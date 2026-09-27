@@ -19,8 +19,8 @@ export function PartnersBlock({ block }: BlockProps<Data>) {
           desc={block.header.description}
         />
         <div className="relative h-[300px] w-full overflow-hidden">
-          <PartnerMarquee partners={rowOne} trackClassName="h-[100px]" />
-          <PartnerMarquee partners={rowTwo} trackClassName="mt-[27px] h-[173px]" reverse />
+          <PartnerMarquee partners={rowOne} trackClassName="h-[100px]" logoClassName="mr-10 h-8 md:h-10" />
+          <PartnerMarquee partners={rowTwo} trackClassName="mt-[27px] h-[150px]" logoClassName="mr-16 h-14 max-w-[120px] object-contain md:mr-[100px] md:h-[90px] md:max-w-[170px]" reverse />
         </div>
       </div>
       <img src="/about/gradasi.svg" alt="" className="pointer-events-none absolute left-0 top-0 h-[600px] w-full" />

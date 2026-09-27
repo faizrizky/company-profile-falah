@@ -206,7 +206,7 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
           ...(variant !== "home" ? { eyebrow } : {}),
           ...rest,
           ...(variant === "home" ? { showPartners } : {}),
-          ...(variant === "centered" ? { showCertificates } : {}),
+          ...(variant !== "home" ? { showCertificates } : {}),
         } as Fields<AnyProps>;
       },
       defaultProps: {

@@ -43,7 +43,7 @@ export function Footer({
   return (
     <footer className="relative overflow-hidden bg-[#020713] px-6 py-12 lg:px-20 lg:py-16">
       <div className="mx-auto w-full max-w-[1269px]">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-[1.3fr_1fr_0.8fr_1.2fr] md:gap-8">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-[274fr_296fr_296fr_313fr] md:gap-8">
           <div className="flex flex-col gap-5">
             {logo && <img src={logo} alt={mediaAlt(settings.logo, settings.siteName)} className="h-10 w-fit" />}
             {footer.description && (

@@ -41,7 +41,7 @@ function CardsVariant({ block }: { block: Data }) {
 
 function CardText({ card, gap = "" }: { card: Item; gap?: string }) {
   return (
-    <div className={`flex w-full flex-col text-left ${gap}`}>
+    <div className={`flex w-full flex-col text-left md:text-center ${gap}`}>
       <h3 className="font-display text-lg font-bold leading-6 text-white md:text-xl">{card.title}</h3>
       {card.description && <p className="text-sm leading-5 text-white">{card.description}</p>}
     </div>
