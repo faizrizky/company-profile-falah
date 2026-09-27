@@ -29,7 +29,7 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
       <div className="absolute inset-0 -z-10 hidden bg-[linear-gradient(180deg,rgba(5,4,13,0)_51%,rgba(5,4,13,1)_100%)] md:block" />
 
       {/* Mobile */}
-      <div className="flex flex-col gap-8 bg-[#0A0A0A]/50 pt-[50px] md:hidden">
+      <div className="flex flex-col gap-8 bg-[#0A0A0A]/50 pt-[120px] md:hidden">
         <div className="flex flex-col gap-2 px-6">
           {block.eyebrow && (
             <span className="inline-flex w-fit items-center rounded-full border border-white bg-surface-dark/5 px-2 py-1 text-xs leading-[18px] text-white backdrop-blur-[5px]">

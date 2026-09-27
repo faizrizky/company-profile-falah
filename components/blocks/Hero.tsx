@@ -102,7 +102,7 @@ function PageHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
   return (
     <section className="relative isolate flex min-h-[570px] flex-col overflow-hidden pb-[25px] md:min-h-0 md:pb-25">
       <Background block={block} />
-      <div className="relative flex flex-1 flex-col px-6 pt-[50px] md:px-20 md:pt-40">
+      <div className="relative flex flex-1 flex-col px-6 pt-[120px] md:px-20 md:pt-40">
         <div className="flex flex-col items-start gap-8 md:gap-9">
           <div className="flex w-full max-w-[768px] flex-col gap-2 md:gap-4">
             {block.eyebrow && (
