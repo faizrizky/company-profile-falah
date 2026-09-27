@@ -3,11 +3,11 @@ import { ArrowUpRight } from "lucide-react";
 
 import { Glow, Section, SectionTitle } from "@/components/common/section-ui";
 import { Button } from "@/components/ui/button";
+import { Pill } from "@/components/ui/pill";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import type { SolutionHighlightsBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
-import { Pill } from "@/components/ui/pill";
 
 export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
   const { featured } = block;

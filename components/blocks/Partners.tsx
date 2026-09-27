@@ -1,10 +1,10 @@
+import { GlowLine } from "@/components/common/glow-line";
 import { PartnerMarquee } from "@/components/common/partner-marquee";
 import { SectionTitle } from "@/components/common/section-ui";
 import { populated } from "@/lib/cms/media";
 import type { Partner, PartnersBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
-import { GlowLine } from "@/components/common/glow-line";
 
 export function PartnersBlock({ block }: BlockProps<Data>) {
   const rowOne = populated<Partner>(block.rowOne);

@@ -1,11 +1,11 @@
 import Image from "next/image";
 
+import { GlowLine } from "@/components/common/glow-line";
 import { Glow, SectionTitle } from "@/components/common/section-ui";
 import { mediaUrl } from "@/lib/cms/media";
 import type { FeatureGridBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
-import { GlowLine } from "@/components/common/glow-line";
 
 type Item = NonNullable<Data["items"]>[number];
 

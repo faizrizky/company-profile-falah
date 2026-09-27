@@ -1,10 +1,9 @@
 import Image from "next/image";
-import { MoveRight } from "lucide-react";
 
 import { PlayButton } from "@/components/blocks/VideoShowcase";
 import { InlineVideo } from "@/components/common/inline-video";
 import { ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
-import { Button } from "@/components/ui/button";
+import { CmsButtons } from "@/components/ui/cms-buttons";
 import { mediaAlt, mediaType, mediaUrl } from "@/lib/cms/media";
 import type { CtaBlock as Data } from "@/types/cms";
 
@@ -25,16 +24,10 @@ function WithMediaCta({ block, ctx }: BlockProps<Data>) {
             title={block.header.title}
             desc={block.header.description}
           />
-          {block.buttons?.length ? (
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
-              {block.buttons.map((b) => (
-                <Button key={b.id ?? b.href} href={b.href} variant={b.style ?? "fill"} size="lg">
-                  {b.label}
-                  {(b.style ?? "fill") === "fill" && <MoveRight className="h-6 w-6" strokeWidth={1.5} />}
-                </Button>
-              ))}
-            </div>
-          ) : null}
+          <CmsButtons
+            buttons={block.buttons}
+            className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center"
+          />
         </div>
         {(media || video) && (
           <div className="w-full max-w-[862px] overflow-hidden rounded-2xl border border-accent shadow-[0_0_10px_rgba(147,197,253,1)]">
@@ -63,22 +56,12 @@ function SimpleCta({ block }: { block: Data }) {
       <ResponsiveBackground src={mediaUrl(block.background)} mobileSrc={mediaUrl(block.backgroundMobile)} />
       <div className="relative mx-auto flex w-full max-w-[800px] flex-col items-center gap-8">
         <SectionTitle variant="page" eyebrow={block.header.eyebrow} title={block.header.title} desc={block.header.description} />
-        {block.buttons?.length ? (
-          <div className="flex w-full flex-col gap-3 md:w-fit md:flex-row md:flex-wrap">
-            {block.buttons.map((b) => (
-              <Button
-                key={b.id ?? b.href}
-                href={b.href}
-                variant={b.style ?? "fill"}
-                size="lg"
-                className="w-full md:w-fit"
-              >
-                {b.label}
-                {(b.style ?? "fill") === "fill" && <img src="/about/icon-arrow.svg" alt="" className="h-6 w-6" />}
-              </Button>
-            ))}
-          </div>
-        ) : null}
+        <CmsButtons
+          buttons={block.buttons}
+          className="flex w-full flex-col gap-3 md:w-fit md:flex-row md:flex-wrap"
+          buttonClassName="w-full md:w-fit"
+          arrow={<img src="/about/icon-arrow.svg" alt="" className="h-6 w-6" />}
+        />
       </div>
     </section>
   );

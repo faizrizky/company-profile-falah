@@ -1,30 +1,13 @@
-import { MoveRight } from "lucide-react";
-
 import { CertificateButton } from "@/components/about/certificate-button";
 import { PartnerMarquee } from "@/components/common/partner-marquee";
+import { ScrollHint } from "@/components/common/scroll-hint";
 import { ResponsiveBackground } from "@/components/common/section-ui";
-import { Button } from "@/components/ui/button";
+import { CmsButtons } from "@/components/ui/cms-buttons";
+import { Pill } from "@/components/ui/pill";
 import { mediaUrl } from "@/lib/cms/media";
 import type { HeroBlock as HeroBlockData } from "@/types/cms";
 
 import type { BlockContext, BlockProps } from "./types";
-import { ScrollHint } from "@/components/common/scroll-hint";
-import { Pill } from "@/components/ui/pill";
-
-
-function HeroButtons({ buttons, className }: { buttons: HeroBlockData["buttons"]; className?: string }) {
-  if (!buttons?.length) return null;
-  return (
-    <div className={className ?? "flex flex-col gap-3 sm:flex-row sm:flex-wrap"}>
-      {buttons.map((b) => (
-        <Button key={b.id ?? b.href} href={b.href} variant={b.style ?? "fill"} size="lg">
-          {b.label}
-          {(b.style ?? "fill") === "fill" && <MoveRight className="h-6 w-6" strokeWidth={1.5} />}
-        </Button>
-      ))}
-    </div>
-  );
-}
 
 function Background({ block }: { block: HeroBlockData }) {
   return (
@@ -52,7 +35,7 @@ function HomeHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
           {block.description && (
             <p className="max-w-[684px] text-base leading-6 text-white">{block.description}</p>
           )}
-          <HeroButtons buttons={block.buttons} />
+          <CmsButtons buttons={block.buttons} />
         </div>
       </div>
       <PartnerMarquee partners={partners} className="mt-[74px]" />
@@ -87,7 +70,7 @@ function CenteredHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext 
               </p>
             )}
           </div>
-          <HeroButtons buttons={block.buttons} />
+          <CmsButtons buttons={block.buttons} />
           {certifications.length > 0 && <CertificateButton certifications={certifications} />}
         </div>
       </div>
@@ -118,22 +101,11 @@ function PageHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
               <p className="text-sm leading-5 text-white md:text-base md:leading-6">{block.description}</p>
             )}
           </div>
-          {block.buttons?.length ? (
-            <div className="flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap">
-              {block.buttons.map((b) => (
-                <Button
-                  key={b.id ?? b.href}
-                  href={b.href}
-                  variant={b.style ?? "fill"}
-                  size="lg"
-                  className="w-full md:w-fit"
-                >
-                  {b.label}
-                  {(b.style ?? "fill") === "fill" && <MoveRight className="h-6 w-6" strokeWidth={1.5} />}
-                </Button>
-              ))}
-            </div>
-          ) : null}
+          <CmsButtons
+            buttons={block.buttons}
+            className="flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap"
+            buttonClassName="w-full md:w-fit"
+          />
           {certifications.length > 0 && <CertificateButton certifications={certifications} />}
         </div>
         {block.showScrollHint && (

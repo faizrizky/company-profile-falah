@@ -1,12 +1,12 @@
 import Image from "next/image";
 
 import { Glow, SectionTitle } from "@/components/common/section-ui";
+import { Pill } from "@/components/ui/pill";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
 import type { LeadershipBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
-import { Pill } from "@/components/ui/pill";
 
 export function LeadershipBlock({ block }: BlockProps<Data>) {
   const bg = mediaUrl(block.background);

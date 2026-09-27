@@ -4,11 +4,11 @@ import { ArrowRight } from "lucide-react";
 
 import { Glow, Lines } from "@/components/common/section-ui";
 import { LocaleLink } from "@/components/i18n/locale-link";
-import { Button } from "@/components/ui/button";
+import { CmsButton } from "@/components/ui/cms-buttons";
+import { Pill } from "@/components/ui/pill";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
 import type { LayoutSectionBlock } from "@/types/cms";
-import { Pill } from "@/components/ui/pill";
 
 export type Element = NonNullable<LayoutSectionBlock["column1"]>[number];
 
@@ -106,10 +106,7 @@ export function ImageView({ el }: { el: Of<"image"> }) {
 export function ButtonView({ el }: { el: Of<"button"> }) {
   return (
     <div className={cn("flex w-full", JUSTIFY[el.align ?? "left"])}>
-      <Button href={el.href} variant={el.style ?? "fill"} size="lg">
-        {el.label}
-        {(el.style ?? "fill") === "fill" && <ArrowRight className="h-4 w-4" />}
-      </Button>
+      <CmsButton button={el} arrow={<ArrowRight className="h-4 w-4" />} />
     </div>
   );
 }

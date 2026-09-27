@@ -3,11 +3,11 @@ import Image from "next/image";
 import { ScrollHint } from "@/components/common/scroll-hint";
 import { ContactForm } from "@/components/contact/contact-form";
 import { WhatsAppButton, whatsappHref } from "@/components/contact/whatsapp-button";
+import { Pill } from "@/components/ui/pill";
 import { mediaUrl } from "@/lib/cms/media";
 import type { ContactFormBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
-import { Pill } from "@/components/ui/pill";
 
 export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
   const { settings, categories } = ctx.data;

@@ -1,12 +1,12 @@
 import Image from "next/image";
 
 import { Glow, Lines } from "@/components/common/section-ui";
+import { Pill } from "@/components/ui/pill";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
 import type { ProblemShowcaseBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
-import { Pill } from "@/components/ui/pill";
 
 export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
   const { header } = block;

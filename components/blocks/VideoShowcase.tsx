@@ -2,11 +2,11 @@ import Image from "next/image";
 
 import { InlineVideo } from "@/components/common/inline-video";
 import { Section, SectionTitle } from "@/components/common/section-ui";
+import { PlayIcon } from "@/components/ui/play-icon";
 import { mediaAlt, mediaType, mediaUrl } from "@/lib/cms/media";
 import type { VideoShowcaseBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
-import { PlayIcon } from "@/components/ui/play-icon";
 
 export function PlayButton({ videoUrl, label }: { videoUrl?: string | null; label: string }) {
   const icon = <PlayIcon alt={videoUrl ? "" : label} />;
