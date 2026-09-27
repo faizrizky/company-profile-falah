@@ -25,13 +25,7 @@ export function Lines({ text }: { text: ReactNode }) {
 
 export function Glow({ className }: { className?: string }) {
   return (
-    <div
-      aria-hidden
-      className={cn(
-        "pointer-events-none absolute rounded-full bg-accent/50 blur-[50px]",
-        className,
-      )}
-    />
+    <div aria-hidden className={cn("pointer-events-none absolute rounded-full bg-accent/50 blur-[50px]", className)} />
   );
 }
 
@@ -97,24 +91,12 @@ export function SectionTitle({
 }
 
 /** Full-bleed section with a dimmed background image (Home page style). */
-export function Section({
-  bg,
-  className,
-  children,
-}: {
-  bg?: string;
-  className?: string;
-  children: ReactNode;
-}) {
+export function Section({ bg, className, children }: { bg?: string; className?: string; children: ReactNode }) {
   return (
-    <section
-      className={cn("relative isolate overflow-hidden px-6 py-12.5 lg:px-20", className)}
-    >
+    <section className={cn("relative isolate overflow-hidden px-6 py-12.5 lg:px-20", className)}>
       <ResponsiveBackground src={bg} />
       <div className="absolute inset-0 -z-10 bg-surface-dark/60" />
-      <div className="relative mx-auto flex w-full max-w-[1269px] flex-col items-center gap-8">
-        {children}
-      </div>
+      <div className="relative mx-auto flex w-full max-w-[1269px] flex-col items-center gap-8">{children}</div>
     </section>
   );
 }

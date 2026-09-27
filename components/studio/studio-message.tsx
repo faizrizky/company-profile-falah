@@ -36,4 +36,7 @@ export function StudioMessage({
   );
 }
 
-export const loginAction = (cmsUrl: string, s: StudioStrings) => ({ href: `${cmsUrl}/admin/login`, label: s.loginButton });
+export const loginAction = (cmsUrl: string, s: StudioStrings) => ({
+  href: `${cmsUrl}/admin/login`,
+  label: s.loginButton,
+});

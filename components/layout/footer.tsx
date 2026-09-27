@@ -47,9 +47,7 @@ export function Footer({
         <div className="grid grid-cols-1 gap-10 md:grid-cols-[274fr_296fr_296fr_313fr] md:gap-8">
           <div className="flex flex-col gap-5">
             {logo && <img src={logo} alt={mediaAlt(settings.logo, settings.siteName)} className="h-10 w-fit" />}
-            {footer.description && (
-              <p className="max-w-[270px] text-sm leading-6 text-accent">{footer.description}</p>
-            )}
+            {footer.description && <p className="max-w-[270px] text-sm leading-6 text-accent">{footer.description}</p>}
           </div>
 
           {footer.columns?.map((column) => (

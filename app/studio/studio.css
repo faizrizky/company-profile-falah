@@ -359,7 +359,9 @@ select.studio-input {
   padding-right: 38px;
   appearance: none;
   cursor: pointer;
-  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a93b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center / 16px;
+  background: #fff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a93b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 14px center / 16px;
 }
 
 .studio-muted,
@@ -707,13 +709,36 @@ select.studio-input {
   }
 }
 
-.studio-sk__block--icon { width: 28px; height: 28px; border-radius: 8px; }
-.studio-sk__block--pill { width: 104px; height: 34px; border-radius: 999px; }
-.studio-sk__block--accent { background: rgb(31 122 224 / 0.22); }
-.studio-sk__block--item { height: 40px; border-radius: 12px; }
-.studio-sk__block--label { width: 40%; height: 12px; border-radius: 6px; }
-.studio-sk__block--input { height: 42px; border-radius: 12px; }
-.studio-sk__block--frame { flex: 1; border-radius: 12px; }
+.studio-sk__block--icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+.studio-sk__block--pill {
+  width: 104px;
+  height: 34px;
+  border-radius: 999px;
+}
+.studio-sk__block--accent {
+  background: rgb(31 122 224 / 0.22);
+}
+.studio-sk__block--item {
+  height: 40px;
+  border-radius: 12px;
+}
+.studio-sk__block--label {
+  width: 40%;
+  height: 12px;
+  border-radius: 6px;
+}
+.studio-sk__block--input {
+  height: 42px;
+  border-radius: 12px;
+}
+.studio-sk__block--frame {
+  flex: 1;
+  border-radius: 12px;
+}
 
 @media (max-width: 1023px) {
   .studio-sk__body {
@@ -739,7 +764,9 @@ select.studio-input {
   background: #fff;
   color: #0f2742;
   box-shadow: 0 1px 2px rgb(6 41 79 / 0.06);
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .studio-body [class*="_Button--secondary_"]:hover {
@@ -754,7 +781,9 @@ select.studio-input {
 .studio-body [class*="_PuckHeader_"] [class*="_IconButton_"] {
   border-radius: 10px;
   color: #56708f;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .studio-body [class*="_PuckHeader_"] [class*="_IconButton_"]:not([class*="--disabled"]):hover {
@@ -829,7 +858,9 @@ select.studio-input {
   border-radius: 16px;
   background: var(--puck-field-color-surface);
   box-shadow: 0 6px 18px -16px rgb(15 39 66 / 0.45);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   animation: studio-card-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
 }
 
@@ -839,10 +870,18 @@ select.studio-input {
 }
 
 /* Fields appear one after the other when a block is selected. */
-.studio-body [class*="_PuckFields-field_"]:nth-child(2) { animation-delay: 30ms; }
-.studio-body [class*="_PuckFields-field_"]:nth-child(3) { animation-delay: 60ms; }
-.studio-body [class*="_PuckFields-field_"]:nth-child(4) { animation-delay: 90ms; }
-.studio-body [class*="_PuckFields-field_"]:nth-child(n + 5) { animation-delay: 120ms; }
+.studio-body [class*="_PuckFields-field_"]:nth-child(2) {
+  animation-delay: 30ms;
+}
+.studio-body [class*="_PuckFields-field_"]:nth-child(3) {
+  animation-delay: 60ms;
+}
+.studio-body [class*="_PuckFields-field_"]:nth-child(4) {
+  animation-delay: 90ms;
+}
+.studio-body [class*="_PuckFields-field_"]:nth-child(n + 5) {
+  animation-delay: 120ms;
+}
 
 @keyframes studio-card-in {
   from {
@@ -880,9 +919,13 @@ select.studio-input {
   margin-inline-start: auto;
   flex: none;
   background: #7a93b0;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
-  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  transition:
+    transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 0.2s ease;
 }
 
 .studio-card-title:hover .studio-card-toggle {
@@ -911,7 +954,9 @@ select.studio-input {
 }
 
 .studio-body [class*="_ArrayFieldItem-summary_"] {
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .studio-body [class*="_ArrayFieldItem-summary_"]:hover {
@@ -923,7 +968,11 @@ select.studio-input {
 .studio-body [class*="_IconButton_"],
 .studio-btn,
 .studio-body [class*="_Button_"] {
-  transition: transform 0.16s ease, background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.16s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
 }
 
 .studio-body [class*="_ArrayField-addButton_"]:active,
@@ -935,7 +984,11 @@ select.studio-input {
 
 /* Left panel: components to drag and the outline. */
 .studio-body [class*="_DrawerItem-draggable_"] {
-  transition: transform 0.18s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .studio-body [class*="_DrawerItem-draggable_"]:hover {
@@ -1054,7 +1107,10 @@ select.studio-input {
 
 /* Header icon buttons (panel toggles…): a small press. */
 .studio-body [class*="_PuckHeader_"] button {
-  transition: transform 0.16s ease, background-color 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.16s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .studio-body [class*="_PuckHeader_"] button:active {

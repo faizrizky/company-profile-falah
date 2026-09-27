@@ -21,8 +21,5 @@ if (!existsSync(SOURCE)) {
 copyFileSync(SOURCE, TARGET);
 // The generated file augments the `payload` module, which the frontend doesn't install.
 const source = readFileSync(TARGET, "utf8").replace(/\ndeclare module 'payload' \{[\s\S]*?\n\}\n?/, "\n");
-writeFileSync(
-  TARGET,
-  `// AUTO-GENERATED from the CMS by scripts/sync-cms-types.mjs — do not edit.\n${source}`,
-);
+writeFileSync(TARGET, `// AUTO-GENERATED from the CMS by scripts/sync-cms-types.mjs — do not edit.\n${source}`);
 console.log(`Synced ${SOURCE} -> ${TARGET}`);

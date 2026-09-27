@@ -7,7 +7,14 @@ import { layoutToPuck, puckTitle, puckToLayout } from "./convert";
 const media = { id: 42, url: "/media/a.webp", alt: "A", createdAt: "2026-01-01", updatedAt: "2026-01-01" };
 
 const layout = [
-  { id: "hero-1", blockType: "hero", blockName: "Top", title: "Hello", background: media, buttons: [{ id: "b1", label: "Go", href: "/contact" }] },
+  {
+    id: "hero-1",
+    blockType: "hero",
+    blockName: "Top",
+    title: "Hello",
+    background: media,
+    buttons: [{ id: "b1", label: "Go", href: "/contact" }],
+  },
   {
     id: "sec-1",
     blockType: "layoutSection",
@@ -24,7 +31,10 @@ describe("CMS layout ↔ visual editor", () => {
     const [hero, section] = data.content as { type: string; props: Record<string, unknown> }[];
     expect(hero).toMatchObject({ type: "hero", props: { id: "hero-1", title: "Hello" } });
     expect(hero!.props).not.toHaveProperty("blockName");
-    expect((section!.props.column1 as { type: string }[])[0]).toMatchObject({ type: "heading", props: { id: "h1", text: "Left" } });
+    expect((section!.props.column1 as { type: string }[])[0]).toMatchObject({
+      type: "heading",
+      props: { id: "h1", text: "Left" },
+    });
   });
 
   it("round-trips without losing content; media go back as ids", () => {

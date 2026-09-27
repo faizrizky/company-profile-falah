@@ -25,7 +25,10 @@ import type { BlockContext } from "./types";
 
 type Block = Page["layout"][number];
 type BlockType = Block["blockType"];
-type BlockComponent<T extends BlockType> = ComponentType<{ block: Extract<Block, { blockType: T }>; ctx: BlockContext }>;
+type BlockComponent<T extends BlockType> = ComponentType<{
+  block: Extract<Block, { blockType: T }>;
+  ctx: BlockContext;
+}>;
 
 /** Small elements placed directly on the page. */
 function ElementBlock({ block }: { block: Parameters<typeof ElementView>[0]["element"] }) {

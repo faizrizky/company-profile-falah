@@ -20,17 +20,11 @@ export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
       <div className="absolute inset-0 -z-10 bg-[#0A0A0A] lg:bg-surface-dark/60" />
       <div className="relative mx-auto flex w-full max-w-[1269px] flex-col items-center gap-8">
         <div className="flex w-full max-w-[564px] flex-col items-center gap-3 text-center">
-          {header.eyebrow && (
-            <Pill className="hidden gap-1 lg:inline-flex">
-              {header.eyebrow}
-            </Pill>
-          )}
+          {header.eyebrow && <Pill className="hidden gap-1 lg:inline-flex">{header.eyebrow}</Pill>}
           <h2 className="max-w-[900px] font-display text-[30px] font-bold leading-9 text-accent">
             <Lines text={header.title} />
           </h2>
-          {header.description && (
-            <p className="max-w-[720px] text-base leading-6 text-white">{header.description}</p>
-          )}
+          {header.description && <p className="max-w-[720px] text-base leading-6 text-white">{header.description}</p>}
         </div>
         <div className="grid w-full grid-cols-1 gap-4 lg:h-[530px] lg:grid-cols-[600px_1fr]">
           <div className="flex flex-col gap-4">

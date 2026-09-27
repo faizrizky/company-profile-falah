@@ -53,7 +53,11 @@ export function RelationField<T extends { id: number }>({
               <button type="button" disabled={i === selected.length - 1} onClick={() => move(i, 1)} aria-label="Down">
                 ↓
               </button>
-              <button type="button" onClick={() => onChange(selected.filter((x) => x.id !== o.id))} aria-label={s.remove}>
+              <button
+                type="button"
+                onClick={() => onChange(selected.filter((x) => x.id !== o.id))}
+                aria-label={s.remove}
+              >
                 ×
               </button>
             </li>

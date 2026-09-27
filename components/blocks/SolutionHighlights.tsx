@@ -33,9 +33,7 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
             <div className="relative flex h-full flex-col items-start justify-end gap-4 p-5">
               <div className="flex flex-col gap-1">
                 <h3 className="font-display text-xl font-bold leading-5 text-white">{featured.title}</h3>
-                {featured.description && (
-                  <p className="text-xs leading-4 text-white">{featured.description}</p>
-                )}
+                {featured.description && <p className="text-xs leading-4 text-white">{featured.description}</p>}
               </div>
               {featured.tags?.length ? (
                 <div className="flex flex-col gap-1 self-start">
@@ -44,10 +42,7 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
                   )}
                   <div className="flex flex-wrap gap-1">
                     {featured.tags.map((chip) => (
-                      <Pill
-                        key={chip}
-                        size="xs" className="px-2 leading-4"
-                      >
+                      <Pill key={chip} size="xs" className="px-2 leading-4">
                         {chip}
                       </Pill>
                     ))}
@@ -65,10 +60,7 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
         {block.items?.map((c) => {
           const image = mediaUrl(c.image);
           return (
-            <Card
-              key={c.id ?? c.title}
-              hover="subtle" className="relative h-[329px] bg-accent/5 md:h-full"
-            >
+            <Card key={c.id ?? c.title} hover="subtle" className="relative h-[329px] bg-accent/5 md:h-full">
               <Glow className="-top-[9px] left-0 h-[25px] w-[416px]" />
               <div className="relative h-full overflow-hidden rounded-lg">
                 {image && <Image src={image} alt={mediaAlt(c.image)} fill className="object-cover" />}

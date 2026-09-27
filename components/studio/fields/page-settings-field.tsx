@@ -21,15 +21,19 @@ export function PageSettingsField({
   s: StudioStrings;
 }) {
   // Built from props (not window.location) so server and client render the same markup.
-  const hrefFor = (ui: "id" | "en") =>
-    `?${new URLSearchParams({ locale, ui, ...(embedded ? { embed: "1" } : {}) })}`;
+  const hrefFor = (ui: "id" | "en") => `?${new URLSearchParams({ locale, ui, ...(embedded ? { embed: "1" } : {}) })}`;
 
   return (
     <div className="studio-settings">
       <FieldLabel label={s.interfaceLanguage} el="div">
         <div className="studio-segment">
           {(["id", "en"] as const).map((code) => (
-            <a key={code} href={hrefFor(code)} className={code === lang ? "is-active" : ""} aria-current={code === lang ? "true" : undefined}>
+            <a
+              key={code}
+              href={hrefFor(code)}
+              className={code === lang ? "is-active" : ""}
+              aria-current={code === lang ? "true" : undefined}
+            >
               {code === "id" ? "Indonesia" : "English"}
             </a>
           ))}

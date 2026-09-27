@@ -47,10 +47,11 @@ export function createFields({ lang, cmsUrl, data, linkGroups }: StudioContext) 
     label: L(en, id),
     options: options.map(([value, oe, oi]) => ({ value, label: L(oe, oi) })),
   });
-  const radio = (en: string, id: string, options: [string, string, string][]): Field => ({
-    ...select(en, id, options),
-    type: "radio",
-  } as Field);
+  const radio = (en: string, id: string, options: [string, string, string][]): Field =>
+    ({
+      ...select(en, id, options),
+      type: "radio",
+    }) as Field;
   const toggle = (en: string, id: string): Field => ({
     type: "radio",
     label: L(en, id),
@@ -76,7 +77,9 @@ export function createFields({ lang, cmsUrl, data, linkGroups }: StudioContext) 
   const tags = (en: string, id: string): Field => ({
     type: "custom",
     label: L(en, id),
-    render: ({ field, value, onChange }) => <TagsField label={field.label ?? ""} value={value} onChange={onChange} s={s} />,
+    render: ({ field, value, onChange }) => (
+      <TagsField label={field.label ?? ""} value={value} onChange={onChange} s={s} />
+    ),
   });
   const partnersField = (en: string, id: string): Field => ({
     type: "custom",
@@ -108,8 +111,17 @@ export function createFields({ lang, cmsUrl, data, linkGroups }: StudioContext) 
       />
     ),
   });
-  const align = () => radio("Alignment", "Perataan", [["left", "Left", "Kiri"], ["center", "Center", "Tengah"], ["right", "Right", "Kanan"]]);
-  const style = () => select("Style", "Gaya", [["fill", "Fill", "Penuh"], ["stroke", "Outline", "Garis"]]);
+  const align = () =>
+    radio("Alignment", "Perataan", [
+      ["left", "Left", "Kiri"],
+      ["center", "Center", "Tengah"],
+      ["right", "Right", "Kanan"],
+    ]);
+  const style = () =>
+    select("Style", "Gaya", [
+      ["fill", "Fill", "Penuh"],
+      ["stroke", "Outline", "Garis"],
+    ]);
   const header = (): Field => ({
     type: "object",
     label: L("Section heading", "Judul section"),
@@ -124,10 +136,22 @@ export function createFields({ lang, cmsUrl, data, linkGroups }: StudioContext) 
     label: L("Buttons", "Tombol"),
     max,
     getItemSummary: (item: AnyProps) => String(item.label || "…"),
-    defaultItemProps: () => ({ id: rowId(), label: L("Request Consultation", "Ajukan Konsultasi"), href: "/contact", style: "fill" }),
+    defaultItemProps: () => ({
+      id: rowId(),
+      label: L("Request Consultation", "Ajukan Konsultasi"),
+      href: "/contact",
+      style: "fill",
+    }),
     arrayFields: { label: text("Label", "Label"), href: link("Link", "Link"), style: style() },
   });
-  const list = (en: string, id: string, arrayFields: Fields, summaryKey: string, defaults: AnyProps, max?: number): Field => ({
+  const list = (
+    en: string,
+    id: string,
+    arrayFields: Fields,
+    summaryKey: string,
+    defaults: AnyProps,
+    max?: number,
+  ): Field => ({
     type: "array",
     label: L(en, id),
     max,

@@ -1,4 +1,3 @@
-
 import { ScrollHint } from "@/components/common/scroll-hint";
 import { ResponsiveBackground } from "@/components/common/section-ui";
 import { ContactForm } from "@/components/contact/contact-form";
@@ -12,9 +11,7 @@ import type { BlockProps } from "./types";
 
 export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
   const { settings, categories } = ctx.data;
-  const interestOptions = block.interestOptions?.length
-    ? block.interestOptions
-    : categories.map((c) => c.title);
+  const interestOptions = block.interestOptions?.length ? block.interestOptions : categories.map((c) => c.title);
   const waHref = whatsappHref(settings?.contact.whatsappNumber, settings?.contact.whatsappMessage);
   const bg = mediaUrl(block.background);
 
@@ -62,11 +59,7 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
 
       {/* Desktop */}
       <div className="hidden w-[574px] shrink-0 flex-col gap-4 md:flex">
-        {block.eyebrow && (
-          <Pill size="md">
-            {block.eyebrow}
-          </Pill>
-        )}
+        {block.eyebrow && <Pill size="md">{block.eyebrow}</Pill>}
         <div className="flex flex-col">
           <h1 className="font-display text-5xl font-bold leading-[60px] text-white">{block.title}</h1>
           {block.description && <p className="text-base leading-6 text-white">{block.description}</p>}

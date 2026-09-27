@@ -32,7 +32,8 @@ export function ChallengesSection({ category }: { category: SolutionCategory }) 
             return (
               <Card
                 key={c.id ?? c.title}
-                hover="lift" className="relative flex flex-col items-center justify-center gap-6 overflow-clip p-10 text-center text-white"
+                hover="lift"
+                className="relative flex flex-col items-center justify-center gap-6 overflow-clip p-10 text-center text-white"
               >
                 <Glow className="-top-2 left-1/2 h-[25px] w-[416px] -translate-x-1/2" />
                 <Icon className="h-[50px] w-[50px] text-blue-bright" strokeWidth={1.75} />

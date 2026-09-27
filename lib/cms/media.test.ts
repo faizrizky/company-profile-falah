@@ -35,7 +35,13 @@ describe("mega menu", () => {
       { id: 12, title: "Other", category: 2 },
     ] as unknown as Product[];
     const menu = buildMegaMenu(categories, products);
-    expect(menu[0]).toMatchObject({ href: "/solution/virtual-training-suite", products: [{ id: 10, image: "/media/x.webp", alt: "Logo" }, { id: 11, alt: "Lang" }] });
+    expect(menu[0]).toMatchObject({
+      href: "/solution/virtual-training-suite",
+      products: [
+        { id: 10, image: "/media/x.webp", alt: "Logo" },
+        { id: 11, alt: "Lang" },
+      ],
+    });
     expect(menu[1]!.href).toBeUndefined();
     expect(menu[1]!.products.map((p) => p.id)).toEqual([12]);
   });

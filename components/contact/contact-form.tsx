@@ -100,7 +100,14 @@ export type ContactFormProps = {
   footer?: ReactNode;
 };
 
-export function ContactForm({ interestOptions, submitLabel, responseNote, successMessage, layout, footer }: ContactFormProps) {
+export function ContactForm({
+  interestOptions,
+  submitLabel,
+  responseNote,
+  successMessage,
+  layout,
+  footer,
+}: ContactFormProps) {
   const { t } = useI18n();
   const messages = t.contact.errors;
   const id = useId();
@@ -211,7 +218,11 @@ export function ContactForm({ interestOptions, submitLabel, responseNote, succes
                   </option>
                 ))}
               </select>
-              <img src={ICONS.dropdown} alt="" className="pointer-events-none absolute right-5 top-1/2 h-4 w-4 -translate-y-1/2" />
+              <img
+                src={ICONS.dropdown}
+                alt=""
+                className="pointer-events-none absolute right-5 top-1/2 h-4 w-4 -translate-y-1/2"
+              />
             </div>
           </div>
           <div className="flex flex-col gap-2">

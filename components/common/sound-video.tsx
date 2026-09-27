@@ -25,7 +25,16 @@ type Props = {
  * the visitor has interacted with the site; then it starts muted and the
  * speaker button turns the sound on.
  */
-export function SoundVideo({ src, type, poster, autoPlay = false, playLabel, soundOnLabel, soundOffLabel, className }: Props) {
+export function SoundVideo({
+  src,
+  type,
+  poster,
+  autoPlay = false,
+  playLabel,
+  soundOnLabel,
+  soundOffLabel,
+  className,
+}: Props) {
   const ref = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(false);
   const [playing, setPlaying] = useState(false);

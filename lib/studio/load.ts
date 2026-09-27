@@ -53,9 +53,7 @@ async function buildLinkGroups(
 }
 
 export type StudioLoadResult =
-  | { status: "ok"; props: StudioEditorProps }
-  | { status: "login" }
-  | { status: "notFound" };
+  { status: "ok"; props: StudioEditorProps } | { status: "login" } | { status: "notFound" };
 
 /** Everything the editor needs for one page, fetched with the editor's own session. */
 export async function loadStudio({
@@ -83,7 +81,11 @@ export async function loadStudio({
   if (!res.ok) return { status: "notFound" };
   const page = (await res.json()) as Page;
 
-  const [siteData, navigation, footer] = await Promise.all([getSiteData(locale), getNavigation(locale), getFooter(locale)]);
+  const [siteData, navigation, footer] = await Promise.all([
+    getSiteData(locale),
+    getNavigation(locale),
+    getFooter(locale),
+  ]);
   const linkGroups = await buildLinkGroups(authorization, locale, uiLang, siteData.categories, navigation);
 
   return {

@@ -17,13 +17,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = join(fileURLToPath(new URL(".", import.meta.url)), "..");
 const SRC_DIRS = ["app", "components", "lib", "types", "scripts"];
-const ROOT_FILES = [
-  "next.config.ts",
-  "package.json",
-  "postcss.config.mjs",
-  "eslint.config.mjs",
-  "tsconfig.json",
-];
+const ROOT_FILES = ["next.config.ts", "package.json", "postcss.config.mjs", "eslint.config.mjs", "tsconfig.json"];
 const SCAN_EXT = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".css", ".json"]);
 const SKIP_DIRS = new Set(["node_modules", ".next", "public", "graphify-out", ".git"]);
 const asJson = process.argv.includes("--json");
@@ -46,8 +40,7 @@ const SECRET_PATTERNS = [
     severity: "high",
   },
 ];
-const PLACEHOLDER_RE =
-  /(your|xxx|example|changeme|lorem|placeholder|todo|fixme|dummy|sample|<[^>]*>|\.\.\.|_+)$/i;
+const PLACEHOLDER_RE = /(your|xxx|example|changeme|lorem|placeholder|todo|fixme|dummy|sample|<[^>]*>|\.\.\.|_+)$/i;
 
 function collectFiles() {
   const files = [];
@@ -102,8 +95,7 @@ function checkHeaders() {
   const forbidden = [];
   if (/default-src\s+['"]?\*/.test(cfg)) forbidden.push("wildcard default-src");
   if (/unsafe-eval/.test(cfg)) forbidden.push("unsafe-eval in CSP");
-  if (/(script|img|font|connect|style)-src[^;\n]*['"]?\*/.test(cfg))
-    forbidden.push("wildcard source in CSP");
+  if (/(script|img|font|connect|style)-src[^;\n]*['"]?\*/.test(cfg)) forbidden.push("wildcard source in CSP");
   const hstsGated = /NODE_ENV\s*===?\s*["']production["']/.test(cfg);
   const status = missing.length || forbidden.length ? "fail" : "pass";
   const details = [];
@@ -151,13 +143,11 @@ function checkDebug(cfgPath, files) {
   };
   if (/debug\s*:\s*true/.test(cfg)) fail("next.config: debug: true");
   if (/sourceMap\s*:\s*true/.test(cfg)) warn("next.config: sourceMap: true");
-  if (/NODE_ENV\s*===?\s*["']development["']/.test(cfg))
-    warn("next.config: hardcoded development mode check");
+  if (/NODE_ENV\s*===?\s*["']development["']/.test(cfg)) warn("next.config: hardcoded development mode check");
   for (const { file, lines } of files) {
     if (!file.startsWith("app/") && !file.startsWith("lib/")) continue;
     lines.forEach((line, i) => {
-      if (/console\.(log|debug|info)\s*\(/.test(line))
-        warn(`${file}:${i + 1} console output in server code`);
+      if (/console\.(log|debug|info)\s*\(/.test(line)) warn(`${file}:${i + 1} console output in server code`);
     });
   }
   if (!details.length) details.push("no debug/legacy patterns found");
@@ -197,8 +187,7 @@ function checkApi() {
         } else if (name === "route.ts" || name === "route.tsx") {
           endpoints.push(rel(p));
         } else if (/\.(ts|tsx)$/.test(name)) {
-          if (/^["']use server["']/.test(readFileSync(p, "utf8").trim()))
-            serverActions.push(rel(p));
+          if (/^["']use server["']/.test(readFileSync(p, "utf8").trim())) serverActions.push(rel(p));
         }
       }
     }
@@ -332,13 +321,7 @@ function checkGraphifyIsolation(files) {
   return { status, details };
 }
 
-const DEPLOY_FILES = [
-  "vercel.json",
-  "Dockerfile",
-  "docker-compose.yml",
-  "docker-compose.yaml",
-  "nginx.conf",
-];
+const DEPLOY_FILES = ["vercel.json", "Dockerfile", "docker-compose.yml", "docker-compose.yaml", "nginx.conf"];
 
 function checkDeploymentConfig() {
   const found = DEPLOY_FILES.filter((n) => existsSync(join(ROOT, n)));
@@ -372,9 +355,7 @@ function checkEnvTracking() {
     return { status: "pass", details: [".gitignore covers all .env* variants"] };
   }
   const required = [".env", ".env.local", ".env.development.local", ".env.test.local", ".env.production.local"];
-  const missing = required.filter(
-    (e) => !new RegExp(`^\\s*${e.replace(/\./g, "\\.")}(\\s|$)`, "m").test(gitignore),
-  );
+  const missing = required.filter((e) => !new RegExp(`^\\s*${e.replace(/\./g, "\\.")}(\\s|$)`, "m").test(gitignore));
   if (missing.length) {
     return { status: "fail", details: [`.gitignore does not cover: ${missing.join(", ")}`] };
   }
@@ -501,9 +482,7 @@ function checkExternalOrigins(files) {
   if (!hosts.size) return { status: "pass", details: ["no external origins referenced in source"] };
   return {
     status: "warn",
-    details: [...hosts.entries()].map(
-      ([h, at]) => `external origin ${h} (${at}) — review against CSP allowlist`,
-    ),
+    details: [...hosts.entries()].map(([h, at]) => `external origin ${h} (${at}) — review against CSP allowlist`),
   };
 }
 
@@ -558,13 +537,9 @@ function checkStaticAssets(files) {
 function checkWorkspaceLockfile() {
   let dir = join(ROOT, "..");
   for (let i = 0; i < 4 && existsSync(dir); i++) {
-    const lock = [
-      "package.json",
-      "package-lock.json",
-      "pnpm-lock.yaml",
-      "yarn.lock",
-      "bun.lockb",
-    ].find((n) => existsSync(join(dir, n)));
+    const lock = ["package.json", "package-lock.json", "pnpm-lock.yaml", "yarn.lock", "bun.lockb"].find((n) =>
+      existsSync(join(dir, n)),
+    );
     if (lock) {
       return {
         status: "warn",
@@ -612,8 +587,7 @@ function checkDependencies() {
     high: 0,
     critical: 0,
   };
-  const total =
-    counts.info + counts.low + counts.moderate + counts.high + counts.critical;
+  const total = counts.info + counts.low + counts.moderate + counts.high + counts.critical;
   const advisories = [];
   const seen = new Set();
   for (const v of Object.values(json.vulnerabilities ?? {})) {
@@ -640,7 +614,7 @@ function checkDependencies() {
     for (const name of Object.keys(json.vulnerabilities ?? {})) {
       const v = json.vulnerabilities[name];
       details.push(
-        `${name} ${v.range ?? ""} (severity: ${v.severity})${v.fixAvailable ? ` — fix: ${v.fixAvailable.name ?? name} ${typeof v.fixAvailable === "string" ? "" : v.fixAvailable.version ?? ""}${v.fixAvailable.isSemVerMajor ? " (major)" : ""}` : " — no fix available"}`,
+        `${name} ${v.range ?? ""} (severity: ${v.severity})${v.fixAvailable ? ` — fix: ${v.fixAvailable.name ?? name} ${typeof v.fixAvailable === "string" ? "" : (v.fixAvailable.version ?? "")}${v.fixAvailable.isSemVerMajor ? " (major)" : ""}` : " — no fix available"}`,
       );
     }
     if (counts.critical + counts.high > 0) {
@@ -663,10 +637,7 @@ function checkDependencies() {
 const files = collectFiles();
 const scanned = scanLines(files);
 const runtime = scanned.filter(
-  (e) =>
-    e.file.startsWith("app/") ||
-    e.file.startsWith("components/") ||
-    e.file.startsWith("lib/"),
+  (e) => e.file.startsWith("app/") || e.file.startsWith("components/") || e.file.startsWith("lib/"),
 );
 const cfgPath = join(ROOT, "next.config.ts");
 
@@ -726,20 +697,14 @@ if (asJson) {
   };
   process.stdout.write(JSON.stringify(result, null, 2) + "\n");
 } else {
-  const lines = [
-    "SECURITY AUDIT — web-falah",
-    "========================================",
-    "",
-  ];
+  const lines = ["SECURITY AUDIT — web-falah", "========================================", ""];
   for (const c of checks) {
     lines.push(`[${c.status.toUpperCase()}] ${c.id}`);
     for (const d of c.details) lines.push(`      ${d}`);
     lines.push("");
   }
   lines.push("----------------------------------------");
-  lines.push(
-    `Result: ${ok ? "OK" : "FAIL"} — ${errors} error(s), ${warnings} warning(s)`,
-  );
+  lines.push(`Result: ${ok ? "OK" : "FAIL"} — ${errors} error(s), ${warnings} warning(s)`);
   process.stdout.write(lines.join("\n") + "\n");
 }
 

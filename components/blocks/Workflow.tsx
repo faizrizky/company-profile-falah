@@ -8,7 +8,12 @@ export function WorkflowBlock({ block }: BlockProps<Data>) {
   const steps = (block.steps ?? []).map((s, i) => ({ ...s, n: String(i + 1).padStart(2, "0") }));
   const last = steps.length - 1;
   const head = (
-    <SectionTitle variant="contact" eyebrow={block.header.eyebrow} title={block.header.title} desc={block.header.description} />
+    <SectionTitle
+      variant="contact"
+      eyebrow={block.header.eyebrow}
+      title={block.header.title}
+      desc={block.header.description}
+    />
   );
 
   return (

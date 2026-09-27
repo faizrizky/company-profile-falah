@@ -11,11 +11,7 @@ import type { BlockProps } from "./types";
 export function ExpertiseBlock({ block }: BlockProps<Data>) {
   return (
     <Section bg={mediaUrl(block.background)}>
-      <SectionTitle
-        eyebrow={block.header.eyebrow}
-        title={block.header.title}
-        desc={block.header.description}
-      />
+      <SectionTitle eyebrow={block.header.eyebrow} title={block.header.title} desc={block.header.description} />
 
       {block.stats?.length ? (
         <div className="relative w-full">
@@ -42,7 +38,8 @@ export function ExpertiseBlock({ block }: BlockProps<Data>) {
           return (
             <Card
               key={e.id ?? e.title}
-              hover="lift" className="relative overflow-hidden bg-surface-dark/20 backdrop-blur-sm"
+              hover="lift"
+              className="relative overflow-hidden bg-surface-dark/20 backdrop-blur-sm"
             >
               <div className="relative h-[215px]">
                 <div className="absolute inset-0 overflow-hidden">

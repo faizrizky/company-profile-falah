@@ -1,4 +1,3 @@
-
 import { ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
 import { mediaUrl } from "@/lib/cms/media";
 import type { OfficeMapBlock as Data } from "@/types/cms";
@@ -18,7 +17,12 @@ export function OfficeMapBlock({ block, ctx }: BlockProps<Data>) {
       <ResponsiveBackground src={bg} className="-z-30 hidden object-cover md:block" />
       <div className="absolute inset-0 -z-20 hidden bg-[linear-gradient(180deg,rgba(5,4,13,1)_0%,rgba(5,4,13,0.97)_0%,rgba(5,4,13,0)_32%)] md:block" />
       <div className="absolute inset-0 -z-10 hidden bg-[linear-gradient(0deg,rgba(5,4,13,1)_0%,rgba(5,4,13,0)_40%)] md:block" />
-      <SectionTitle variant="contact" eyebrow={block.header.eyebrow} title={block.header.title} desc={block.header.description} />
+      <SectionTitle
+        variant="contact"
+        eyebrow={block.header.eyebrow}
+        title={block.header.title}
+        desc={block.header.description}
+      />
       {address && (
         <div className="relative h-[177px] w-full overflow-hidden md:h-[480px] md:w-[853px] md:rounded-lg md:border md:border-accent md:shadow-[0_0_4px_2px_rgba(147,197,253,1)]">
           <iframe

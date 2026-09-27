@@ -82,9 +82,7 @@ export function SolutionOverviewTabs({
           <ProductCard key={p.id} product={p} />
         ))}
         {visible.length === 0 && (
-          <p className="col-span-full py-16 text-center text-sm text-white/70">
-            {t.solutions.comingSoon}
-          </p>
+          <p className="col-span-full py-16 text-center text-sm text-white/70">{t.solutions.comingSoon}</p>
         )}
       </div>
     </>

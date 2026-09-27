@@ -40,7 +40,9 @@ export function VideoShowcaseBlock({ block, ctx }: BlockProps<Data>) {
           </h3>
         )}
         {block.captionDescription && (
-          <p className="max-w-[860px] text-sm leading-5 text-white md:text-base md:leading-6">{block.captionDescription}</p>
+          <p className="max-w-[860px] text-sm leading-5 text-white md:text-base md:leading-6">
+            {block.captionDescription}
+          </p>
         )}
       </div>
     </>

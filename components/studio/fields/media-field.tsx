@@ -115,13 +115,7 @@ export function MediaField({
             <button type="button" className="studio-btn studio-btn--primary" onClick={() => fileRef.current?.click()}>
               {s.upload}
             </button>
-            <input
-              ref={fileRef}
-              type="file"
-              accept={MEDIA_ACCEPT[kind]}
-              hidden
-              onChange={onUpload}
-            />
+            <input ref={fileRef} type="file" accept={MEDIA_ACCEPT[kind]} hidden onChange={onUpload} />
           </div>
           {error && <p className="studio-error">{error}</p>}
           <div className="studio-media__grid">
@@ -141,7 +135,12 @@ export function MediaField({
             ))}
           </div>
           {hasMore && (
-            <button type="button" className="studio-btn studio-btn--ghost w-full" disabled={busy} onClick={() => load(page + 1, search)}>
+            <button
+              type="button"
+              className="studio-btn studio-btn--ghost w-full"
+              disabled={busy}
+              onClick={() => load(page + 1, search)}
+            >
               {busy ? s.loading : s.loadMore}
             </button>
           )}

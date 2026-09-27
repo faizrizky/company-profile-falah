@@ -59,9 +59,7 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
       <div role="tabpanel" className="md:hidden">
         <div key={activeTab} className="tab-panel-in flex flex-col gap-8 px-6">
           <div className="flex flex-col items-start gap-3">
-            <Pill size="xs">
-              {category.title}
-            </Pill>
+            <Pill size="xs">{category.title}</Pill>
             <div className="flex flex-col gap-1">
               <h2 className="font-display text-xl font-bold leading-6 text-accent">{tab.name}</h2>
               {tab.description && <p className="text-sm leading-5 text-white">{tab.description}</p>}

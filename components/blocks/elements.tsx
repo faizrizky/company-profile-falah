@@ -37,16 +37,18 @@ const HEADING_SIZE = {
   lg: "text-[24px] leading-8 md:text-[30px] md:leading-9",
   xl: "text-[32px] leading-[1.2] md:text-[48px] md:leading-[60px]",
 };
-const TEXT_SIZE = { sm: "text-sm leading-5", base: "text-sm leading-5 md:text-base md:leading-6", lg: "text-base leading-7 md:text-lg" };
+const TEXT_SIZE = {
+  sm: "text-sm leading-5",
+  base: "text-sm leading-5 md:text-base md:leading-6",
+  lg: "text-base leading-7 md:text-lg",
+};
 const ASPECT = { video: "aspect-video", landscape: "aspect-[4/3]", square: "aspect-square", portrait: "aspect-[3/4]" };
 const SPACER = { sm: "h-4", md: "h-8", lg: "h-14", xl: "h-24" };
 
 export function BadgeView({ el }: { el: Of<"badge"> }) {
   return (
     <div className={cn("flex w-full", JUSTIFY[el.align ?? "left"])}>
-      <Pill>
-        {el.text}
-      </Pill>
+      <Pill>{el.text}</Pill>
     </div>
   );
 }
@@ -94,7 +96,13 @@ export function ImageView({ el }: { el: Of<"image"> }) {
         )}
       >
         {src ? (
-          <Image src={src} alt={mediaAlt(el.image)} fill className="object-cover" sizes="(min-width: 768px) 50vw, 100vw" />
+          <Image
+            src={src}
+            alt={mediaAlt(el.image)}
+            fill
+            className="object-cover"
+            sizes="(min-width: 768px) 50vw, 100vw"
+          />
         ) : (
           <div className="absolute inset-0 bg-white/5" />
         )}

@@ -13,7 +13,26 @@ type Block = Page["layout"][number];
 
 /** Ready-made sections (Hero, CTA, FAQ…), rendered with the live site's blocks. */
 export function sectionComponents(f: StudioFields): Record<string, ComponentConfig<AnyProps>> {
-  const { text, textarea, plain, link, number, select, toggle, image, video, tags, partnersField, certificationsField, header, buttons, list, headerDefaults, L, data } = f;
+  const {
+    text,
+    textarea,
+    plain,
+    link,
+    number,
+    select,
+    toggle,
+    image,
+    video,
+    tags,
+    partnersField,
+    certificationsField,
+    header,
+    buttons,
+    list,
+    headerDefaults,
+    L,
+    data,
+  } = f;
 
   // Each section renders the live site's block component.
   const section = <T extends Block["blockType"]>(
@@ -71,7 +90,18 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
       fields: {
         header: header(),
         background: image("Background", "Latar belakang"),
-        items: list("Items", "Item", { icon: image("Icon", "Ikon"), title: text("Title", "Judul"), description: textarea("Description", "Deskripsi") }, "title", { title: L("Item", "Item") }, 6),
+        items: list(
+          "Items",
+          "Item",
+          {
+            icon: image("Icon", "Ikon"),
+            title: text("Title", "Judul"),
+            description: textarea("Description", "Deskripsi"),
+          },
+          "title",
+          { title: L("Item", "Item") },
+          6,
+        ),
         image: image("Image", "Gambar"),
       },
       defaultProps: { header: headerDefaults, items: [] },
@@ -103,32 +133,80 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
             description: textarea("Description", "Deskripsi"),
             tagsLabel: text("Tags label", "Label tag"),
             tags: tags("Tags", "Tag"),
-            button: { type: "object", label: L("Button", "Tombol"), objectFields: { label: text("Label", "Label"), href: link("Link", "Link") } },
+            button: {
+              type: "object",
+              label: L("Button", "Tombol"),
+              objectFields: { label: text("Label", "Label"), href: link("Link", "Link") },
+            },
           },
         },
-        items: list("Small cards", "Kartu kecil", { image: image("Image", "Gambar"), title: text("Title", "Judul"), href: link("Link", "Link") }, "title", { title: L("Card", "Kartu"), href: "/solution" }, 7),
+        items: list(
+          "Small cards",
+          "Kartu kecil",
+          { image: image("Image", "Gambar"), title: text("Title", "Judul"), href: link("Link", "Link") },
+          "title",
+          { title: L("Card", "Kartu"), href: "/solution" },
+          7,
+        ),
       },
-      defaultProps: { header: headerDefaults, featured: { title: L("Featured", "Utama"), tags: [], button: {} }, items: [] },
+      defaultProps: {
+        header: headerDefaults,
+        featured: { title: L("Featured", "Utama"), tags: [], button: {} },
+        items: [],
+      },
     }),
     expertise: section("expertise", {
       label: L("Expertise + stats", "Keahlian + statistik"),
       fields: {
         header: header(),
         background: image("Background", "Latar belakang"),
-        stats: list("Stats", "Statistik", { value: number("Value", "Angka"), suffix: plain("Suffix", "Akhiran"), label: text("Label", "Label") }, "label", { value: 10, suffix: "+", label: L("Metric", "Metrik") }, 4),
-        cards: list("Cards", "Kartu", { image: image("Image", "Gambar"), icon: image("Icon", "Ikon"), title: text("Title", "Judul"), description: textarea("Description", "Deskripsi") }, "title", { title: L("Card", "Kartu") }, 6),
+        stats: list(
+          "Stats",
+          "Statistik",
+          { value: number("Value", "Angka"), suffix: plain("Suffix", "Akhiran"), label: text("Label", "Label") },
+          "label",
+          { value: 10, suffix: "+", label: L("Metric", "Metrik") },
+          4,
+        ),
+        cards: list(
+          "Cards",
+          "Kartu",
+          {
+            image: image("Image", "Gambar"),
+            icon: image("Icon", "Ikon"),
+            title: text("Title", "Judul"),
+            description: textarea("Description", "Deskripsi"),
+          },
+          "title",
+          { title: L("Card", "Kartu") },
+          6,
+        ),
       },
       defaultProps: { header: headerDefaults, stats: [], cards: [] },
     }),
     featureGrid: section("featureGrid", {
       label: L("Feature grid", "Grid fitur"),
       fields: {
-        variant: select("Variant", "Varian", [["cards", "Cards — 3 columns", "Kartu — 3 kolom"], ["values", "Values — 4 columns + quote", "Nilai — 4 kolom + kutipan"]]),
+        variant: select("Variant", "Varian", [
+          ["cards", "Cards — 3 columns", "Kartu — 3 kolom"],
+          ["values", "Values — 4 columns + quote", "Nilai — 4 kolom + kutipan"],
+        ]),
         header: header(),
         background: image("Background", "Latar belakang"),
         backgroundOverlay: image("Background overlay", "Lapisan latar"),
         quote: text("Quote", "Kutipan"),
-        items: list("Items", "Item", { icon: image("Icon", "Ikon"), title: text("Title", "Judul"), description: textarea("Description", "Deskripsi") }, "title", { title: L("Feature", "Fitur") }, 8),
+        items: list(
+          "Items",
+          "Item",
+          {
+            icon: image("Icon", "Ikon"),
+            title: text("Title", "Judul"),
+            description: textarea("Description", "Deskripsi"),
+          },
+          "title",
+          { title: L("Feature", "Fitur") },
+          8,
+        ),
       },
       defaultProps: { variant: "cards", header: headerDefaults, items: [] },
     }),
@@ -137,7 +215,19 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
       fields: {
         header: header(),
         background: image("Background", "Latar belakang"),
-        leaders: list("People", "Orang", { photo: image("Photo", "Foto"), name: text("Name", "Nama"), roles: tags("Roles", "Jabatan"), bio: textarea("Bio", "Bio") }, "name", { name: L("Name", "Nama"), roles: [] }, 8),
+        leaders: list(
+          "People",
+          "Orang",
+          {
+            photo: image("Photo", "Foto"),
+            name: text("Name", "Nama"),
+            roles: tags("Roles", "Jabatan"),
+            bio: textarea("Bio", "Bio"),
+          },
+          "name",
+          { name: L("Name", "Nama"), roles: [] },
+          8,
+        ),
       },
       defaultProps: { header: headerDefaults, leaders: [] },
     }),
@@ -146,7 +236,14 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
       fields: {
         header: header(),
         background: image("Background", "Latar belakang"),
-        items: list("Stats", "Statistik", { label: text("Label", "Label"), value: number("Value", "Angka"), suffix: plain("Suffix", "Akhiran") }, "label", { label: L("Team", "Tim"), value: 10, suffix: "+" }, 8),
+        items: list(
+          "Stats",
+          "Statistik",
+          { label: text("Label", "Label"), value: number("Value", "Angka"), suffix: plain("Suffix", "Akhiran") },
+          "label",
+          { label: L("Team", "Tim"), value: 10, suffix: "+" },
+          8,
+        ),
       },
       defaultProps: { header: headerDefaults, items: [] },
     }),
@@ -162,7 +259,10 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
     certifications: section("certifications", {
       label: L("Certifications", "Sertifikasi"),
       fields: {
-        variant: select("Variant", "Varian", [["cards", "Cards", "Kartu"], ["gallery", "Gallery (zoomable)", "Galeri (bisa diperbesar)"]]),
+        variant: select("Variant", "Varian", [
+          ["cards", "Cards", "Kartu"],
+          ["gallery", "Gallery (zoomable)", "Galeri (bisa diperbesar)"],
+        ]),
         header: header(),
         background: image("Background", "Latar belakang"),
         items: certificationsField("Certifications (empty = all)", "Sertifikasi (kosong = semua)"),
@@ -179,7 +279,14 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
       fields: {
         header: header(),
         background: image("Background", "Latar belakang"),
-        items: list("Questions", "Pertanyaan", { question: text("Question", "Pertanyaan"), answer: textarea("Answer", "Jawaban") }, "question", { question: L("Question?", "Pertanyaan?"), answer: L("Answer.", "Jawaban.") }, 20),
+        items: list(
+          "Questions",
+          "Pertanyaan",
+          { question: text("Question", "Pertanyaan"), answer: textarea("Answer", "Jawaban") },
+          "question",
+          { question: L("Question?", "Pertanyaan?"), answer: L("Answer.", "Jawaban.") },
+          20,
+        ),
       },
       defaultProps: { header: headerDefaults, items: [] },
     }),
@@ -187,7 +294,14 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
       label: L("Workflow steps", "Langkah kerja"),
       fields: {
         header: header(),
-        steps: list("Steps", "Langkah", { title: text("Title", "Judul"), description: textarea("Description", "Deskripsi") }, "title", { title: L("Step", "Langkah") }, 8),
+        steps: list(
+          "Steps",
+          "Langkah",
+          { title: text("Title", "Judul"), description: textarea("Description", "Deskripsi") },
+          "title",
+          { title: L("Step", "Langkah") },
+          8,
+        ),
       },
       defaultProps: { header: headerDefaults, steps: [] },
     }),
@@ -216,7 +330,10 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
     cta: section("cta", {
       label: L("Call to action", "Ajakan (CTA)"),
       fields: {
-        variant: select("Variant", "Varian", [["simple", "Simple", "Sederhana"], ["withMedia", "With media / video", "Dengan media / video"]]),
+        variant: select("Variant", "Varian", [
+          ["simple", "Simple", "Sederhana"],
+          ["withMedia", "With media / video", "Dengan media / video"],
+        ]),
         header: header(),
         background: image("Background", "Latar belakang"),
         backgroundMobile: image("Background (mobile)", "Latar belakang (ponsel)"),
@@ -231,6 +348,5 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
       },
       defaultProps: { variant: "simple", header: headerDefaults, buttons: [] },
     }),
-
   };
 }

@@ -1,0 +1,6 @@
+types/cms.ts
+.next/
+node_modules/
+package-lock.json
+*.md
+public/

@@ -78,11 +78,7 @@ export function Navbar({
               <ChevronDown className={cn("h-4 w-4 transition-transform duration-300", mega && "rotate-180")} />
             </button>
             {navLinks.map((link) => (
-              <LocaleLink
-                key={link.id ?? link.label}
-                href={link.href}
-                className="text-sm text-white hover:text-accent"
-              >
+              <LocaleLink key={link.id ?? link.label} href={link.href} className="text-sm text-white hover:text-accent">
                 {link.label}
               </LocaleLink>
             ))}
@@ -103,7 +99,6 @@ export function Navbar({
             {mobile ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
-
       </header>
 
       {/* Menus live outside the header: its backdrop-filter would otherwise

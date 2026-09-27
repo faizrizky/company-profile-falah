@@ -5,7 +5,8 @@ import { useEffect } from "react";
 /** Top-level fields of the right panel (each becomes a collapsible card). */
 const FIELD = '[class*="_PuckFields-field_"]';
 /** The field's own title, before its content. */
-const LABEL = ':scope > [class*="_InputWrapper_"] > [class*="_Input_"] > [class*="_Input-label_"], :scope > [class*="_Input_"] > [class*="_Input-label_"], :scope [class*="_Input-label_"]';
+const LABEL =
+  ':scope > [class*="_InputWrapper_"] > [class*="_Input_"] > [class*="_Input-label_"], :scope > [class*="_Input_"] > [class*="_Input-label_"], :scope [class*="_Input-label_"]';
 
 const DURATION = 220;
 

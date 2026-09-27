@@ -46,10 +46,7 @@ export function LeadershipBlock({ block }: BlockProps<Data>) {
                     {leader.roles?.length ? (
                       <div className="flex flex-wrap items-center gap-1">
                         {leader.roles.map((role) => (
-                          <Pill
-                            key={role}
-                            size="xs"
-                          >
+                          <Pill key={role} size="xs">
                             {role}
                           </Pill>
                         ))}

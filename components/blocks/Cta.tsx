@@ -19,11 +19,7 @@ function WithMediaCta({ block, ctx }: BlockProps<Data>) {
       <div className="absolute inset-0 -z-10 bg-black/10" />
       <div className="relative mx-auto flex w-full max-w-[1269px] flex-col items-center gap-8">
         <div className="flex w-full max-w-[800px] flex-col items-center gap-8">
-          <SectionTitle
-            eyebrow={block.header.eyebrow}
-            title={block.header.title}
-            desc={block.header.description}
-          />
+          <SectionTitle eyebrow={block.header.eyebrow} title={block.header.title} desc={block.header.description} />
           <CmsButtons
             buttons={block.buttons}
             className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center"
@@ -55,7 +51,12 @@ function SimpleCta({ block }: { block: Data }) {
     <section className="relative isolate overflow-hidden px-6 py-12.5 md:px-20">
       <ResponsiveBackground src={mediaUrl(block.background)} mobileSrc={mediaUrl(block.backgroundMobile)} />
       <div className="relative mx-auto flex w-full max-w-[800px] flex-col items-center gap-8">
-        <SectionTitle variant="page" eyebrow={block.header.eyebrow} title={block.header.title} desc={block.header.description} />
+        <SectionTitle
+          variant="page"
+          eyebrow={block.header.eyebrow}
+          title={block.header.title}
+          desc={block.header.description}
+        />
         <CmsButtons
           buttons={block.buttons}
           className="flex w-full flex-col gap-3 md:w-fit md:flex-row md:flex-wrap"

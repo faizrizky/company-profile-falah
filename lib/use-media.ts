@@ -16,7 +16,11 @@ const subscribeMobile = (onChange: () => void) => {
  * so nothing size-specific (e.g. a video file) is fetched before it is known.
  */
 export function useIsMobile(): boolean | null {
-  return useSyncExternalStore(subscribeMobile, () => window.matchMedia(MOBILE_QUERY).matches, () => null);
+  return useSyncExternalStore(
+    subscribeMobile,
+    () => window.matchMedia(MOBILE_QUERY).matches,
+    () => null,
+  );
 }
 
 /** True when the visitor asked for less motion or less data. */

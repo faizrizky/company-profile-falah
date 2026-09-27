@@ -21,9 +21,7 @@ function resolveSlug(segments: string[] | undefined): string | null {
 
 export async function generateStaticParams(): Promise<Params[]> {
   const slugs = await getPageSlugs();
-  return locales.flatMap((locale) =>
-    slugs.map((slug) => ({ locale, slug: slug === HOME_SLUG ? [] : [slug] })),
-  );
+  return locales.flatMap((locale) => slugs.map((slug) => ({ locale, slug: slug === HOME_SLUG ? [] : [slug] })));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {

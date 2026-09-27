@@ -110,11 +110,11 @@ function ProductItem({
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-1">
         <span className="font-display text-lg font-bold leading-6 tracking-wide text-white">{product.title}</span>
-        {product.summary && (
-          <span className="line-clamp-2 text-sm leading-6 text-white/85">{product.summary}</span>
-        )}
+        {product.summary && <span className="line-clamp-2 text-sm leading-6 text-white/85">{product.summary}</span>}
       </span>
-      {href && <ArrowBadge className="h-10 w-10 self-start opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100" />}
+      {href && (
+        <ArrowBadge className="h-10 w-10 self-start opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100" />
+      )}
     </MaybeLink>
   );
 }
@@ -169,9 +169,7 @@ export function MegaMenu({
                     onNavigate={onClose}
                     className={cn(
                       "inline-flex items-center rounded-lg px-3 py-2 text-sm leading-6 transition-all duration-300",
-                      selected
-                        ? "bg-blue-bright font-semibold text-white"
-                        : "text-white hover:text-accent",
+                      selected ? "bg-blue-bright font-semibold text-white" : "text-white hover:text-accent",
                     )}
                   >
                     {category.title}
@@ -205,7 +203,10 @@ export function MegaMenu({
           )}
 
           {featured && rest.length > 0 && (
-            <ul key={`list-${active.id}`} className="tab-panel-in mega-scroll mega-scroll--bold -mr-3 flex min-h-0 flex-col gap-3 overflow-y-auto pr-5">
+            <ul
+              key={`list-${active.id}`}
+              className="tab-panel-in mega-scroll mega-scroll--bold -mr-3 flex min-h-0 flex-col gap-3 overflow-y-auto pr-5"
+            >
               {rest.map((product) => (
                 <li key={product.id}>
                   <ProductItem product={product} href={active.href} onNavigate={onClose} />

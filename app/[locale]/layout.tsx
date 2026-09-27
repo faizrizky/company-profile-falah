@@ -7,13 +7,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { asMedia, mediaUrl } from "@/lib/cms/media";
 import { fontVariables } from "@/lib/fonts";
 import { buildMegaMenu } from "@/lib/cms/mega-menu";
-import {
-  getFooter,
-  getNavigation,
-  getProducts,
-  getSiteSettings,
-  getSolutionCategories,
-} from "@/lib/cms/queries";
+import { getFooter, getNavigation, getProducts, getSiteSettings, getSolutionCategories } from "@/lib/cms/queries";
 import { isLocale, locales } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import "../globals.css";

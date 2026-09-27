@@ -15,24 +15,14 @@ type RevealProps = {
 
 const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
 
-export function Reveal({
-  children,
-  className,
-  delay = 0,
-  y = 24,
-  duration = 700,
-  once = true,
-}: RevealProps) {
+export function Reveal({ children, className, delay = 0, y = 24, duration = 700, once = true }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (
-      typeof IntersectionObserver === "undefined" ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
+    if (typeof IntersectionObserver === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setShown(true);
       return;
     }

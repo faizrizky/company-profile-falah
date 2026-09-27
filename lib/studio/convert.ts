@@ -21,7 +21,12 @@ let counter = 0;
 const newId = (type: string) => `${type}-${Date.now().toString(36)}-${(counter++).toString(36)}`;
 
 function toPuckItem(block: { blockType: string; id?: string | null; blockName?: string | null }): PuckItem {
-  const { blockType, id, blockName: _blockName, ...fields } = block as Record<string, unknown> & {
+  const {
+    blockType,
+    id,
+    blockName: _blockName,
+    ...fields
+  } = block as Record<string, unknown> & {
     blockType: string;
     id?: string | null;
   };

@@ -41,9 +41,7 @@ export function CertificateButton({ certifications }: { certifications: Certific
             <div
               className={cn(
                 "fixed inset-0 bg-surface-dark/80 backdrop-blur-md",
-                open
-                  ? "animate-fade-in"
-                  : "pointer-events-none animate-fade-out",
+                open ? "animate-fade-in" : "pointer-events-none animate-fade-out",
               )}
               onClick={() => setOpen(false)}
               aria-hidden
@@ -55,14 +53,7 @@ export function CertificateButton({ certifications }: { certifications: Certific
                 open ? "animate-modal-in" : "animate-modal-out",
               )}
             >
-              <Image
-                src={certBg}
-                alt=""
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority
-              />
+              <Image src={certBg} alt="" fill className="object-cover" sizes="100vw" priority />
 
               <div className="absolute inset-0 bg-surface-dark/80 backdrop-blur-sm" />
 
@@ -78,10 +69,7 @@ export function CertificateButton({ certifications }: { certifications: Certific
 
                 <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
                   {items.map((c) => (
-                    <div
-                      key={c.id}
-                      className="relative h-[280px] overflow-hidden rounded-lg md:h-[380px]"
-                    >
+                    <div key={c.id} className="relative h-[280px] overflow-hidden rounded-lg md:h-[380px]">
                       <Image
                         src={mediaUrl(c.certificate)!}
                         alt={mediaAlt(c.certificate, c.title)}
@@ -91,9 +79,7 @@ export function CertificateButton({ certifications }: { certifications: Certific
                       />
 
                       <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,rgba(5,4,13,0)_0%,rgba(5,4,13,0.7)_100%)] p-4 backdrop-blur-[5px]">
-                        <h3 className="font-display text-base font-bold leading-6 text-white">
-                          {c.title}
-                        </h3>
+                        <h3 className="font-display text-base font-bold leading-6 text-white">{c.title}</h3>
                       </div>
                     </div>
                   ))}

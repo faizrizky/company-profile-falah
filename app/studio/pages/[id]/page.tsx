@@ -30,7 +30,14 @@ export default async function StudioPage({ params, searchParams }: Props) {
     return <StudioMessage title={s.loginTitle} body={s.loginBody} action={loginAction(cmsUrl, s)} cmsUrl={cmsUrl} />;
   }
 
-  const result = await loadStudio({ pageId, locale, uiLang, embedded, authorization: session.authorization, user: session.user });
+  const result = await loadStudio({
+    pageId,
+    locale,
+    uiLang,
+    embedded,
+    authorization: session.authorization,
+    user: session.user,
+  });
   if (result.status === "ok") return <StudioEditor key={`${locale}-${uiLang}`} {...result.props} />;
   if (result.status === "login")
     return <StudioMessage title={s.loginTitle} body={s.loginBody} action={loginAction(cmsUrl, s)} cmsUrl={cmsUrl} />;

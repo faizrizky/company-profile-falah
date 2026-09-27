@@ -1,4 +1,3 @@
-
 import { ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
 import { SolutionOverviewTabs } from "@/components/solution/overview-tabs";
 import { mediaUrl } from "@/lib/cms/media";

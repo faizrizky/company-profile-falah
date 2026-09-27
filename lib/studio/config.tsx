@@ -73,4 +73,3 @@ export function createStudioConfig(context: StudioContext): Config {
     },
   };
 }
-

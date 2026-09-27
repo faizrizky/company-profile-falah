@@ -1,4 +1,3 @@
-
 import { GlowLine } from "@/components/common/glow-line";
 import { Glow, ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
 import { Card } from "@/components/ui/card";
@@ -26,7 +25,8 @@ function CardsVariant({ block }: { block: Data }) {
           {block.items?.map((card) => (
             <Card
               key={card.id ?? card.title}
-              hover="lift" className="relative flex flex-col justify-center gap-6 border-accent/30 p-10"
+              hover="lift"
+              className="relative flex flex-col justify-center gap-6 border-accent/30 p-10"
             >
               <Glow className="-top-[7px] left-0 h-[25px] w-full" />
               <div className="flex h-[52px] items-center justify-center">
@@ -80,10 +80,7 @@ function ValuesVariant({ block }: { block: Data }) {
           )}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:px-5">
             {block.items?.map((card) => (
-              <Card
-                key={card.id ?? card.title}
-                hover="lift" className="flex flex-col justify-center gap-4 p-8"
-              >
+              <Card key={card.id ?? card.title} hover="lift" className="flex flex-col justify-center gap-4 p-8">
                 <div className="flex h-[52px] items-center justify-center">
                   <img src={mediaUrl(card.icon)} alt="" className="h-[50px] w-[50px]" />
                 </div>

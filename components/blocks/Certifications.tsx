@@ -16,16 +16,18 @@ const ICON_CLASS: Record<NonNullable<Certification["iconShape"]>, string> = {
 function CertificationCards({ block, items }: { block: Data; items: Certification[] }) {
   return (
     <Section bg={mediaUrl(block.background)}>
-      <SectionTitle
-        eyebrow={block.header.eyebrow}
-        title={block.header.title}
-        desc={block.header.description}
-      />
-      <div className={cn("grid w-full grid-cols-1 gap-4 md:grid-cols-2", items.length % 3 === 0 ? "lg:grid-cols-3" : "lg:grid-cols-4")}>
+      <SectionTitle eyebrow={block.header.eyebrow} title={block.header.title} desc={block.header.description} />
+      <div
+        className={cn(
+          "grid w-full grid-cols-1 gap-4 md:grid-cols-2",
+          items.length % 3 === 0 ? "lg:grid-cols-3" : "lg:grid-cols-4",
+        )}
+      >
         {items.map((c) => (
           <Card
             key={c.id}
-            hover="lift" className="relative flex flex-col items-center gap-4 overflow-clip px-6 pb-8 pt-4 text-center backdrop-blur-sm"
+            hover="lift"
+            className="relative flex flex-col items-center gap-4 overflow-clip px-6 pb-8 pt-4 text-center backdrop-blur-sm"
           >
             <Glow className="-top-3.5 left-0 h-[25px] w-[322px]" />
             <div className="flex h-[98px] items-center justify-center">

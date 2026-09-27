@@ -30,14 +30,7 @@ type CountUpProps = {
  * starts. The final text reserves the space, and digits are tabular, so the
  * number never shifts or overlaps its neighbours while counting.
  */
-export function CountUp({
-  value,
-  prefix = "",
-  suffix = "",
-  duration = DURATION,
-  delay = 0,
-  className,
-}: CountUpProps) {
+export function CountUp({ value, prefix = "", suffix = "", duration = DURATION, delay = 0, className }: CountUpProps) {
   const decimals = decimalsOf(value);
   const format = (n: number) => `${prefix}${n.toFixed(decimals)}${suffix}`;
   const finalText = format(value);

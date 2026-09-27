@@ -40,7 +40,11 @@ export function TagsField({
         {tags.map((tag) => (
           <span key={tag} className="studio-tag">
             {tag}
-            <button type="button" aria-label={`${s.remove} ${tag}`} onClick={() => onChange(tags.filter((t) => t !== tag))}>
+            <button
+              type="button"
+              aria-label={`${s.remove} ${tag}`}
+              onClick={() => onChange(tags.filter((t) => t !== tag))}
+            >
               ×
             </button>
           </span>

@@ -27,9 +27,21 @@ export function layoutComponents(f: StudioFields): Record<string, ComponentConfi
     layoutSection: {
       label: L("Layout section (columns)", "Section bebas (kolom)"),
       fields: {
-        columns: radio("Columns", "Kolom", [["1", "1", "1"], ["2", "2", "2"], ["3", "3", "3"], ["4", "4", "4"]]),
-        verticalAlign: radio("Vertical alignment", "Perataan vertikal", [["start", "Top", "Atas"], ["center", "Center", "Tengah"]]),
-        gap: radio("Spacing", "Jarak", [["sm", "S", "K"], ["md", "M", "S"], ["lg", "L", "B"]]),
+        columns: radio("Columns", "Kolom", [
+          ["1", "1", "1"],
+          ["2", "2", "2"],
+          ["3", "3", "3"],
+          ["4", "4", "4"],
+        ]),
+        verticalAlign: radio("Vertical alignment", "Perataan vertikal", [
+          ["start", "Top", "Atas"],
+          ["center", "Center", "Tengah"],
+        ]),
+        gap: radio("Spacing", "Jarak", [
+          ["sm", "S", "K"],
+          ["md", "M", "S"],
+          ["lg", "L", "B"],
+        ]),
         background: select("Background", "Latar belakang", [
           ["dark", "Dark", "Gelap"],
           ["darker", "Darker", "Lebih gelap"],
@@ -37,10 +49,21 @@ export function layoutComponents(f: StudioFields): Record<string, ComponentConfi
           ["image", "Image", "Gambar"],
         ]),
         backgroundImage: image("Background image", "Gambar latar"),
-        padding: radio("Padding", "Padding", [["sm", "S", "K"], ["md", "M", "S"], ["lg", "L", "B"]]),
-        width: radio("Width", "Lebar", [["narrow", "Narrow", "Sempit"], ["default", "Default", "Standar"], ["wide", "Wide", "Lebar"]]),
+        padding: radio("Padding", "Padding", [
+          ["sm", "S", "K"],
+          ["md", "M", "S"],
+          ["lg", "L", "B"],
+        ]),
+        width: radio("Width", "Lebar", [
+          ["narrow", "Narrow", "Sempit"],
+          ["default", "Default", "Standar"],
+          ["wide", "Wide", "Lebar"],
+        ]),
         ...Object.fromEntries(
-          COLUMN_KEYS.map((key, i) => [key, { type: "slot", label: `${L("Column", "Kolom")} ${i + 1}`, allow: ELEMENT_TYPES } satisfies Field]),
+          COLUMN_KEYS.map((key, i) => [
+            key,
+            { type: "slot", label: `${L("Column", "Kolom")} ${i + 1}`, allow: ELEMENT_TYPES } satisfies Field,
+          ]),
         ),
       },
       resolveFields: (item, { fields }) => {
@@ -66,7 +89,8 @@ export function layoutComponents(f: StudioFields): Record<string, ComponentConfi
       },
       render: ({ puck: _puck, id, editMode: _editMode, ...props }) => {
         const slots = COLUMN_KEYS.map((key) => {
-          const Slot = props[key] as ((p?: { className?: string; minEmptyHeight?: number }) => React.ReactNode) | undefined;
+          const Slot = props[key] as
+            ((p?: { className?: string; minEmptyHeight?: number }) => React.ReactNode) | undefined;
           return Slot ? <Slot key={key} className="flex min-h-16 flex-col gap-4" minEmptyHeight={96} /> : null;
         });
         return <LayoutSectionView block={{ ...props, id, blockType: "layoutSection" } as never} columns={slots} />;
@@ -88,9 +112,22 @@ export function layoutComponents(f: StudioFields): Record<string, ComponentConfi
       label: L("Heading", "Judul"),
       fields: {
         text: textarea("Text", "Teks"),
-        level: radio("Level", "Level", [["h1", "H1", "H1"], ["h2", "H2", "H2"], ["h3", "H3", "H3"], ["h4", "H4", "H4"]]),
-        size: radio("Size", "Ukuran", [["sm", "S", "K"], ["md", "M", "S"], ["lg", "L", "B"], ["xl", "XL", "XL"]]),
-        color: radio("Color", "Warna", [["accent", "Light blue", "Biru muda"], ["white", "White", "Putih"]]),
+        level: radio("Level", "Level", [
+          ["h1", "H1", "H1"],
+          ["h2", "H2", "H2"],
+          ["h3", "H3", "H3"],
+          ["h4", "H4", "H4"],
+        ]),
+        size: radio("Size", "Ukuran", [
+          ["sm", "S", "K"],
+          ["md", "M", "S"],
+          ["lg", "L", "B"],
+          ["xl", "XL", "XL"],
+        ]),
+        color: radio("Color", "Warna", [
+          ["accent", "Light blue", "Biru muda"],
+          ["white", "White", "Putih"],
+        ]),
         align: align(),
       },
       defaultProps: { text: L("Heading", "Judul"), level: "h2", size: "lg", color: "accent", align: "left" },
@@ -104,8 +141,15 @@ export function layoutComponents(f: StudioFields): Record<string, ComponentConfi
       label: L("Paragraph", "Paragraf"),
       fields: {
         text: textarea("Text", "Teks"),
-        size: radio("Size", "Ukuran", [["sm", "S", "K"], ["base", "M", "S"], ["lg", "L", "B"]]),
-        tone: radio("Tone", "Warna", [["default", "White", "Putih"], ["muted", "Muted", "Redup"]]),
+        size: radio("Size", "Ukuran", [
+          ["sm", "S", "K"],
+          ["base", "M", "S"],
+          ["lg", "L", "B"],
+        ]),
+        tone: radio("Tone", "Warna", [
+          ["default", "White", "Putih"],
+          ["muted", "Muted", "Redup"],
+        ]),
         align: align(),
       },
       defaultProps: {
@@ -124,7 +168,12 @@ export function layoutComponents(f: StudioFields): Record<string, ComponentConfi
       label: L("Image", "Gambar"),
       fields: {
         image: image("Image", "Gambar"),
-        aspect: radio("Aspect ratio", "Rasio", [["video", "16:9", "16:9"], ["landscape", "4:3", "4:3"], ["square", "1:1", "1:1"], ["portrait", "3:4", "3:4"]]),
+        aspect: radio("Aspect ratio", "Rasio", [
+          ["video", "16:9", "16:9"],
+          ["landscape", "4:3", "4:3"],
+          ["square", "1:1", "1:1"],
+          ["portrait", "3:4", "3:4"],
+        ]),
         framed: toggle("Glow frame", "Bingkai glow"),
         caption: text("Caption", "Keterangan"),
       },
@@ -138,7 +187,12 @@ export function layoutComponents(f: StudioFields): Record<string, ComponentConfi
     button: {
       label: L("Button", "Tombol"),
       fields: { label: text("Label", "Label"), href: link("Link", "Link"), style: style(), align: align() },
-      defaultProps: { label: L("Request Consultation", "Ajukan Konsultasi"), href: "/contact", style: "fill", align: "left" },
+      defaultProps: {
+        label: L("Request Consultation", "Ajukan Konsultasi"),
+        href: "/contact",
+        style: "fill",
+        align: "left",
+      },
       render: ({ puck: _p, ...props }) => (
         <ElementFrame>
           <ButtonView el={{ ...props, blockType: "button" } as never} />
@@ -147,8 +201,16 @@ export function layoutComponents(f: StudioFields): Record<string, ComponentConfi
     },
     card: {
       label: L("Card", "Kartu"),
-      fields: { icon: image("Icon", "Ikon"), title: text("Title", "Judul"), description: textarea("Description", "Deskripsi"), href: link("Link (optional)", "Link (opsional)") },
-      defaultProps: { title: L("Card title", "Judul kartu"), description: L("Short supporting text.", "Teks pendukung singkat.") },
+      fields: {
+        icon: image("Icon", "Ikon"),
+        title: text("Title", "Judul"),
+        description: textarea("Description", "Deskripsi"),
+        href: link("Link (optional)", "Link (opsional)"),
+      },
+      defaultProps: {
+        title: L("Card title", "Judul kartu"),
+        description: L("Short supporting text.", "Teks pendukung singkat."),
+      },
       render: ({ puck: _p, ...props }) => (
         <ElementFrame>
           <CardView el={{ ...props, blockType: "card" } as never} />
@@ -157,7 +219,14 @@ export function layoutComponents(f: StudioFields): Record<string, ComponentConfi
     },
     spacer: {
       label: L("Spacer", "Jarak"),
-      fields: { size: radio("Size", "Ukuran", [["sm", "S", "K"], ["md", "M", "S"], ["lg", "L", "B"], ["xl", "XL", "XL"]]) },
+      fields: {
+        size: radio("Size", "Ukuran", [
+          ["sm", "S", "K"],
+          ["md", "M", "S"],
+          ["lg", "L", "B"],
+          ["xl", "XL", "XL"],
+        ]),
+      },
       defaultProps: { size: "md" },
       render: ({ puck: _p, ...props }) => (
         <ElementFrame>

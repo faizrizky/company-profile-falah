@@ -69,7 +69,11 @@ function HeaderActions({
     <div className="studio-actions">
       <label className="studio-select" title={`${s.contentLanguage} — ${s.structureShared}`}>
         <span className="sr-only">{s.contentLanguage}</span>
-        <select value={props.locale} onChange={(e) => switchContentLanguage(e.target.value)} aria-label={s.contentLanguage}>
+        <select
+          value={props.locale}
+          onChange={(e) => switchContentLanguage(e.target.value)}
+          aria-label={s.contentLanguage}
+        >
           {locales.map((code) => (
             <option key={code} value={code} title={localeNames[code]}>
               {code.toUpperCase()}
@@ -120,7 +124,9 @@ function usePreviewFrameGuard(onLost: () => void, generation: number) {
         recoveries.current = recoveries.current.filter((t) => now - t < 30_000);
         if (recoveries.current.length >= 5) return;
         recoveries.current.push(now);
-        console.warn("[studio] Preview frame was reloaded by an external script (browser extension?); remounting the editor.");
+        console.warn(
+          "[studio] Preview frame was reloaded by an external script (browser extension?); remounting the editor.",
+        );
         onLost();
       });
     };
@@ -261,7 +267,8 @@ function StudioEditorClient(props: StudioEditorProps) {
       setStatus({ kind: "success", message: publish ? s.published : s.saved });
     } catch (error) {
       const code = error instanceof StudioApiError ? error.status : 0;
-      const message = code === 401 ? s.sessionExpired : code === 403 ? s.forbidden : (error as Error).message || "Error";
+      const message =
+        code === 401 ? s.sessionExpired : code === 403 ? s.forbidden : (error as Error).message || "Error";
       setStatus({ kind: "error", message });
     }
   };

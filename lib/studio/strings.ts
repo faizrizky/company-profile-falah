@@ -17,8 +17,7 @@ const en = {
   viewSite: "View page",
   sessionExpired: "Your CMS session has expired. Log in again in another tab, then retry.",
   forbidden: "You don't have permission to change this page.",
-  structureShared:
-    "Section order and images are shared by all languages; texts are saved per language.",
+  structureShared: "Section order and images are shared by all languages; texts are saved per language.",
   // auth screen
   loginTitle: "Sign in to continue",
   loginBody: "The visual editor uses your CMS account. Sign in to the CMS, then open this page again.",
