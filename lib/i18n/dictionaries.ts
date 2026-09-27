@@ -8,7 +8,7 @@ const en = {
   nav: { toggleMenu: "Toggle menu", closeMenu: "Close menu", home: "Home", language: "Language" },
   footer: { contact: "Contact", address: "Address", email: "Email", questions: "Got any Questions?" },
   certificates: { show: "Show Certificate", view: "View {title}", close: "Close certificate modal" },
-  video: { play: "Play video" },
+  video: { play: "Play video", soundOn: "Turn sound on", soundOff: "Mute" },
   solutions: {
     comingSoon: "Solutions for this category are coming soon.",
     recommendedFor: "Recommended For",
@@ -57,7 +57,7 @@ const id: Dictionary = {
   nav: { toggleMenu: "Buka/tutup menu", closeMenu: "Tutup menu", home: "Beranda", language: "Bahasa" },
   footer: { contact: "Kontak", address: "Alamat", email: "Email", questions: "Ada pertanyaan?" },
   certificates: { show: "Lihat Sertifikat", view: "Lihat {title}", close: "Tutup sertifikat" },
-  video: { play: "Putar video" },
+  video: { play: "Putar video", soundOn: "Nyalakan suara", soundOff: "Matikan suara" },
   solutions: {
     comingSoon: "Solusi untuk kategori ini segera hadir.",
     recommendedFor: "Direkomendasikan Untuk",

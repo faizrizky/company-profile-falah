@@ -81,7 +81,7 @@ export function Footer({
             </ContactItem>
 
             {settings.socials?.length ? (
-              <div className="mt-6 flex flex-wrap items-center gap-3">
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-3 md:justify-start">
                 {settings.socials.map((social) => {
                   const custom = social.platform === "other" ? mediaUrl(social.icon) : undefined;
                   // WhatsApp without its own link opens a chat with the CMS WhatsApp number.
@@ -118,7 +118,7 @@ export function Footer({
 
         {copyright && (
           <div className="flex justify-center pt-5">
-            <p className="text-xs text-white/80">{copyright}</p>
+            <p className="text-center text-xs text-white/80">{copyright}</p>
           </div>
         )}
       </div>

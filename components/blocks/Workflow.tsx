@@ -34,7 +34,7 @@ export function WorkflowBlock({ block }: BlockProps<Data>) {
       </div>
       <div className="hidden flex-col items-center gap-8 px-20 pb-12.5 pt-25 md:flex">
         {head}
-        <ol className="flex w-[1280px] max-w-full justify-center gap-4">
+        <ol className="flex w-[1280px] max-w-full justify-center">
           {steps.map((f, i) => (
             <li key={f.id ?? f.n} className="flex w-50 flex-col gap-4">
               <div className="flex h-9 items-center justify-center font-display text-[40px] font-bold leading-6 text-accent">
