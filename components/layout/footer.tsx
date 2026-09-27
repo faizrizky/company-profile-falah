@@ -6,6 +6,7 @@ import { whatsappHref } from "@/components/contact/whatsapp-button";
 import { LocaleLink } from "@/components/i18n/locale-link";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import type { Footer as FooterData, SiteSetting } from "@/types/cms";
+import { GlowLine } from "@/components/common/glow-line";
 
 function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -111,10 +112,7 @@ export function Footer({
           </FooterColumn>
         </div>
 
-        {/* Glowing line: thickest in the middle, tapering to a point at both ends. */}
-        <div aria-hidden className="mt-10 w-full drop-shadow-[0_0_6px_rgba(24,102,239,0.9)]">
-          <div className="h-[4px] w-full bg-[linear-gradient(90deg,#1c4fd8,#2f6bff_50%,#1c4fd8)] [clip-path:polygon(0_50%,6%_25%,50%_0,94%_25%,100%_50%,94%_75%,50%_100%,6%_75%)]" />
-        </div>
+        <GlowLine className="mt-10" />
 
         {copyright && (
           <div className="flex justify-center pt-5">

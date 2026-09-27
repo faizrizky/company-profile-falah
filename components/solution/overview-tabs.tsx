@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
 import type { Product, SolutionCategory } from "@/types/cms";
+import { GlowLine } from "@/components/common/glow-line";
 
 function ProductCard({ product }: { product: Product }) {
   const image = mediaUrl(product.image);
@@ -82,7 +83,7 @@ export function SolutionOverviewTabs({
             >
               {c.title}
               {active && (
-                <span className="absolute -top-0.5 left-1/2 h-[5px] w-[170px] -translate-x-1/2 rounded-full bg-blue-bright shadow-[0_0_10px_rgba(59,130,246,1)]" />
+                <GlowLine width={170} thickness={5} className="absolute -top-0.5 left-1/2 -translate-x-1/2" />
               )}
             </button>
           );

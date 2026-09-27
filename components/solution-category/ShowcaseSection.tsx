@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import type { SolutionCategory } from "@/types/cms";
 
 import { pill } from "./pill";
+import { GlowLine } from "@/components/common/glow-line";
 
 const MOBILE_QUERY = "(max-width: 767px)";
 const subscribeMobile = (onChange: () => void) => {
@@ -67,7 +68,7 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
               >
                 {active && (
                   // Figma: a thin ellipse (pointed ends), not a pill, with a soft glow.
-                  <span className="absolute left-1/2 top-[-3px] h-[5px] w-[170px] -translate-x-1/2 rounded-[50%] bg-blue-bright shadow-[0_0_10px_#3b82f6]" />
+                  <GlowLine width={170} thickness={5} className="absolute left-1/2 top-[-3px] -translate-x-1/2" />
                 )}
                 {t.name}
               </button>

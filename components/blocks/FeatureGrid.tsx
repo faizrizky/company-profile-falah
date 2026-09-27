@@ -5,6 +5,7 @@ import { mediaUrl } from "@/lib/cms/media";
 import type { FeatureGridBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
+import { GlowLine } from "@/components/common/glow-line";
 
 type Item = NonNullable<Data["items"]>[number];
 
@@ -58,14 +59,14 @@ function ValuesVariant({ block }: { block: Data }) {
       {overlay && <Image src={overlay} alt="" fill className="-z-20 hidden object-fill md:block" />}
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <Head
-          className="max-w-[666px] items-start text-left md:items-center md:text-center"
+          className="max-w-[564px] items-start text-left md:items-center md:text-center"
           pill={block.header.eyebrow}
           title={block.header.title}
           desc={block.header.description}
         />
         <div className="relative mx-auto flex w-full flex-col items-stretch justify-center rounded-lg backdrop-blur-[5px]">
           <Glow className="-top-[7px] left-1/2 hidden h-[25px] w-[416px] -translate-x-1/2 md:block" />
-          <div className="absolute top-0 left-1/2 hidden h-[5px] w-[574px] -translate-x-1/2 bg-[#1866EF] md:block shadow-[0_0_10px_rgba(59,130,246,1)]" />
+          <GlowLine width={680} className="absolute left-1/2 top-0 hidden -translate-x-1/2 md:block" />
           {block.quote && (
             <div className="flex flex-col items-center justify-center gap-4 rounded-lg px-4 py-8 backdrop-blur-[5px] md:h-[110px] md:flex-row md:py-0">
               <img src="/about/icon-quotes.svg" alt="" className="h-[34px] w-[34px]" />

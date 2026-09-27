@@ -4,6 +4,7 @@ import { populated } from "@/lib/cms/media";
 import type { Partner, PartnersBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
+import { GlowLine } from "@/components/common/glow-line";
 
 export function PartnersBlock({ block }: BlockProps<Data>) {
   const rowOne = populated<Partner>(block.rowOne);
@@ -25,7 +26,7 @@ export function PartnersBlock({ block }: BlockProps<Data>) {
       </div>
       <img src="/about/gradasi.svg" alt="" className="pointer-events-none absolute left-0 top-0 h-[600px] w-full" />
       {/* Figma: glowing ellipse on the section's bottom edge, clear of the logos. */}
-      <div className="absolute bottom-0 left-1/2 h-[5px] w-[min(574px,80%)] -translate-x-1/2 rounded-[50%] bg-blue-bright shadow-[0_0_10px_#3b82f6]" />
+      <GlowLine width="min(574px, 80%)" className="absolute bottom-0 left-1/2 -translate-x-1/2" />
     </section>
   );
 }
