@@ -26,7 +26,7 @@ function WithMediaCta({ block, ctx }: BlockProps<Data>) {
             desc={block.header.description}
           />
           {block.buttons?.length ? (
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
               {block.buttons.map((b) => (
                 <Button key={b.id ?? b.href} href={b.href} variant={b.style ?? "fill"} size="lg">
                   {b.label}
@@ -64,7 +64,7 @@ function SimpleCta({ block }: { block: Data }) {
       <div className="relative mx-auto flex w-full max-w-[800px] flex-col items-center gap-8">
         <Head pill={block.header.eyebrow} title={block.header.title} desc={block.header.description} />
         {block.buttons?.length ? (
-          <div className="flex w-full flex-col gap-3 md:w-fit md:flex-row">
+          <div className="flex w-full flex-col gap-3 md:w-fit md:flex-row md:flex-wrap">
             {block.buttons.map((b) => (
               <Button
                 key={b.id ?? b.href}

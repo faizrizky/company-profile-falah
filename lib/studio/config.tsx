@@ -143,7 +143,7 @@ export function createStudioConfig({ lang, locale, cmsUrl, data, pageId, embedde
       description: textarea("Description", "Deskripsi"),
     },
   });
-  const buttons = (max = 2): Field => ({
+  const buttons = (max = 4): Field => ({
     type: "array",
     label: L("Buttons", "Tombol"),
     max,

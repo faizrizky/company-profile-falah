@@ -14,7 +14,7 @@ import { ScrollHint } from "@/components/common/scroll-hint";
 function HeroButtons({ buttons, className }: { buttons: HeroBlockData["buttons"]; className?: string }) {
   if (!buttons?.length) return null;
   return (
-    <div className={className ?? "flex flex-col gap-3 sm:flex-row"}>
+    <div className={className ?? "flex flex-col gap-3 sm:flex-row sm:flex-wrap"}>
       {buttons.map((b) => (
         <Button key={b.id ?? b.href} href={b.href} variant={b.style ?? "fill"} size="lg">
           {b.label}
@@ -117,7 +117,7 @@ function PageHero({ block }: { block: HeroBlockData }) {
             )}
           </div>
           {block.buttons?.length ? (
-            <div className="flex w-full flex-col gap-3 sm:flex-row">
+            <div className="flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap">
               {block.buttons.map((b) => (
                 <Button
                   key={b.id ?? b.href}
