@@ -1,6 +1,7 @@
 import { CircleDollarSign, ClipboardList, Clock, UserX } from "lucide-react";
 
 import { Glow, SectionTitle } from "@/components/common/section-ui";
+import { Card } from "@/components/ui/card";
 import type { SolutionCategory } from "@/types/cms";
 
 type ChallengeIcon = NonNullable<NonNullable<SolutionCategory["challenges"]>["items"]>[number]["icon"];
@@ -29,9 +30,9 @@ export function ChallengesSection({ category }: { category: SolutionCategory }) 
           {challenges.items.map((c) => {
             const Icon = ICONS[c.icon];
             return (
-              <div
+              <Card
                 key={c.id ?? c.title}
-                className="relative flex flex-col items-center justify-center gap-6 overflow-clip rounded-lg border border-accent/50 bg-surface-dark/5 p-10 text-center text-white backdrop-blur-[5px] transition-transform duration-300 hover:scale-[1.03]"
+                hover="lift" className="relative flex flex-col items-center justify-center gap-6 overflow-clip p-10 text-center text-white"
               >
                 <Glow className="-top-2 left-1/2 h-[25px] w-[416px] -translate-x-1/2" />
                 <Icon className="h-[50px] w-[50px] text-blue-bright" strokeWidth={1.75} />
@@ -39,7 +40,7 @@ export function ChallengesSection({ category }: { category: SolutionCategory }) 
                   <h3 className="text-xl font-bold leading-[30px]">{c.title}</h3>
                   {c.description && <p className="text-base leading-6">{c.description}</p>}
                 </div>
-              </div>
+              </Card>
             );
           })}
         </div>

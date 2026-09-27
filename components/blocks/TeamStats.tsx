@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { Glow, SectionTitle } from "@/components/common/section-ui";
+import { Card } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/count-up";
 import { mediaUrl } from "@/lib/cms/media";
 import type { TeamStatsBlock as Data } from "@/types/cms";
@@ -22,9 +23,9 @@ export function TeamStatsBlock({ block }: BlockProps<Data>) {
         />
         <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
           {block.items?.map((item, i) => (
-            <div
+            <Card
               key={item.id ?? item.label}
-              className="relative flex flex-col items-start gap-5 overflow-clip rounded-lg border border-accent/50 bg-surface-dark/5 p-10 backdrop-blur-[5px]"
+              className="relative flex flex-col items-start gap-5 overflow-clip p-10"
             >
               <Glow className="-top-[15px] left-1/2 h-[25px] w-[356px] -translate-x-1/2" />
               {/* Two lines reserved, so every number sits on the same line. */}
@@ -37,7 +38,7 @@ export function TeamStatsBlock({ block }: BlockProps<Data>) {
                   className="font-display text-[48px] font-bold leading-6 text-[#1866EF]"
                 />
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </div>

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ScrollHint } from "@/components/common/scroll-hint";
 import { ContactForm } from "@/components/contact/contact-form";
 import { WhatsAppButton, whatsappHref } from "@/components/contact/whatsapp-button";
+import { Card } from "@/components/ui/card";
 import { Pill } from "@/components/ui/pill";
 import { mediaUrl } from "@/lib/cms/media";
 import type { ContactFormBlock as Data } from "@/types/cms";
@@ -72,7 +73,7 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
         </div>
       </div>
 
-      <div className="relative hidden flex-1 flex-col gap-5 overflow-hidden rounded-lg border border-accent/50 bg-surface-dark/5 p-8 backdrop-blur-[5px] md:flex">
+      <Card className="relative hidden flex-1 flex-col gap-5 overflow-hidden p-8 md:flex">
         <div className="absolute -top-0.5 left-0 h-[15px] w-full bg-accent blur-[50px]" />
         <ContactForm
           {...formProps}
@@ -93,7 +94,7 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
             ) : null
           }
         />
-      </div>
+      </Card>
 
       <ScrollHint className="absolute bottom-0 left-1/2 hidden -translate-x-1/2 opacity-70 md:block" />
     </section>

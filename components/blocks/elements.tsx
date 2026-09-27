@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 
 import { Glow, Lines } from "@/components/common/section-ui";
 import { LocaleLink } from "@/components/i18n/locale-link";
+import { Card } from "@/components/ui/card";
 import { CmsButton } from "@/components/ui/cms-buttons";
 import { Pill } from "@/components/ui/pill";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
@@ -114,12 +115,12 @@ export function ButtonView({ el }: { el: Of<"button"> }) {
 export function CardView({ el }: { el: Of<"card"> }) {
   const icon = mediaUrl(el.icon);
   const body = (
-    <div className="relative flex h-full flex-col gap-4 rounded-lg border border-accent/50 bg-surface-dark/5 p-8 backdrop-blur-[5px] transition-transform duration-300 hover:scale-[1.03]">
+    <Card hover="lift" className="relative flex h-full flex-col gap-4 p-8">
       <Glow className="-top-[7px] left-0 h-[25px] w-full" />
       {icon && <img src={icon} alt="" className="h-[50px] w-[50px]" />}
       <h3 className="font-display text-lg font-bold leading-6 text-white md:text-xl">{el.title}</h3>
       {el.description && <p className="text-sm leading-5 text-white">{el.description}</p>}
-    </div>
+    </Card>
   );
   if (!el.href) return body;
   return el.href.startsWith("/") ? (

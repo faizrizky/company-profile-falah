@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import type { FaqBlock } from "@/types/cms";
 
 type Item = NonNullable<FaqBlock["items"]>[number];
@@ -7,9 +8,9 @@ export function FaqAccordion({ items }: { items: Item[] }) {
   return (
     <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
       {items.map((item) => (
-        <div
+        <Card
           key={item.id ?? item.question}
-          className="relative flex h-full flex-col gap-2 rounded-lg border border-accent/50 bg-surface-dark/5 px-5 py-4 backdrop-blur-sm"
+          className="relative flex h-full flex-col gap-2 px-5 py-4 backdrop-blur-sm"
         >
           <div
             aria-hidden
@@ -17,7 +18,7 @@ export function FaqAccordion({ items }: { items: Item[] }) {
           />
           <h3 className="font-display text-sm font-bold leading-5 text-accent">{item.question}</h3>
           {item.answer && <p className="whitespace-pre-line text-sm leading-6 text-white">{item.answer}</p>}
-        </div>
+        </Card>
       ))}
     </div>
   );

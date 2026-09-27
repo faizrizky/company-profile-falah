@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { GlowLine } from "@/components/common/glow-line";
 import { Glow, SectionTitle } from "@/components/common/section-ui";
+import { Card } from "@/components/ui/card";
 import { mediaUrl } from "@/lib/cms/media";
 import type { FeatureGridBlock as Data } from "@/types/cms";
 
@@ -24,16 +25,16 @@ function CardsVariant({ block }: { block: Data }) {
         />
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
           {block.items?.map((card) => (
-            <div
+            <Card
               key={card.id ?? card.title}
-              className="relative flex flex-col justify-center gap-6 rounded-lg border border-accent/30 bg-surface-dark/5 p-10 backdrop-blur-[5px] transition-transform duration-300 hover:scale-[1.03]"
+              hover="lift" className="relative flex flex-col justify-center gap-6 border-accent/30 p-10"
             >
               <Glow className="-top-[7px] left-0 h-[25px] w-full" />
               <div className="flex h-[52px] items-center justify-center">
                 <img src={mediaUrl(card.icon)} alt="" className="h-[50px] w-[50px]" />
               </div>
               <CardText card={card} gap="gap-4" />
-            </div>
+            </Card>
           ))}
         </div>
       </div>
@@ -80,15 +81,15 @@ function ValuesVariant({ block }: { block: Data }) {
           )}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:px-5">
             {block.items?.map((card) => (
-              <div
+              <Card
                 key={card.id ?? card.title}
-                className="flex flex-col justify-center gap-4 rounded-lg border border-accent/50 bg-surface-dark/5 p-8 backdrop-blur-[5px] transition-transform duration-300 hover:scale-[1.03]"
+                hover="lift" className="flex flex-col justify-center gap-4 p-8"
               >
                 <div className="flex h-[52px] items-center justify-center">
                   <img src={mediaUrl(card.icon)} alt="" className="h-[50px] w-[50px]" />
                 </div>
                 <CardText card={card} />
-              </div>
+              </Card>
             ))}
           </div>
         </div>

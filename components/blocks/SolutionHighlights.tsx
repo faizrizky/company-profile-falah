@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 
 import { Glow, Section, SectionTitle } from "@/components/common/section-ui";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Pill } from "@/components/ui/pill";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import type { SolutionHighlightsBlock as Data } from "@/types/cms";
@@ -22,7 +23,7 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
         desc={block.header.description}
       />
       <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:auto-rows-[329px] lg:grid-cols-3">
-        <div className="relative h-[329px] rounded-lg border border-accent/50 bg-surface-dark/5 backdrop-blur-[5px] transition-transform duration-300 hover:scale-[1.02] md:col-span-2 md:h-full">
+        <Card hover="subtle" className="relative h-[329px] md:col-span-2 md:h-full">
           <Glow className="-top-[9px] left-0 h-[25px] w-[416px]" />
           <div className="relative h-full overflow-hidden rounded-lg">
             {featuredImage && (
@@ -60,13 +61,13 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
               )}
             </div>
           </div>
-        </div>
+        </Card>
         {block.items?.map((c) => {
           const image = mediaUrl(c.image);
           return (
-            <div
+            <Card
               key={c.id ?? c.title}
-              className="relative h-[329px] rounded-lg border border-accent/50 bg-accent/5 backdrop-blur-[5px] transition-transform duration-300 hover:scale-[1.02] md:h-full"
+              hover="subtle" className="relative h-[329px] bg-accent/5 md:h-full"
             >
               <Glow className="-top-[9px] left-0 h-[25px] w-[416px]" />
               <div className="relative h-full overflow-hidden rounded-lg">
@@ -79,7 +80,7 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
                   <h3 className="w-full font-display text-base font-bold leading-5 text-white">{c.title}</h3>
                 </div>
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>

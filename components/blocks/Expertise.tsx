@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { Glow, Section, SectionTitle } from "@/components/common/section-ui";
+import { Card } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/count-up";
 import { mediaUrl } from "@/lib/cms/media";
 import type { ExpertiseBlock as Data } from "@/types/cms";
@@ -19,7 +20,7 @@ export function ExpertiseBlock({ block }: BlockProps<Data>) {
       {block.stats?.length ? (
         <div className="relative w-full">
           <Glow className="-top-3 left-0 h-[25px] w-full" />
-          <div className="grid min-h-[100px] w-full grid-cols-2 items-center rounded-lg border border-accent/50 bg-surface-dark/20 gap-y-4 px-6 py-6 backdrop-blur-sm md:grid-cols-4 md:px-8">
+          <Card className="grid min-h-[100px] w-full grid-cols-2 items-center gap-y-4 bg-surface-dark/20 px-6 py-6 backdrop-blur-sm md:grid-cols-4 md:px-8">
             {block.stats.map((s, i) => (
               <div key={s.id ?? s.label} className="flex flex-col items-center justify-center gap-2 text-center">
                 <CountUp
@@ -31,7 +32,7 @@ export function ExpertiseBlock({ block }: BlockProps<Data>) {
                 <span className="font-display text-base leading-5 text-white md:text-lg">{s.label}</span>
               </div>
             ))}
-          </div>
+          </Card>
         </div>
       ) : null}
 
@@ -39,9 +40,9 @@ export function ExpertiseBlock({ block }: BlockProps<Data>) {
         {block.cards?.map((e) => {
           const image = mediaUrl(e.image);
           return (
-            <div
+            <Card
               key={e.id ?? e.title}
-              className="relative overflow-hidden rounded-lg border border-accent/50 bg-surface-dark/20 backdrop-blur-sm transition-transform duration-300 hover:scale-[1.03]"
+              hover="lift" className="relative overflow-hidden bg-surface-dark/20 backdrop-blur-sm"
             >
               <div className="relative h-[215px]">
                 <div className="absolute inset-0 overflow-hidden">
@@ -56,7 +57,7 @@ export function ExpertiseBlock({ block }: BlockProps<Data>) {
                 <h3 className="font-display text-xl font-bold leading-6 text-white">{e.title}</h3>
                 {e.description && <p className="text-sm leading-5 text-white">{e.description}</p>}
               </div>
-            </div>
+            </Card>
           );
         })}
       </div>

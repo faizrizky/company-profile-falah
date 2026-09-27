@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { Glow, Lines } from "@/components/common/section-ui";
+import { Card } from "@/components/ui/card";
 import { Pill } from "@/components/ui/pill";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
@@ -56,9 +57,9 @@ export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
 
           <div className="relative">
             <Glow className="left-0 top-0 h-[25px] w-[600px]" />
-            <div className="relative h-full min-h-[300px] overflow-hidden rounded-lg border border-accent/50 lg:min-h-0">
+            <Card surface="none" className="relative h-full min-h-[300px] overflow-hidden lg:min-h-0">
               {image && <Image src={image} alt={mediaAlt(block.image)} fill className="object-cover" />}
-            </div>
+            </Card>
           </div>
         </div>
       </div>
