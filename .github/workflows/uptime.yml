@@ -1,0 +1,58 @@
+name: Uptime & defacement check
+
+# Every 15 minutes: the website and the CMS answer, and the home page still
+# looks like ours (title + expected text, no typical defacement banner).
+# A failed run emails the repo owner (GitHub → Settings → Notifications →
+# Actions) and, when the SECURITY_WEBHOOK_URL secret is set, posts to the
+# same chat channel as the CMS security alerts.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SITE_URL: ${{ vars.SITE_URL || 'https://falah-web.vercel.app' }}
+      CMS_URL: ${{ vars.CMS_URL || 'https://falah-cms-admin.vercel.app' }}
+    steps:
+      - name: Website pages respond
+        run: |
+          for path in /en /id /en/about /en/solution /en/contact; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --retry 2 --retry-delay 10 -m 30 "$SITE_URL$path")
+            echo "$code $SITE_URL$path"
+            test "$code" = "200"
+          done
+
+      - name: Home page is intact (no defacement)
+        run: |
+          html=$(curl -sf --retry 2 --retry-delay 10 -m 30 "$SITE_URL/en")
+          echo "$html" | grep -q "<title>Falah Inovasi Teknologi" || { echo "::error::Home page title changed"; exit 1; }
+          echo "$html" | grep -qi "Train Smarter with Immersive" || { echo "::error::Hero headline missing"; exit 1; }
+          if echo "$html" | grep -qiE "hacked by|defaced by|owned by|h4ck|greetz"; then
+            echo "::error::Defacement text found on the home page"; exit 1
+          fi
+
+      - name: CMS responds
+        run: |
+          for path in /admin/login /api/globals/site-settings; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --retry 2 --retry-delay 10 -m 30 "$CMS_URL$path")
+            echo "$code $CMS_URL$path"
+            test "$code" = "200"
+          done
+
+      - name: Alert chat channel
+        if: failure()
+        env:
+          WEBHOOK: ${{ secrets.SECURITY_WEBHOOK_URL }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          [ -z "$WEBHOOK" ] && exit 0
+          msg="🚨 [Falah] Uptime/defacement check failed — $RUN_URL"
+          curl -s -X POST -H "Content-Type: application/json" \
+            -d "{\"content\":\"$msg\",\"text\":\"$msg\"}" "$WEBHOOK" > /dev/null
