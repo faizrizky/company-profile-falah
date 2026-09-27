@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 
 import { useIsMobile, usePrefersStill } from "@/lib/use-media";
+import { watchVisibility } from "@/lib/visibility";
 
 type Props = {
   src: string;
@@ -34,15 +35,11 @@ export function BackgroundVideo({ src, type, mobileSrc, mobileType, poster, clas
     if (still) return;
     const video = ref.current;
     if (!video) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) void video.play().catch(() => {});
-        else video.pause();
-      },
+    return watchVisibility(
+      video,
+      (visible) => (visible ? void video.play().catch(() => {}) : video.pause()),
       { threshold: 0.15 },
     );
-    observer.observe(video);
-    return () => observer.disconnect();
   }, [file, still, mobile]);
 
   if (still || (mobile === null && mobileSrc)) {

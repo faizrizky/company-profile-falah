@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+
 import { cn } from "@/lib/utils";
+import { watchVisibility } from "@/lib/visibility";
 
 const DURATION = 1600;
 
@@ -66,18 +68,16 @@ export function CountUp({
       raf = requestAnimationFrame(tick);
     };
 
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) return;
-        io.disconnect();
+    const stopWatching = watchVisibility(
+      el,
+      () => {
         timer = window.setTimeout(start, delay);
       },
-      { threshold: 0.4 },
+      { once: true, threshold: 0.4 },
     );
-    io.observe(el);
 
     return () => {
-      io.disconnect();
+      stopWatching();
       window.clearTimeout(timer);
       cancelAnimationFrame(raf);
     };

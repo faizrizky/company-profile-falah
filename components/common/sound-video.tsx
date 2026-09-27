@@ -6,6 +6,7 @@ import { Volume2, VolumeX } from "lucide-react";
 import { prefersStill } from "@/lib/use-media";
 import { cn } from "@/lib/utils";
 import { PlayIcon } from "@/components/ui/play-icon";
+import { watchVisibility } from "@/lib/visibility";
 
 type Props = {
   src: string;
@@ -44,15 +45,7 @@ export function SoundVideo({ src, type, poster, autoPlay = false, playLabel, sou
   useEffect(() => {
     const video = ref.current;
     if (!video || !autoPlay || prefersStill()) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) start(video);
-        else video.pause();
-      },
-      { threshold: 0.4 },
-    );
-    observer.observe(video);
-    return () => observer.disconnect();
+    return watchVisibility(video, (visible) => (visible ? start(video) : video.pause()), { threshold: 0.4 });
   }, [src, autoPlay]);
 
   const toggleSound = () => {

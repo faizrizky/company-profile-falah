@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
+import { watchVisibility } from "@/lib/visibility";
+
 type RevealProps = {
   children: ReactNode;
   className?: string;
@@ -34,21 +36,7 @@ export function Reveal({
       setShown(true);
       return;
     }
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            setShown(true);
-            if (once) io.disconnect();
-          } else if (!once) {
-            setShown(false);
-          }
-        }
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -8% 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    return watchVisibility(el, setShown, { once, threshold: 0.1, rootMargin: "0px 0px -8% 0px" });
   }, [once]);
 
   return (
