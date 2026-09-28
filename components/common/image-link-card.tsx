@@ -67,7 +67,14 @@ export function ImageLinkCard({
           <Image src={image} alt={alt ?? title} fill className={ZOOM} />
         ))}
       {/* Figma Product_b: a constant 50% dark overlay; hover only reveals the text. */}
-      <div className={cn("absolute inset-0", tone === "highlight" ? "bg-surface-dark/50" : "bg-surface-dark/25")} />
+      <div
+        className={cn(
+          "absolute inset-0",
+          tone === "highlight"
+            ? "bg-surface-dark/50"
+            : "bg-surface-dark/25 transition-colors duration-300 group-hover:bg-surface-dark/50",
+        )}
+      />
       {tone === "highlight" && <Glow />}
       <div className="relative flex h-full flex-col items-end justify-between p-5">
         {href ? (

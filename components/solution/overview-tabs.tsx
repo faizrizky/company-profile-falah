@@ -13,6 +13,7 @@ import type { Product, SolutionCategory } from "@/types/cms";
  * the whole card links there and opens that product's tab (#anchor).
  */
 function ProductCard({ product, href }: { product: Product; href?: string }) {
+  const { t } = useI18n();
   const { wide, largeTitle } = product.layout ?? {};
   return (
     <ImageLinkCard
@@ -23,6 +24,8 @@ function ProductCard({ product, href }: { product: Product; href?: string }) {
       href={href}
       largeTitle={largeTitle}
       description={product.summary}
+      tags={product.tags}
+      tagsLabel={t.solutions.recommendedFor}
       tone="product"
       className={cn(wide && "md:col-span-2")}
     />
