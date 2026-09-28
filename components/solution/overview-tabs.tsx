@@ -84,7 +84,10 @@ export function SolutionOverviewTabs({
   const visible = products.filter((p) => categoryId(p) === activeId);
   const productHref = (p: Product) => {
     const category = categories.find((c) => c.id === categoryId(p));
-    return category?.hasDetailPage ? `/solution/${category.slug}#${slugify(p.title)}` : undefined;
+    if (!category?.hasDetailPage) return undefined;
+    // The tab chosen in the CMS, else the tab named like the product.
+    const tab = category.showcase?.tabs?.find((t) => t.id === p.showcaseTab);
+    return `/solution/${category.slug}#${slugify(tab?.name ?? p.title)}`;
   };
 
   return (
