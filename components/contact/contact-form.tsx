@@ -217,8 +217,10 @@ export function ContactForm({
                 id={`${id}-interest`}
                 name="interest"
                 defaultValue={interestOptions[0]}
+                // Figma: the preset choice reads as a placeholder (50% white) until the visitor picks one.
+                onChange={(e) => e.currentTarget.classList.replace("text-white/50", "text-white")}
                 className={cn(
-                  "h-11 w-full cursor-pointer appearance-none rounded-lg border border-white bg-surface-dark/50 pl-5 pr-10 text-sm leading-4 text-white outline-none backdrop-blur-[14.7px]",
+                  "h-11 w-full cursor-pointer appearance-none rounded-lg border border-white bg-surface-dark/50 pl-5 pr-10 text-sm leading-4 text-white/50 outline-none backdrop-blur-[14.7px]",
                   FIELD_STATES,
                 )}
               >
