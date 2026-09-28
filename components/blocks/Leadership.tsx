@@ -28,13 +28,14 @@ export function LeadershipBlock({ block }: BlockProps<Data>) {
             const photo = mediaUrl(leader.photo);
             return (
               <div key={leader.id ?? leader.name} className="group relative">
-                <Glow className="z-10 -top-[9px] left-1/2 h-[25px] w-[416px] -translate-x-1/2" />
                 <div
                   className={cn(
                     // Figma Leadership_b: Default at rest, Variant2 on hover.
                     "relative h-[407px] overflow-hidden rounded-lg border border-accent/50 bg-surface-dark/5 backdrop-blur-[5px] transition-colors duration-300 hover:bg-accent/5",
                   )}
                 >
+                  {/* Figma Leadership_b: glow inside the card, clipped by its edges, over the photo. */}
+                  <Glow className="z-10 -top-[10px]" />
                   {photo && (
                     <Image src={photo} alt={mediaAlt(leader.photo, leader.name)} fill className="object-cover" />
                   )}
