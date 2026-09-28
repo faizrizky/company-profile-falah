@@ -11,8 +11,10 @@ import type { SolutionHighlightsBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
 
-export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
+export function SolutionHighlightsBlock({ block, ctx }: BlockProps<Data>) {
   const { featured } = block;
+  // Label above every card's tags; the site's own wording when the CMS leaves it empty.
+  const tagsLabel = featured.tagsLabel || ctx.t.solutions.recommendedFor;
   const featuredImage = mediaUrl(featured.image);
 
   return (
@@ -24,25 +26,26 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
         desc={block.header.description}
       />
       <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:auto-rows-[329px] lg:grid-cols-3">
-        <Card hover="subtle" className="relative h-[329px] md:col-span-2 md:h-full">
+        <Card className="h-[329px] md:col-span-2 md:h-full">
           <div className="relative h-full overflow-hidden rounded-lg">
             {featuredImage && (
               <Image src={featuredImage} alt={mediaAlt(featured.image)} fill className="object-cover" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/70 via-surface-dark/10 to-transparent" />
-            <div className="relative flex h-full flex-col items-start justify-end gap-4 p-5">
+            {/* Figma Product - Virtual Training Suite_b: light blue wash over the photo. */}
+            <div className="absolute inset-0 bg-accent/25" />
+            <div className="relative flex h-full flex-col items-start justify-end p-5">
               <div className="flex flex-col gap-1">
                 <h3 className="font-display text-xl font-bold leading-5 text-white">{featured.title}</h3>
                 {featured.description && <p className="text-xs leading-4 text-white">{featured.description}</p>}
               </div>
               {featured.tags?.length ? (
                 <HoverReveal className="w-full">
-                  <TagList label={featured.tagsLabel} tags={featured.tags} />
+                  <TagList label={tagsLabel} tags={featured.tags} className="gap-1 pt-4" />
                 </HoverReveal>
               ) : null}
               {featured.button?.href && (
-                <Button href={featured.button.href} variant="stroke" size="md" className="w-fit">
-                  {featured.button.label} <ArrowUpRight className="h-4 w-4" />
+                <Button href={featured.button.href} variant="stroke" size="md" className="mt-4 w-fit px-4 font-normal">
+                  {featured.button.label} <ArrowUpRight className="h-6 w-6" strokeWidth={1.5} />
                 </Button>
               )}
             </div>
@@ -57,7 +60,7 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
             href={c.href}
             description={c.description}
             tags={c.tags}
-            tagsLabel={featured.tagsLabel}
+            tagsLabel={tagsLabel}
             className="h-[329px] md:h-full"
           />
         ))}

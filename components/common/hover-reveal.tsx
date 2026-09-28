@@ -23,10 +23,19 @@ export function HoverReveal({ children, className }: { children: ReactNode; clas
 }
 
 /** "Recommended For" + keyword chips, as on the product cards. */
-export function TagList({ label, tags }: { label?: string | null; tags?: string[] | null }) {
+export function TagList({
+  label,
+  tags,
+  className,
+}: {
+  label?: string | null;
+  tags?: string[] | null;
+  /** Gap between label and chips (Figma: 8px on product cards, 4px on the featured card). */
+  className?: string;
+}) {
   if (!tags?.length) return null;
   return (
-    <div className="flex flex-col gap-1">
+    <div className={cn("flex flex-col gap-2", className)}>
       {label && <span className="text-xs font-semibold leading-4 text-white">{label}</span>}
       <div className="flex flex-wrap gap-1">
         {tags.map((tag) => (

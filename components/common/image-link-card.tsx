@@ -39,7 +39,7 @@ export function ImageLinkCard({
   className?: string;
 }) {
   const classes = cn(
-    "group relative block h-[200px] overflow-hidden rounded-lg border border-accent/50 transition-transform duration-300 hover:scale-[1.03] md:h-[397px]",
+    "group relative block h-[200px] overflow-hidden rounded-lg border border-accent/50 bg-accent/5 backdrop-blur-[5px] md:h-[397px]",
     href && "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent",
     className,
   );
@@ -54,20 +54,21 @@ export function ImageLinkCard({
         ) : (
           <Image src={image} alt={alt ?? title} fill className="object-cover" />
         ))}
-      <div className="absolute inset-0 bg-surface-dark/50 transition-colors duration-300 group-hover:bg-surface-dark/60 md:bg-surface-dark/25" />
+      {/* Figma Product_b: a constant 50% dark overlay; hover only reveals the text. */}
+      <div className="absolute inset-0 bg-surface-dark/50" />
       <Glow />
       <div className="relative flex h-full flex-col items-end justify-between p-5">
         {href ? (
           <span
             aria-hidden
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white bg-surface-dark/5 text-white backdrop-blur-sm transition-colors duration-300 group-hover:border-accent group-hover:bg-blue-bright"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white bg-surface-dark/5 text-white backdrop-blur-[5px]"
           >
-            <ArrowUpRight className="h-4 w-4" />
+            <ArrowUpRight className="h-6 w-6" strokeWidth={1.5} />
           </span>
         ) : (
           <span />
         )}
-        <div className="flex w-full flex-col gap-2">
+        <div className="flex w-full flex-col">
           <h3
             className={cn(
               "w-full font-display font-bold text-white",
@@ -78,7 +79,7 @@ export function ImageLinkCard({
           </h3>
           {(description || Boolean(tags?.length)) && (
             <HoverReveal>
-              <div className="flex flex-col gap-3 pt-1">
+              <div className="flex flex-col gap-4 pt-1">
                 {description && <p className="text-xs leading-4 text-white">{description}</p>}
                 <TagList label={tagsLabel} tags={tags} />
               </div>
