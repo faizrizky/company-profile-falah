@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
+import { ImageLinkCard } from "@/components/common/image-link-card";
 import { Glow, Section, SectionTitle } from "@/components/common/section-ui";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -57,24 +58,16 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
             </div>
           </div>
         </Card>
-        {block.items?.map((c) => {
-          const image = mediaUrl(c.image);
-          return (
-            <Card key={c.id ?? c.title} hover="subtle" className="relative h-[329px] bg-accent/5 md:h-full">
-              <Glow className="-top-[9px] left-0 h-[25px] w-[416px]" />
-              <div className="relative h-full overflow-hidden rounded-lg">
-                {image && <Image src={image} alt={mediaAlt(c.image)} fill className="object-cover" />}
-                <div className="absolute inset-0 bg-black/50" />
-                <div className="relative flex h-full flex-col items-end justify-between p-5">
-                  <Button href={c.href} variant="stroke" size="md" ariaLabel={c.title} className="w-10 px-0">
-                    <ArrowUpRight className="h-6 w-6" />
-                  </Button>
-                  <h3 className="w-full font-display text-base font-bold leading-5 text-white">{c.title}</h3>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
+        {block.items?.map((c) => (
+          <ImageLinkCard
+            key={c.id ?? c.title}
+            title={c.title}
+            image={mediaUrl(c.image)}
+            alt={mediaAlt(c.image, c.title)}
+            href={c.href}
+            className="h-[329px] md:h-full"
+          />
+        ))}
       </div>
     </Section>
   );
