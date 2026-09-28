@@ -4,26 +4,30 @@ import { useState } from "react";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
+import { LocaleLink } from "@/components/i18n/locale-link";
 import { useI18n } from "@/components/i18n/locale-provider";
-import { Button } from "@/components/ui/button";
 import { TabButton } from "@/components/ui/tab-button";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
-import { cn } from "@/lib/utils";
+import { cn, slugify } from "@/lib/utils";
 import type { Product, SolutionCategory } from "@/types/cms";
 
-function ProductCard({ product }: { product: Product }) {
+/**
+ * A product in the Solution overview. When its category has a detail page,
+ * the whole card links there and opens that product's tab (#anchor).
+ */
+function ProductCard({ product, href }: { product: Product; href?: string }) {
   const image = mediaUrl(product.image);
   const imageMobile = mediaUrl(product.imageMobile);
   const alt = mediaAlt(product.image, product.title);
   const { wide, largeTitle } = product.layout ?? {};
 
-  return (
-    <div
-      className={cn(
-        "relative h-[200px] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-[1.03] md:h-[397px]",
-        wide && "md:col-span-2",
-      )}
-    >
+  const className = cn(
+    "group relative block h-[200px] overflow-hidden rounded-lg transition-transform duration-300 hover:scale-[1.03] md:h-[397px]",
+    href && "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent",
+    wide && "md:col-span-2",
+  );
+  const content = (
+    <>
       {image &&
         (imageMobile ? (
           <>
@@ -35,9 +39,16 @@ function ProductCard({ product }: { product: Product }) {
         ))}
       <div className="absolute inset-0 bg-surface-dark/50 md:bg-surface-dark/25" />
       <div className="relative flex h-full flex-col items-end justify-between p-5">
-        <Button variant="stroke" size="md" ariaLabel={product.title} className="px-2">
-          <ArrowUpRight className="h-4 w-4" />
-        </Button>
+        {href ? (
+          <span
+            aria-hidden
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white bg-surface-dark/5 text-white backdrop-blur-sm transition-colors duration-300 group-hover:border-accent group-hover:bg-blue-bright"
+          >
+            <ArrowUpRight className="h-4 w-4" />
+          </span>
+        ) : (
+          <span />
+        )}
         <h3
           className={cn(
             "w-full font-display font-bold text-white",
@@ -47,7 +58,15 @@ function ProductCard({ product }: { product: Product }) {
           {product.title}
         </h3>
       </div>
-    </div>
+    </>
+  );
+
+  return href ? (
+    <LocaleLink href={href} className={className} aria-label={product.title}>
+      {content}
+    </LocaleLink>
+  ) : (
+    <div className={className}>{content}</div>
   );
 }
 
@@ -63,6 +82,10 @@ export function SolutionOverviewTabs({
   const { t } = useI18n();
   const [activeId, setActiveId] = useState(categories[0]?.id);
   const visible = products.filter((p) => categoryId(p) === activeId);
+  const productHref = (p: Product) => {
+    const category = categories.find((c) => c.id === categoryId(p));
+    return category?.hasDetailPage ? `/solution/${category.slug}#${slugify(p.title)}` : undefined;
+  };
 
   return (
     <>
@@ -79,7 +102,7 @@ export function SolutionOverviewTabs({
       {/* Keyed by tab: the cards replay their enter animation on every switch. */}
       <div key={activeId} role="tabpanel" className="tab-panel-in grid w-full grid-cols-1 gap-4 md:grid-cols-3">
         {visible.map((p) => (
-          <ProductCard key={p.id} product={p} />
+          <ProductCard key={p.id} product={p} href={productHref(p)} />
         ))}
         {visible.length === 0 && (
           <p className="col-span-full py-16 text-center text-sm text-white/70">{t.solutions.comingSoon}</p>

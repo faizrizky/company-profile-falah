@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { Download } from "lucide-react";
 
@@ -11,6 +11,7 @@ import { Pill } from "@/components/ui/pill";
 import { TabButton } from "@/components/ui/tab-button";
 import { mediaType, mediaUrl } from "@/lib/cms/media";
 import { useIsMobile } from "@/lib/use-media";
+import { slugify } from "@/lib/utils";
 import type { SolutionCategory } from "@/types/cms";
 
 export function ShowcaseSection({ category }: { category: SolutionCategory }) {
@@ -19,8 +20,25 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
   // Only one video element is mounted, for the current screen size.
   const isMobile = useIsMobile();
   const showcase = category.showcase ?? {};
-  const tabs = showcase.tabs ?? [];
+  const tabs = useMemo(() => category.showcase?.tabs ?? [], [category.showcase?.tabs]);
   const tab = tabs[activeTab];
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Arriving from a product card (/solution/<category>#<product>): open that
+  // product's tab and bring the showcase into view.
+  useEffect(() => {
+    const open = () => {
+      const target = decodeURIComponent(window.location.hash.slice(1));
+      if (!target) return;
+      const index = tabs.findIndex((t) => slugify(t.name) === target);
+      if (index === -1) return;
+      setActiveTab(index);
+      sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    open();
+    window.addEventListener("hashchange", open);
+    return () => window.removeEventListener("hashchange", open);
+  }, [tabs]);
   if (!tab) return null;
 
   const background = mediaUrl(showcase.background);
@@ -38,7 +56,7 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
   );
 
   return (
-    <section className="w-full bg-surface-dark">
+    <section ref={sectionRef} className="w-full scroll-mt-16 bg-surface-dark">
       <div className="px-6 pb-8 pt-12.5 md:px-20 md:pb-12.5">
         <div
           role="tablist"
