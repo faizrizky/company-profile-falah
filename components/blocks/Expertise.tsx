@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Section, SectionTitle } from "@/components/common/section-ui";
+import { Glow, Section, SectionTitle } from "@/components/common/section-ui";
 import { Card } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/count-up";
 import { mediaUrl } from "@/lib/cms/media";
@@ -15,16 +15,24 @@ export function ExpertiseBlock({ block }: BlockProps<Data>) {
 
       {block.stats?.length ? (
         <div className="relative w-full">
-          <Card className="grid min-h-[100px] w-full grid-cols-2 items-center gap-y-4 bg-surface-dark/20 px-6 py-6 backdrop-blur-sm md:grid-cols-4 md:px-8">
+          {/* Figma: 100px bar, 200px columns spread edge to edge, no hover state. */}
+          <Card
+            glow={false}
+            className="grid w-full grid-cols-2 items-center gap-y-4 px-6 py-6 backdrop-blur-[2px] hover:bg-surface-dark/5 md:flex md:h-[100px] md:justify-between md:px-8"
+          >
+            <Glow className="-top-[13px] h-[25px] bg-blue-bright group-hover:translate-y-0 group-hover:bg-blue-bright" />
             {block.stats.map((s, i) => (
-              <div key={s.id ?? s.label} className="flex flex-col items-center justify-center gap-2 text-center">
+              <div
+                key={s.id ?? s.label}
+                className="flex flex-col items-center justify-center gap-1.5 text-center md:w-[200px]"
+              >
                 <CountUp
                   value={s.value}
                   suffix={s.suffix ?? ""}
                   delay={i * 80}
                   className="font-display text-[30px] font-bold leading-5 text-accent"
                 />
-                <span className="font-display text-base leading-5 text-white md:text-lg">{s.label}</span>
+                <span className="font-display text-base font-normal leading-5 text-white md:text-lg">{s.label}</span>
               </div>
             ))}
           </Card>
@@ -35,11 +43,10 @@ export function ExpertiseBlock({ block }: BlockProps<Data>) {
         {block.cards?.map((e) => {
           const image = mediaUrl(e.image);
           return (
-            <Card
-              key={e.id ?? e.title}
-              hover="lift"
-              className="relative overflow-hidden bg-surface-dark/20 backdrop-blur-sm"
-            >
+            // Figma Expert Section_b: the glow sits on the photo's bottom edge and
+            // tints the text area; hover zooms the photo ~5% from the top centre.
+            <Card key={e.id ?? e.title} glow={false}>
+              <Glow className="top-[200px] h-[27px] bg-blue-bright group-hover:translate-y-0 group-hover:bg-blue-bright" />
               <div className="relative h-[215px]">
                 <div className="absolute inset-0 overflow-hidden">
                   {image && (
@@ -47,16 +54,15 @@ export function ExpertiseBlock({ block }: BlockProps<Data>) {
                       src={image}
                       alt=""
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="origin-top object-cover transition-transform duration-500 group-hover:scale-[1.053]"
                     />
                   )}
-                  <div className="absolute inset-0 bg-surface-dark/20" />
                 </div>
-                <div className="absolute bottom-[-20px] left-6 z-20 flex h-20 w-20 items-center justify-center rounded-full bg-blue-bright p-5 shadow-[0_0_12px_rgba(37,99,235,0.6)]">
+                <div className="absolute bottom-[-20px] left-6 z-20 flex h-20 w-20 items-center justify-center rounded-full bg-blue-bright p-5">
                   <img src={mediaUrl(e.icon)} alt="" className="h-10 w-10" />
                 </div>
               </div>
-              <div className="relative min-h-[140px] bg-[linear-gradient(180deg,rgba(15,42,100,0.95)_0%,rgba(5,15,40,0.95)_100%)] flex flex-col gap-4 px-6 pb-10 pt-10">
+              <div className="relative flex flex-col gap-4 px-6 py-10">
                 <h3 className="font-display text-xl font-bold leading-6 text-white">{e.title}</h3>
                 {e.description && <p className="text-sm leading-5 text-white">{e.description}</p>}
               </div>
