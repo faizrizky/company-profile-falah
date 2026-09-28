@@ -16,7 +16,12 @@ const ICON_CLASS: Record<NonNullable<Certification["iconShape"]>, string> = {
 function CertificationCards({ block, items }: { block: Data; items: Certification[] }) {
   return (
     <Section bg={mediaUrl(block.background)}>
-      <SectionTitle eyebrow={block.header.eyebrow} title={block.header.title} desc={block.header.description} />
+      <SectionTitle
+        className="max-w-[682px]"
+        eyebrow={block.header.eyebrow}
+        title={block.header.title}
+        desc={block.header.description}
+      />
       <div
         className={cn(
           "grid w-full grid-cols-1 gap-4 md:grid-cols-2",
@@ -26,19 +31,30 @@ function CertificationCards({ block, items }: { block: Data; items: Certificatio
         {items.map((c) => (
           <Card
             key={c.id}
-            hover="lift"
-            className="relative flex flex-col items-center gap-4 overflow-clip px-6 pb-8 pt-4 text-center backdrop-blur-sm"
+            // Figma Card_b: no lift; hover tints the card and swaps in the colour logo.
+            className="flex flex-col items-center gap-4 px-7 py-4 text-center"
           >
-            <div className="flex h-[98px] items-center justify-center">
-              {/* Figma: monochrome logo that takes its colours on hover. */}
+            <div className="relative flex h-[98px] items-center justify-center py-3">
               <img
                 src={mediaUrl(c.icon)}
                 alt=""
                 className={cn(
                   ICON_CLASS[c.iconShape ?? "square"],
-                  "grayscale transition-[filter] duration-300 group-hover:grayscale-0",
+                  "transition-opacity duration-300",
+                  mediaUrl(c.iconHover) && "group-hover:opacity-0",
                 )}
               />
+              {mediaUrl(c.iconHover) && (
+                <img
+                  src={mediaUrl(c.iconHover)}
+                  alt=""
+                  aria-hidden
+                  className={cn(
+                    ICON_CLASS[c.iconShape ?? "square"],
+                    "absolute opacity-0 transition-opacity duration-300 group-hover:opacity-100",
+                  )}
+                />
+              )}
             </div>
             <div className="flex flex-col items-center gap-4">
               <h3 className="font-display text-xl font-bold leading-7 text-white">{c.title}</h3>
