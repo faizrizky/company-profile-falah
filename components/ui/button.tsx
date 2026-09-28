@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
  * brand blue #1866EF).
  */
 const FILL_FADE =
-  "relative isolate overflow-hidden before:absolute before:inset-0 before:-z-10 before:bg-[var(--btn-fill,var(--color-blue-bright))] before:opacity-0 before:transition-opacity before:duration-300 before:ease-out before:content-[''] hover:before:opacity-100 focus-visible:before:opacity-100";
+  "relative isolate overflow-hidden before:absolute before:inset-0 before:-z-10 before:bg-[var(--btn-fill,var(--color-blue-bright))] before:opacity-0 before:transition-opacity before:duration-500 before:ease-out before:content-[''] hover:before:opacity-100 focus-visible:before:opacity-100";
 
 const buttonVariants = cva(
   "group/btn inline-flex items-center justify-center gap-2 rounded-lg font-sans font-medium transition-colors duration-300",

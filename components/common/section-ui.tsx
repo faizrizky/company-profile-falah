@@ -30,7 +30,7 @@ export function Glow({ className }: { className?: string }) {
       className={cn(
         // Thin glow on a card's top edge; brightens and drops a little when
         // the card (a `group`) is hovered.
-        "pointer-events-none absolute z-10 -top-[10px] left-1/2 h-[25px] w-full -translate-x-1/2 rounded-full bg-accent/50 blur-[50px] transition-all duration-300 group-hover:translate-y-[5px] group-hover:bg-accent/80",
+        "pointer-events-none absolute z-10 -top-[10px] left-1/2 h-[25px] w-full -translate-x-1/2 rounded-full bg-accent/75 blur-[40px] transition-all duration-300 group-hover:translate-y-[5px] group-hover:bg-accent",
         className,
       )}
     />
