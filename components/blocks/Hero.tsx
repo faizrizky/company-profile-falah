@@ -72,22 +72,25 @@ function CenteredHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext 
 function PageHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
   const certifications = block.showCertificates ? ctx.data.certifications : [];
   return (
-    <section className="relative isolate flex min-h-[570px] flex-col overflow-hidden pb-[25px] md:min-h-0 md:pb-25">
+    <section className="relative isolate flex min-h-[570px] flex-col overflow-hidden pb-[25px] md:min-h-[720px] md:pb-25">
       <Background block={block} />
       <div className="relative flex flex-1 flex-col px-6 pt-[120px] md:px-20 md:pt-40">
         <div className="flex flex-col items-start gap-8 md:gap-9">
-          <div className="flex w-full max-w-[768px] flex-col gap-2 md:gap-4">
+          {/* Figma: 735px column; pill 16px above, title and text flush. */}
+          <div className="flex w-full max-w-[735px] flex-col gap-2 md:gap-4">
             {block.eyebrow && (
               <Pill size="xs" className="px-2 md:px-4 md:text-base md:leading-6">
                 {block.eyebrow}
               </Pill>
             )}
-            <h1 className="font-display text-[20px] font-bold leading-6 text-white md:text-[48px] md:leading-[60px]">
-              {block.title}
-            </h1>
-            {block.description && (
-              <p className="text-sm leading-5 text-white md:text-base md:leading-6">{block.description}</p>
-            )}
+            <div className="flex flex-col gap-2 md:gap-0">
+              <h1 className="font-display text-[20px] font-bold leading-6 text-white md:text-[48px] md:leading-[60px]">
+                {block.title}
+              </h1>
+              {block.description && (
+                <p className="text-sm leading-5 text-white md:text-base md:leading-6">{block.description}</p>
+              )}
+            </div>
           </div>
           <CmsButtons
             buttons={block.buttons}
@@ -97,11 +100,15 @@ function PageHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
           {certifications.length > 0 && <CertificateButton certifications={certifications} />}
         </div>
         {block.showScrollHint && (
-          <div className="mt-auto flex justify-center pt-[92px]">
+          <div className="mt-auto flex justify-center pt-[92px] md:hidden">
             <ScrollHint className="opacity-70" />
           </div>
         )}
       </div>
+      {/* Figma: the swipe hint sits on the hero's bottom edge. */}
+      {block.showScrollHint && (
+        <ScrollHint className="absolute bottom-0 left-1/2 hidden -translate-x-1/2 opacity-70 md:block" />
+      )}
     </section>
   );
 }

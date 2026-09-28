@@ -19,9 +19,12 @@ export function SolutionOverviewBlock({ block, ctx }: BlockProps<Data>) {
           eyebrow={block.header.eyebrow}
           title={block.header.title}
           desc={block.header.description}
-          className="max-w-[564px]"
+          className="max-w-[682px]"
         />
-        <SolutionOverviewTabs categories={categories} products={products} />
+        {/* Figma: tabs sit 16px above the card grid. */}
+        <div className="flex w-full flex-col gap-4">
+          <SolutionOverviewTabs categories={categories} products={products} />
+        </div>
       </div>
     </section>
   );

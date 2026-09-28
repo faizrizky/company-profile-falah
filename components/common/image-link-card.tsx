@@ -26,6 +26,7 @@ export function ImageLinkCard({
   description,
   tags,
   tagsLabel,
+  tone = "highlight",
   className,
 }: {
   title: string;
@@ -40,11 +41,17 @@ export function ImageLinkCard({
   tags?: string[] | null;
   /** Heading above the tags, e.g. "Recommended For". */
   tagsLabel?: string | null;
+  /**
+   * highlight: home Solution Highlights (bordered, glow, 50% dim).
+   * product: Solution overview product (no border or glow, 25% dim, 330px tall).
+   */
+  tone?: "highlight" | "product";
   /** Size and grid placement (e.g. height, md:col-span-2). */
   className?: string;
 }) {
   const classes = cn(
-    "group relative block h-[200px] overflow-hidden rounded-lg border border-accent/50 bg-accent/5 backdrop-blur-[5px] md:h-[397px]",
+    "group relative block h-[200px] overflow-hidden rounded-lg",
+    tone === "highlight" ? "border border-accent/50 bg-accent/5 backdrop-blur-[5px] md:h-[397px]" : "md:h-[330.5px]",
     href && "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent",
     className,
   );
@@ -60,8 +67,8 @@ export function ImageLinkCard({
           <Image src={image} alt={alt ?? title} fill className={ZOOM} />
         ))}
       {/* Figma Product_b: a constant 50% dark overlay; hover only reveals the text. */}
-      <div className="absolute inset-0 bg-surface-dark/50" />
-      <Glow />
+      <div className={cn("absolute inset-0", tone === "highlight" ? "bg-surface-dark/50" : "bg-surface-dark/25")} />
+      {tone === "highlight" && <Glow />}
       <div className="relative flex h-full flex-col items-end justify-between p-5">
         {href ? (
           <span
@@ -77,7 +84,7 @@ export function ImageLinkCard({
           <h3
             className={cn(
               "w-full font-display font-bold text-white",
-              largeTitle ? "text-xl leading-5" : "text-base leading-5",
+              largeTitle && tone === "highlight" ? "text-xl leading-5" : "text-base leading-5",
             )}
           >
             {title}

@@ -23,6 +23,7 @@ function ProductCard({ product, href }: { product: Product; href?: string }) {
       href={href}
       largeTitle={largeTitle}
       description={product.summary}
+      tone="product"
       className={cn(wide && "md:col-span-2")}
     />
   );
@@ -61,7 +62,7 @@ export function SolutionOverviewTabs({
               key={c.id}
               active={active}
               onClick={() => setActiveId(c.id)}
-              className="hover:scale-[1.03] md:w-auto md:min-w-0 md:flex-1"
+              className="md:w-auto md:min-w-0 md:flex-1"
             >
               {c.title}
             </TabButton>
