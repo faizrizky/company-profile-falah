@@ -1,5 +1,5 @@
 import { GlowLine } from "@/components/common/glow-line";
-import { Glow, ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
+import { FramedBackground, Glow, ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
 import { Card } from "@/components/ui/card";
 import { mediaUrl } from "@/lib/cms/media";
 import type { FeatureGridBlock as Data } from "@/types/cms";
@@ -54,10 +54,11 @@ function ValuesVariant({ block }: { block: Data }) {
   const bg = mediaUrl(block.background);
   const overlay = mediaUrl(block.backgroundOverlay);
   return (
-    <section className="relative isolate overflow-hidden bg-[#0A0A0A] px-6 py-12.5 md:bg-transparent md:px-20">
-      {/* Phones (Figma mobile): a plain dark section, no background art. */}
-      <ResponsiveBackground src={bg} className="-z-30 hidden object-fill md:block" />
-      <ResponsiveBackground src={overlay} className="-z-20 hidden object-fill md:block" />
+    <section className="relative isolate overflow-hidden bg-[#0A0A0A] px-6 py-12.5 md:min-h-[650px] md:bg-transparent md:px-20">
+      {/* Phones (Figma mobile): a plain dark section, no background art.
+          Desktop: Figma's two image fills, framed exactly as in the design. */}
+      <FramedBackground src={bg} top="73.7%" height="135.19%" className="-z-30 hidden md:block" />
+      <FramedBackground src={overlay} top="-85.43%" height="159.12%" className="hidden md:block" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <SectionTitle
           variant="page"
@@ -80,7 +81,7 @@ function ValuesVariant({ block }: { block: Data }) {
           )}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:px-5">
             {block.items?.map((card) => (
-              <Card key={card.id ?? card.title} hover="lift" className="flex flex-col justify-center gap-4 p-8">
+              <Card key={card.id ?? card.title} className="flex h-[240px] flex-col justify-center gap-4 p-8">
                 <div className="flex h-[52px] items-center justify-center">
                   <img src={mediaUrl(card.icon)} alt="" className="h-[50px] w-[50px]" />
                 </div>

@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { HoverReveal } from "@/components/common/hover-reveal";
-import { Glow, ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
+import { FramedBackground, Glow, SectionTitle } from "@/components/common/section-ui";
 import { Pill } from "@/components/ui/pill";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
@@ -13,11 +13,12 @@ export function LeadershipBlock({ block }: BlockProps<Data>) {
   const bg = mediaUrl(block.background);
   return (
     <section className="relative isolate overflow-hidden px-6 py-12.5 md:h-[671px] md:px-20">
-      <ResponsiveBackground src={bg} className="-z-20 object-fill" />
+      {/* Figma image fill: 123.7% tall, shifted up 23.66%. */}
+      <FramedBackground src={bg} top="-23.66%" height="123.7%" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <SectionTitle
           variant="page"
-          className="max-w-[708px]"
+          className="max-w-[564px]"
           eyebrow={block.header.eyebrow}
           title={block.header.title}
           desc={block.header.description}
@@ -31,14 +32,19 @@ export function LeadershipBlock({ block }: BlockProps<Data>) {
                 <div
                   className={cn(
                     // Figma Leadership_b: Default at rest, Variant2 on hover.
-                    "relative h-[407px] overflow-hidden rounded-lg border border-accent/50 bg-surface-dark/5 backdrop-blur-[5px] transition-[transform,background-color] duration-300 hover:scale-[1.03] hover:bg-accent/5",
+                    "relative h-[407px] overflow-hidden rounded-lg border border-accent/50 bg-surface-dark/5 backdrop-blur-[5px] transition-colors duration-300 hover:bg-accent/5",
                   )}
                 >
                   {photo && (
                     <Image src={photo} alt={mediaAlt(leader.photo, leader.name)} fill className="object-cover" />
                   )}
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,4,13,0)_59%,rgba(5,4,13,0.5)_93%)]" />
-                  <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-[linear-gradient(180deg,rgba(5,4,13,0)_0%,rgba(5,4,13,0.5)_100%)] p-6 backdrop-blur-[1px] transition-[backdrop-filter] duration-300 group-hover:backdrop-blur-[5px]">
+                  <div className="absolute inset-x-0 bottom-0 isolate flex flex-col gap-2 bg-[linear-gradient(180deg,rgba(5,4,13,0)_0%,rgba(5,4,13,0.5)_100%)] p-6">
+                    {/* Figma Isi blur (1px → 5px on hover), feathered at the top so it has no hard edge. */}
+                    <div
+                      aria-hidden
+                      className="absolute inset-0 -z-10 backdrop-blur-[1px] transition-[backdrop-filter] duration-300 [mask-image:linear-gradient(to_bottom,transparent,black_35%)] group-hover:backdrop-blur-[5px]"
+                    />
                     {leader.roles?.length ? (
                       <div className="flex flex-wrap items-center gap-1">
                         {leader.roles.map((role) => (

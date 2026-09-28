@@ -111,6 +111,29 @@ export function Section({ bg, className, children }: { bg?: string; className?: 
 }
 
 /** Background that swaps to a dedicated mobile image below md, when one is set. */
+/**
+ * Background art placed like a Figma image fill: full width, `height` and
+ * `top` given as percentages of the section (e.g. "135.19%", "73.7%").
+ */
+export function FramedBackground({
+  src,
+  top,
+  height,
+  className,
+}: {
+  src?: string;
+  top: string;
+  height: string;
+  className?: string;
+}) {
+  if (!src) return null;
+  return (
+    <div aria-hidden className={cn("pointer-events-none absolute inset-x-0 -z-20", className)} style={{ top, height }}>
+      <Image src={src} alt="" fill sizes="100vw" className="object-cover" />
+    </div>
+  );
+}
+
 export function ResponsiveBackground({
   src,
   mobileSrc,
