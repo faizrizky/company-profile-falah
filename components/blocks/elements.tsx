@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
-import { Glow, Lines } from "@/components/common/section-ui";
+import { Lines } from "@/components/common/section-ui";
 import { LocaleLink } from "@/components/i18n/locale-link";
 import { Card } from "@/components/ui/card";
 import { CmsButton } from "@/components/ui/cms-buttons";
@@ -124,7 +124,6 @@ export function CardView({ el }: { el: Of<"card"> }) {
   const icon = mediaUrl(el.icon);
   const body = (
     <Card hover="lift" className="relative flex h-full flex-col gap-4 p-8">
-      <Glow className="-top-[7px] left-0 h-[25px] w-full" />
       {icon && <img src={icon} alt="" className="h-[50px] w-[50px]" />}
       <h3 className="font-display text-lg font-bold leading-6 text-white md:text-xl">{el.title}</h3>
       {el.description && <p className="text-sm leading-5 text-white">{el.description}</p>}

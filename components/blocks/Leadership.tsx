@@ -25,7 +25,7 @@ export function LeadershipBlock({ block }: BlockProps<Data>) {
           {block.leaders?.map((leader, i) => {
             const photo = mediaUrl(leader.photo);
             return (
-              <div key={leader.id ?? leader.name} className="relative">
+              <div key={leader.id ?? leader.name} className="group relative">
                 <Glow className="-top-[9px] left-1/2 h-[25px] w-[416px] -translate-x-1/2" />
                 <div
                   className={cn(

@@ -22,6 +22,7 @@ function ProductCard({ product, href }: { product: Product; href?: string }) {
       alt={mediaAlt(product.image, product.title)}
       href={href}
       largeTitle={largeTitle}
+      description={product.summary}
       className={cn(wide && "md:col-span-2")}
     />
   );

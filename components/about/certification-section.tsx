@@ -48,7 +48,7 @@ export function CertificationGallery({
             .map((card) => {
               const image = mediaUrl(card.certificate);
               return (
-                <div key={card.id} className="relative">
+                <div key={card.id} className="group relative">
                   <Glow className="-top-[9px] left-0 h-[25px] w-full" />
                   <button
                     type="button"

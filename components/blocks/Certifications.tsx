@@ -1,5 +1,5 @@
 import { CertificationGallery } from "@/components/about/certification-section";
-import { Glow, Section, SectionTitle } from "@/components/common/section-ui";
+import { Section, SectionTitle } from "@/components/common/section-ui";
 import { Card } from "@/components/ui/card";
 import { mediaUrl, populated } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
@@ -29,9 +29,16 @@ function CertificationCards({ block, items }: { block: Data; items: Certificatio
             hover="lift"
             className="relative flex flex-col items-center gap-4 overflow-clip px-6 pb-8 pt-4 text-center backdrop-blur-sm"
           >
-            <Glow className="-top-3.5 left-0 h-[25px] w-[322px]" />
             <div className="flex h-[98px] items-center justify-center">
-              <img src={mediaUrl(c.icon)} alt="" className={ICON_CLASS[c.iconShape ?? "square"]} />
+              {/* Figma: monochrome logo that takes its colours on hover. */}
+              <img
+                src={mediaUrl(c.icon)}
+                alt=""
+                className={cn(
+                  ICON_CLASS[c.iconShape ?? "square"],
+                  "grayscale transition-[filter] duration-300 group-hover:grayscale-0",
+                )}
+              />
             </div>
             <div className="flex flex-col items-center gap-4">
               <h3 className="font-display text-xl font-bold leading-7 text-white">{c.title}</h3>

@@ -32,7 +32,7 @@ export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
               <div
                 key={p.id ?? p.title}
                 className={cn(
-                  "relative flex flex-col justify-center overflow-clip rounded-lg border border-accent/50 p-7 backdrop-blur-[5px] transition-transform duration-300 hover:scale-[1.02] lg:flex-1",
+                  "group relative flex flex-col justify-center overflow-clip rounded-lg border border-accent/50 p-7 backdrop-blur-[5px] transition-transform duration-300 hover:scale-[1.02] lg:flex-1",
                   p.description ? "bg-accent/15" : "bg-surface-dark/5",
                 )}
               >
@@ -50,7 +50,6 @@ export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
           </div>
 
           <div className="relative">
-            <Glow className="left-0 top-0 h-[25px] w-[600px]" />
             <Card surface="none" className="relative h-full min-h-[300px] overflow-hidden lg:min-h-0">
               {image && <Image src={image} alt={mediaAlt(block.image)} fill className="object-cover" />}
             </Card>

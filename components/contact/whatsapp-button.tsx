@@ -16,9 +16,13 @@ export function WhatsAppButton({ href, label }: { href?: string; label: string }
       external={Boolean(href)}
       variant="stroke"
       size="lg"
-      className="border-[#34C759] bg-surface-dark/5 text-[#34C759] backdrop-blur-[5px]"
+      className="border-[#34C759] bg-surface-dark/5 text-[#34C759] backdrop-blur-[5px] [--btn-fill:#34C759] hover:text-white"
     >
-      <img src="/contact/icon-whatsapp.svg" alt="" className="h-6 w-6" />
+      <img
+        src="/contact/icon-whatsapp.svg"
+        alt=""
+        className="h-6 w-6 transition-[filter] duration-300 group-hover/btn:brightness-0 group-hover/btn:invert"
+      />
       {label}
     </Button>
   );

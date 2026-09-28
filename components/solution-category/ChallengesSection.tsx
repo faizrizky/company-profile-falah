@@ -1,6 +1,6 @@
 import { CircleDollarSign, ClipboardList, Clock, UserX } from "lucide-react";
 
-import { Glow, SectionTitle } from "@/components/common/section-ui";
+import { SectionTitle } from "@/components/common/section-ui";
 import { Card } from "@/components/ui/card";
 import type { SolutionCategory } from "@/types/cms";
 
@@ -35,7 +35,6 @@ export function ChallengesSection({ category }: { category: SolutionCategory }) 
                 hover="lift"
                 className="relative flex flex-col items-center justify-center gap-6 overflow-clip p-10 text-center text-white"
               >
-                <Glow className="-top-2 left-1/2 h-[25px] w-[416px] -translate-x-1/2" />
                 <Icon className="h-[50px] w-[50px] text-blue-bright" strokeWidth={1.75} />
                 <div className="flex flex-col gap-4">
                   <h3 className="text-xl font-bold leading-[30px]">{c.title}</h3>

@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
+import { HoverReveal, TagList } from "@/components/common/hover-reveal";
 import { ImageLinkCard } from "@/components/common/image-link-card";
-import { Glow, Section, SectionTitle } from "@/components/common/section-ui";
+import { Section, SectionTitle } from "@/components/common/section-ui";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Pill } from "@/components/ui/pill";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import type { SolutionHighlightsBlock as Data } from "@/types/cms";
 
@@ -25,7 +25,6 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
       />
       <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:auto-rows-[329px] lg:grid-cols-3">
         <Card hover="subtle" className="relative h-[329px] md:col-span-2 md:h-full">
-          <Glow className="-top-[9px] left-0 h-[25px] w-[416px]" />
           <div className="relative h-full overflow-hidden rounded-lg">
             {featuredImage && (
               <Image src={featuredImage} alt={mediaAlt(featured.image)} fill className="object-cover" />
@@ -37,18 +36,9 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
                 {featured.description && <p className="text-xs leading-4 text-white">{featured.description}</p>}
               </div>
               {featured.tags?.length ? (
-                <div className="flex flex-col gap-1 self-start">
-                  {featured.tagsLabel && (
-                    <span className="text-xs font-medium leading-4 text-white">{featured.tagsLabel}</span>
-                  )}
-                  <div className="flex flex-wrap gap-1">
-                    {featured.tags.map((chip) => (
-                      <Pill key={chip} size="xs" className="px-2 leading-4">
-                        {chip}
-                      </Pill>
-                    ))}
-                  </div>
-                </div>
+                <HoverReveal className="w-full">
+                  <TagList label={featured.tagsLabel} tags={featured.tags} />
+                </HoverReveal>
               ) : null}
               {featured.button?.href && (
                 <Button href={featured.button.href} variant="stroke" size="md" className="w-fit">
@@ -65,6 +55,9 @@ export function SolutionHighlightsBlock({ block }: BlockProps<Data>) {
             image={mediaUrl(c.image)}
             alt={mediaAlt(c.image, c.title)}
             href={c.href}
+            description={c.description}
+            tags={c.tags}
+            tagsLabel={featured.tagsLabel}
             className="h-[329px] md:h-full"
           />
         ))}

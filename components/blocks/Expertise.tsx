@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { Glow, Section, SectionTitle } from "@/components/common/section-ui";
+import { Section, SectionTitle } from "@/components/common/section-ui";
 import { Card } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/count-up";
 import { mediaUrl } from "@/lib/cms/media";
@@ -15,7 +15,6 @@ export function ExpertiseBlock({ block }: BlockProps<Data>) {
 
       {block.stats?.length ? (
         <div className="relative w-full">
-          <Glow className="-top-3 left-0 h-[25px] w-full" />
           <Card className="grid min-h-[100px] w-full grid-cols-2 items-center gap-y-4 bg-surface-dark/20 px-6 py-6 backdrop-blur-sm md:grid-cols-4 md:px-8">
             {block.stats.map((s, i) => (
               <div key={s.id ?? s.label} className="flex flex-col items-center justify-center gap-2 text-center">

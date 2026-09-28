@@ -3,13 +3,23 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { LocaleLink } from "@/components/i18n/locale-link";
 import { cn } from "@/lib/utils";
 
+/**
+ * Hover (Figma "Variant2"): a solid colour sweeps in from the left behind the
+ * label. `--btn-fill` sets that colour (default: the brand blue).
+ */
+const FILL_SWEEP =
+  "relative isolate overflow-hidden before:absolute before:inset-0 before:-z-10 before:origin-left before:scale-x-0 before:bg-[var(--btn-fill,var(--color-blue-bright))] before:transition-transform before:duration-300 before:ease-out before:content-[''] hover:before:scale-x-100 focus-visible:before:scale-x-100";
+
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-lg font-sans font-medium transition-all duration-300 hover:scale-105",
+  "group/btn inline-flex items-center justify-center gap-2 rounded-lg font-sans font-medium transition-colors duration-300",
   {
     variants: {
       variant: {
-        fill: "gradient-brand text-white shadow-[0_0_10px_rgba(59,130,246,0.6)]",
-        stroke: "border border-white bg-surface-dark/5 text-white backdrop-blur-sm",
+        fill: cn(FILL_SWEEP, "gradient-brand text-white shadow-[0_0_10px_rgba(59,130,246,0.6)]"),
+        stroke: cn(
+          FILL_SWEEP,
+          "border border-white bg-surface-dark/5 text-white backdrop-blur-sm hover:border-[var(--btn-fill,var(--color-blue-bright))]",
+        ),
         ghost: "text-white hover:text-accent",
       },
       size: {

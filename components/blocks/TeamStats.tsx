@@ -1,4 +1,4 @@
-import { Glow, ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
+import { ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
 import { Card } from "@/components/ui/card";
 import { CountUp } from "@/components/ui/count-up";
 import { mediaUrl } from "@/lib/cms/media";
@@ -22,7 +22,6 @@ export function TeamStatsBlock({ block }: BlockProps<Data>) {
         <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
           {block.items?.map((item, i) => (
             <Card key={item.id ?? item.label} className="relative flex flex-col items-start gap-5 overflow-clip p-10">
-              <Glow className="-top-[15px] left-1/2 h-[25px] w-[356px] -translate-x-1/2" />
               {/* Two lines reserved, so every number sits on the same line. */}
               <h3 className="min-h-[60px] font-display text-2xl font-bold leading-[30px] text-white">{item.label}</h3>
               <div className="flex h-[34px] flex-col justify-center">

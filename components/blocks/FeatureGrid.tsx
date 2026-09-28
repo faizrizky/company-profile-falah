@@ -28,7 +28,6 @@ function CardsVariant({ block }: { block: Data }) {
               hover="lift"
               className="relative flex flex-col justify-center gap-6 border-accent/30 p-10"
             >
-              <Glow className="-top-[7px] left-0 h-[25px] w-full" />
               <div className="flex h-[52px] items-center justify-center">
                 <img src={mediaUrl(card.icon)} alt="" className="h-[50px] w-[50px]" />
               </div>
