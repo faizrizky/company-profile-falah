@@ -20,17 +20,18 @@ export function PartnersBlock({ block }: BlockProps<Data>) {
           title={block.header.title}
           desc={block.header.description}
         />
-        {/* Figma: partner logos ~120px wide, client crests 120px tall at most. */}
-        <div className="relative flex w-full flex-col gap-6 overflow-x-clip pt-10">
+        {/* Figma Logo Animation 2_b: 300px band; partners ~40px tall 40px apart,
+            client crests 90px tall 100px apart. */}
+        <div className="relative flex w-full flex-col overflow-x-clip md:-mx-20 md:h-[300px] md:w-[calc(100%+160px)]">
           <PartnerMarquee
             partners={rowOne}
-            trackClassName="h-[80px]"
-            logoClassName="mr-10 h-6 max-w-[120px] md:mr-[60px] md:h-8"
+            trackClassName="h-[100px]"
+            logoClassName="mr-8 h-7 max-w-[160px] md:mr-10 md:h-[40px] md:max-w-[170px]"
           />
           <PartnerMarquee
             partners={rowTwo}
-            trackClassName="h-[130px]"
-            logoClassName="mr-12 h-12 max-w-[100px] md:mr-[80px] md:h-[72px] md:max-w-[120px]"
+            trackClassName="mt-[27px] h-[150px]"
+            logoClassName="mr-12 h-14 max-w-[120px] md:mr-[100px] md:h-[90px] md:max-w-[170px]"
             reverse
           />
         </div>

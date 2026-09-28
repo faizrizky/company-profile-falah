@@ -35,7 +35,7 @@ export function LeadershipBlock({ block }: BlockProps<Data>) {
                   )}
                 >
                   {/* Figma Leadership_b: glow inside the card, clipped by its edges, over the photo. */}
-                  <Glow className="z-10 -top-[10px]" />
+                  <Glow className="z-10 -top-[10px] group-hover:translate-y-0 group-hover:bg-accent/75" />
                   {photo && (
                     <Image src={photo} alt={mediaAlt(leader.photo, leader.name)} fill className="object-cover" />
                   )}
@@ -55,7 +55,7 @@ export function LeadershipBlock({ block }: BlockProps<Data>) {
                         ))}
                       </div>
                     ) : null}
-                    <h3 className="font-display text-xl font-bold leading-6 text-white">{leader.name}</h3>
+                    <h3 className="font-display text-xl font-bold leading-7 text-white">{leader.name}</h3>
                     {leader.bio && (
                       <HoverReveal>
                         <p className="text-xs leading-5 text-white">{leader.bio}</p>
