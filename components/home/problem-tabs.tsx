@@ -17,8 +17,9 @@ export type ProblemItem = {
 };
 
 /**
- * Figma Problem_b / Card Problem_b: pointing at (or clicking) an item opens it —
- * its description slides in and the picture on the right switches to its image.
+ * Figma Problem_b / Card Problem_b: hovering an item brightens its glow;
+ * clicking opens it — its description slides in, the previously open one
+ * closes and the picture on the right cross-fades to the item's image.
  */
 export function ProblemTabs({
   items,
@@ -42,15 +43,22 @@ export function ProblemTabs({
               key={p.key}
               type="button"
               aria-expanded={open}
-              onMouseEnter={() => setActive(i)}
-              onFocus={() => setActive(i)}
               onClick={() => setActive(i)}
               className={cn(
-                "group relative flex flex-col justify-center overflow-clip rounded-lg border border-accent/50 p-7 text-left backdrop-blur-[5px] transition-[background-color,transform] duration-300 lg:flex-1",
+                "group relative flex cursor-pointer flex-col justify-center overflow-clip rounded-lg border border-accent/50 p-7 text-left backdrop-blur-[5px] transition-colors duration-300 lg:flex-1",
+                // Figma Problem_b: Default → Variant3 on hover → Variant2 when open.
                 open ? "bg-accent/15" : "bg-surface-dark/5 hover:bg-accent/5",
               )}
             >
-              <Glow className="-top-[7px] h-[15px] w-[416px]" />
+              <Glow
+                className={cn(
+                  // Figma glow per state: Default 15px / Variant3 27px / Variant2 25px.
+                  "w-[416px] transition-[height,top,background-color]",
+                  open
+                    ? "-top-[13px] h-[25px] bg-accent/80"
+                    : "-top-[8px] h-[15px] group-hover:-top-[14px] group-hover:h-[27px]",
+                )}
+              />
               <div className="flex items-center gap-[31px]">
                 {/* Figma icons carry their own glow, drawn around a 28px glyph. */}
                 {p.icon && <img src={p.icon} alt="" className="-m-1 h-[37px] w-9 shrink-0 object-contain" />}

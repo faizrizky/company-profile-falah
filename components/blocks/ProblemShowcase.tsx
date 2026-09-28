@@ -12,16 +12,19 @@ export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
   const image = mediaUrl(block.image);
 
   return (
-    <section className="relative isolate overflow-hidden px-6 pt-12.5 lg:px-20 lg:pt-25 lg:pb-12">
+    <section className="relative isolate overflow-hidden px-6 pt-12.5 lg:px-20 lg:pt-25 lg:pb-12.5">
       <ResponsiveBackground src={bg} />
       <div className="absolute inset-0 -z-10 bg-[#0A0A0A] lg:bg-surface-dark/60" />
-      <div className="relative mx-auto flex w-full max-w-[1269px] flex-col items-center gap-8">
-        <div className="flex w-full max-w-[564px] flex-col items-center gap-3 text-center">
-          {header.eyebrow && <Pill className="hidden gap-1 lg:inline-flex">{header.eyebrow}</Pill>}
-          <h2 className="max-w-[900px] font-display text-[30px] font-bold leading-9 text-accent">
-            <Lines text={header.title} />
-          </h2>
-          {header.description && <p className="max-w-[720px] text-base leading-6 text-white">{header.description}</p>}
+      <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
+        <div className="flex w-full max-w-[682px] flex-col items-center gap-3 text-center">
+          {header.eyebrow && <Pill className="hidden gap-1 font-medium lg:inline-flex">{header.eyebrow}</Pill>}
+          {/* Figma Title_b: 12px under the pill, 4px between title and text. */}
+          <div className="flex flex-col gap-1">
+            <h2 className="font-display text-[30px] font-bold leading-9 text-accent">
+              <Lines text={header.title} />
+            </h2>
+            {header.description && <p className="text-base leading-6 text-white">{header.description}</p>}
+          </div>
         </div>
         <ProblemTabs
           items={(block.items ?? []).map((p, i) => ({
