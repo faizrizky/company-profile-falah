@@ -6,10 +6,15 @@ import { Glow } from "@/components/common/section-ui";
 import { LocaleLink } from "@/components/i18n/locale-link";
 import { cn } from "@/lib/utils";
 
+/** Figma arrow hover (applied to the whole card): the photo slowly zooms in. */
+const ZOOM =
+  "object-cover transition-transform duration-[2500ms] ease-out group-hover:scale-[1.6] group-focus-visible:scale-[1.6] motion-reduce:transition-none";
+
 /**
  * Photo card with a title and an ↗ badge (Solution overview, home highlights).
  * With `href` the whole card is the link; without it, it's a plain card.
- * On hover the top glow brightens and `description` / `tags` slide up.
+ * On hover (Figma arrow hover, applied to the whole card) the photo zooms in,
+ * the ↗ badge fills blue and `description` / `tags` slide up.
  */
 export function ImageLinkCard({
   title,
@@ -48,11 +53,11 @@ export function ImageLinkCard({
       {image &&
         (imageMobile ? (
           <>
-            <Image src={imageMobile} alt={alt ?? title} fill className="object-cover md:hidden" />
-            <Image src={image} alt={alt ?? title} fill className="hidden object-cover md:block" />
+            <Image src={imageMobile} alt={alt ?? title} fill className={cn(ZOOM, "md:hidden")} />
+            <Image src={image} alt={alt ?? title} fill className={cn(ZOOM, "hidden md:block")} />
           </>
         ) : (
-          <Image src={image} alt={alt ?? title} fill className="object-cover" />
+          <Image src={image} alt={alt ?? title} fill className={ZOOM} />
         ))}
       {/* Figma Product_b: a constant 50% dark overlay; hover only reveals the text. */}
       <div className="absolute inset-0 bg-surface-dark/50" />
@@ -61,7 +66,7 @@ export function ImageLinkCard({
         {href ? (
           <span
             aria-hidden
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white bg-surface-dark/5 text-white backdrop-blur-[5px]"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white bg-surface-dark/5 text-white backdrop-blur-[5px] transition-colors duration-300 group-hover:border-transparent group-hover:bg-blue-bright group-focus-visible:border-transparent group-focus-visible:bg-blue-bright"
           >
             <ArrowUpRight className="h-6 w-6" strokeWidth={1.5} />
           </span>
