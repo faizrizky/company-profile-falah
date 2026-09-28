@@ -294,3 +294,28 @@ body {
 .count-up--landed {
   animation: count-up-land 0.9s ease-out;
 }
+
+/* Workflow dots (Figma Elipse_b): each dot swells from light to brand blue in
+   turn, left to right, on a loop. Delay per dot is set inline. */
+@keyframes workflow-dot {
+  0%,
+  60%,
+  100% {
+    background-color: #93c5fd;
+    box-shadow: 0 0 4px rgb(147 197 253 / 0.6);
+  }
+  20% {
+    background-color: #1866ef;
+    box-shadow: 0 0 8px #1866ef;
+  }
+}
+
+.workflow-dot {
+  animation: workflow-dot 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workflow-dot {
+    animation: none;
+  }
+}

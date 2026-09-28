@@ -24,7 +24,10 @@ export function WorkflowBlock({ block }: BlockProps<Data>) {
           {steps.map((f, i) => (
             <li key={f.id ?? f.n} className={cn("flex gap-1", i === 0 && "pt-[15px]", i === last && "pb-[87px]")}>
               <div className="relative flex w-3 flex-col items-center">
-                <span className="absolute left-0 top-[9px] h-3 w-3 rounded-full bg-[#1866EF] shadow-[0_0_4px_#1866EF]" />
+                <span
+                  className="workflow-dot absolute left-0 top-[9px] h-3 w-3 rounded-full bg-[#1866EF]"
+                  style={{ animationDelay: `${i * 0.3}s` }}
+                />
                 {i !== last && <span className="w-px flex-1 bg-accent" />}
               </div>
               <div className="flex flex-1 flex-col gap-2 pb-6 pl-2">
@@ -47,7 +50,10 @@ export function WorkflowBlock({ block }: BlockProps<Data>) {
               </div>
               <div className="flex h-3 items-center">
                 <span className={cn("h-px flex-1", i !== 0 && "bg-accent/80")} />
-                <span className="h-3 w-3 rounded-full bg-[#1866EF] shadow-[0_0_4px_#1866EF]" />
+                <span
+                  className="workflow-dot h-3 w-3 rounded-full bg-[#1866EF]"
+                  style={{ animationDelay: `${i * 0.3}s` }}
+                />
                 <span className={cn("h-px flex-1", i !== last && "bg-accent/80")} />
               </div>
               <div className="flex flex-col gap-2 px-2 text-center">
