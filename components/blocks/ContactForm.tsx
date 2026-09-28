@@ -1,5 +1,5 @@
 import { ScrollHint } from "@/components/common/scroll-hint";
-import { ResponsiveBackground } from "@/components/common/section-ui";
+import { Glow, ResponsiveBackground } from "@/components/common/section-ui";
 import { ContactForm } from "@/components/contact/contact-form";
 import { WhatsAppButton, whatsappHref } from "@/components/contact/whatsapp-button";
 import { Card } from "@/components/ui/card";
@@ -66,8 +66,9 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
         </div>
       </div>
 
-      <Card className="relative hidden flex-1 flex-col gap-5 overflow-hidden p-8 md:flex">
-        <div className="absolute -top-0.5 left-0 h-[15px] w-full bg-accent blur-[50px]" />
+      {/* Figma Isi: one thin glow (15px, 3px above the edge); no hover tint. */}
+      <Card glow={false} className="hidden flex-1 flex-col gap-5 p-8 hover:bg-surface-dark/5 md:flex">
+        <Glow className="-top-[3px] h-[15px] group-hover:translate-y-0 group-hover:bg-accent/75" />
         <ContactForm
           {...formProps}
           layout="desktop"
@@ -80,7 +81,7 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
                   <span className="h-px flex-1 bg-gradient-to-l from-accent/0 via-accent/70 to-accent/70" />
                 </div>
                 <div className="flex h-20 items-center gap-4 rounded-lg bg-surface-dark/50 p-4">
-                  <p className="flex-1 whitespace-pre-line text-sm leading-6 text-white">{block.whatsappText}</p>
+                  <p className="flex-1 whitespace-pre-line text-sm leading-[18px] text-white">{block.whatsappText}</p>
                   <WhatsAppButton href={waHref} label={ctx.t.contact.whatsapp} />
                 </div>
               </>

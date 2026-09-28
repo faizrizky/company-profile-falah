@@ -246,7 +246,7 @@ export function ContactForm({
               placeholder={t.contact.messagePlaceholder}
               aria-invalid={Boolean(errors.message)}
               className={cn(
-                "h-[88px] w-full resize-none rounded-lg border border-white bg-surface-dark/50 p-5 text-sm leading-4 text-white outline-none backdrop-blur-[14.7px] placeholder:text-white/50",
+                "h-[66px] w-full resize-none rounded-lg border border-white bg-surface-dark/50 p-5 text-sm leading-4 text-white outline-none backdrop-blur-[14.7px] placeholder:text-white/50",
                 FIELD_STATES,
               )}
             />
