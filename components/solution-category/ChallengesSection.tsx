@@ -1,16 +1,15 @@
-import { CircleDollarSign, ClipboardList, Clock, UserX } from "lucide-react";
-
 import { SectionTitle } from "@/components/common/section-ui";
 import { Card } from "@/components/ui/card";
 import type { SolutionCategory } from "@/types/cms";
 
 type ChallengeIcon = NonNullable<NonNullable<SolutionCategory["challenges"]>["items"]>[number]["icon"];
 
-const ICONS: Record<ChallengeIcon, typeof Clock> = {
-  downtime: Clock,
-  cost: CircleDollarSign,
-  error: UserX,
-  inconsistent: ClipboardList,
+/** Figma "The Challenges_b" icons (public/solution/challenges). */
+const ICONS: Record<ChallengeIcon, string> = {
+  downtime: "/solution/challenges/downtime.svg",
+  cost: "/solution/challenges/cost.svg",
+  error: "/solution/challenges/error.svg",
+  inconsistent: "/solution/challenges/inconsistent.svg",
 };
 
 export function ChallengesSection({ category }: { category: SolutionCategory }) {
@@ -28,14 +27,15 @@ export function ChallengesSection({ category }: { category: SolutionCategory }) 
         />
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
           {challenges.items.map((c) => {
-            const Icon = ICONS[c.icon];
             return (
               <Card
                 key={c.id ?? c.title}
-                hover="lift"
-                className="relative flex flex-col items-center justify-center gap-6 overflow-clip p-10 text-center text-white"
+                // Figma Card_b: no lift; hover only tints the card.
+                className="flex flex-col items-center justify-center gap-6 overflow-clip p-10 text-center text-white"
               >
-                <Icon className="h-[50px] w-[50px] text-blue-bright" strokeWidth={1.75} />
+                <div className="flex h-[52px] items-center justify-center">
+                  <img src={ICONS[c.icon]} alt="" className="h-[50px] w-[50px]" />
+                </div>
                 <div className="flex flex-col gap-4">
                   <h3 className="text-xl font-bold leading-[30px]">{c.title}</h3>
                   {c.description && <p className="text-base leading-6">{c.description}</p>}

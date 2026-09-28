@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { MoveRight } from "lucide-react";
 
 import { ScrollHint } from "@/components/common/scroll-hint";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,8 @@ export function HeroSection({ category, t }: { category: SolutionCategory; t: Di
           {hero.recommendedFor?.length ? (
             <div className="flex flex-col gap-1">
               <span className="text-base font-medium leading-[30px] text-white">{t.solutions.recommendedFor}</span>
-              <div className="flex flex-wrap gap-2">
+              {/* Figma: chips 4px apart. */}
+              <div className="flex flex-wrap gap-1">
                 {hero.recommendedFor.map((r) => (
                   <Pill key={r} tone="tag" size="xs">
                     {r}
@@ -39,7 +40,7 @@ export function HeroSection({ category, t }: { category: SolutionCategory; t: Di
         </div>
         <Button href={cta.buttonHref || "/contact"} variant="fill" size="lg">
           {cta.buttonLabel || t.solutions.requestConsultation}
-          <ArrowRight className="h-6 w-6" />
+          <MoveRight className="h-6 w-6" strokeWidth={1.5} />
         </Button>
       </div>
       <ScrollHint className="absolute bottom-0 left-1/2 -translate-x-1/2 opacity-70" />
