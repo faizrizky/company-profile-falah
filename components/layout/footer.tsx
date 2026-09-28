@@ -95,7 +95,7 @@ export function Footer({
                       aria-label={social.label}
                       title={social.label}
                       {...(href.startsWith("https://") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      className="flex h-8 w-8 items-center justify-center rounded-full border border-white/90 text-white transition-all duration-300 hover:border-blue-bright hover:bg-blue-bright hover:shadow-[0_0_12px_rgba(24,102,239,0.9)]"
+                      className="flex h-8 w-8 items-center justify-center rounded-full border border-white/90 text-white transition-all duration-300 hover:border-transparent hover:bg-[linear-gradient(132deg,#1866ef_32%,#05040d_170%)] hover:shadow-[0_0_5px_#1866ef]"
                     >
                       {custom ? (
                         <img src={custom} alt="" className="h-4 w-4 object-contain" />

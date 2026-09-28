@@ -34,7 +34,7 @@ export function OfficeMapBlock({ block, ctx }: BlockProps<Data>) {
             sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
           />
           <div className="absolute left-[336px] top-[21px] hidden flex-col items-center backdrop-blur-[2.5px] md:flex">
-            <div className="flex items-center rounded-lg bg-[#0F0F14]/50 p-3">
+            <div className="flex items-center rounded-lg bg-[#0F0F14]/50 p-3 transition-colors duration-300 hover:bg-[#0F0F14]/20">
               <span className="w-[258px] text-xs font-medium leading-4 text-white">{address}</span>
             </div>
             <img src="/contact/icon-address-arrow.svg" alt="" className="h-[10px] w-[20px]" />

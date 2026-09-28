@@ -5,8 +5,10 @@ import { useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 
+import { HoverReveal } from "@/components/common/hover-reveal";
 import { Glow, ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
 import { useI18n } from "@/components/i18n/locale-provider";
+import { Pill } from "@/components/ui/pill";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { format } from "@/lib/i18n/dictionaries";
 import { useDelayedUnmount, useModalEffects } from "@/lib/use-animated";
@@ -70,8 +72,17 @@ export function CertificationGallery({
                     <div className="absolute right-6 top-6 flex h-9 w-9 items-center justify-center rounded-lg border border-white bg-surface-dark/50 backdrop-blur-[5px]">
                       <img src={ICON_MAXIMIZE} alt="" className="h-5 w-5" />
                     </div>
-                    <div className="absolute inset-x-0 bottom-0 flex h-[160px] flex-col justify-end gap-2 bg-[linear-gradient(180deg,rgba(5,4,13,0)_0%,rgba(5,4,13,0.5)_86%)] p-6 backdrop-blur-[1px]">
+                    {/* Figma Certificate Card_b: hover raises the caption and reveals its details. */}
+                    <div className="absolute inset-x-0 bottom-0 flex min-h-[160px] flex-col justify-end gap-2 bg-[linear-gradient(180deg,rgba(5,4,13,0)_0%,rgba(5,4,13,0.5)_86%)] p-6 text-left backdrop-blur-[1px] transition-[backdrop-filter] duration-300 group-hover:bg-[linear-gradient(180deg,rgba(5,4,13,0)_0%,rgba(5,4,13,0.5)_43%)]">
                       <h3 className="font-display text-xl font-bold leading-6 text-white">{card.title}</h3>
+                      {(card.subtitle || card.description) && (
+                        <HoverReveal>
+                          <div className="flex flex-col items-start gap-2 pt-1">
+                            {card.subtitle && <Pill size="xs">{card.subtitle}</Pill>}
+                            {card.description && <p className="text-sm leading-6 text-white">{card.description}</p>}
+                          </div>
+                        </HoverReveal>
+                      )}
                     </div>
                   </button>
                 </div>

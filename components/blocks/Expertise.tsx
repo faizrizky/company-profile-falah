@@ -42,7 +42,14 @@ export function ExpertiseBlock({ block }: BlockProps<Data>) {
             >
               <div className="relative h-[215px]">
                 <div className="absolute inset-0 overflow-hidden">
-                  {image && <Image src={image} alt="" fill className="object-cover" />}
+                  {image && (
+                    <Image
+                      src={image}
+                      alt=""
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-surface-dark/20" />
                 </div>
                 <div className="absolute bottom-[-20px] left-6 z-20 flex h-20 w-20 items-center justify-center rounded-full bg-blue-bright p-5 shadow-[0_0_12px_rgba(37,99,235,0.6)]">

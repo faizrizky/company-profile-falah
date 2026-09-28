@@ -32,6 +32,13 @@ function Label({ htmlFor, children, required }: { htmlFor: string; children: Rea
   );
 }
 
+/**
+ * Figma Input_b: blue outline and tint on hover, white outline and tint while
+ * typing (Click). Shared by every input, select and textarea in the form.
+ */
+const FIELD_STATES =
+  "transition-colors duration-300 not-focus-within:hover:border-accent not-focus-within:hover:bg-accent/5 focus-within:bg-accent/5";
+
 function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
   return (
@@ -69,7 +76,7 @@ function Field({
       <div
         className={cn(
           "flex h-11 items-center gap-3 rounded-lg border bg-surface-dark/50 px-5 backdrop-blur-[14.7px]",
-          error ? "border-red-400" : "border-white",
+          error ? "border-red-400" : cn("border-white", FIELD_STATES),
         )}
       >
         <img src={icon} alt="" className="h-4 w-4" />
@@ -210,7 +217,10 @@ export function ContactForm({
                 id={`${id}-interest`}
                 name="interest"
                 defaultValue={interestOptions[0]}
-                className="h-11 w-full cursor-pointer appearance-none rounded-lg border border-white bg-surface-dark/50 pl-5 pr-10 text-sm leading-4 text-white outline-none backdrop-blur-[14.7px]"
+                className={cn(
+                  "h-11 w-full cursor-pointer appearance-none rounded-lg border border-white bg-surface-dark/50 pl-5 pr-10 text-sm leading-4 text-white outline-none backdrop-blur-[14.7px]",
+                  FIELD_STATES,
+                )}
               >
                 {interestOptions.map((opt) => (
                   <option key={opt} value={opt} className="bg-surface-dark text-white">
@@ -233,7 +243,10 @@ export function ContactForm({
               maxLength={2000}
               placeholder={t.contact.messagePlaceholder}
               aria-invalid={Boolean(errors.message)}
-              className="h-[88px] w-full resize-none rounded-lg border border-white bg-surface-dark/50 p-5 text-sm leading-4 text-white outline-none backdrop-blur-[14.7px] placeholder:text-white/50"
+              className={cn(
+                "h-[88px] w-full resize-none rounded-lg border border-white bg-surface-dark/50 p-5 text-sm leading-4 text-white outline-none backdrop-blur-[14.7px] placeholder:text-white/50",
+                FIELD_STATES,
+              )}
             />
             <FieldError id={`${id}-message-error`} message={errorFor("message")} />
           </div>

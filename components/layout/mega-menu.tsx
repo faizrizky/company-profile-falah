@@ -95,7 +95,7 @@ function ProductItem({
     <MaybeLink
       href={href}
       onNavigate={onNavigate}
-      className="group flex items-center gap-4 rounded-lg p-2 transition-colors duration-300 hover:bg-white/[0.06]"
+      className="group flex items-center gap-4 rounded-lg p-2 transition-colors duration-300 hover:bg-surface-dark/50"
     >
       <span className="relative h-[78px] w-[78px] shrink-0 overflow-hidden rounded-md bg-white/5">
         {product.image && (
@@ -169,7 +169,10 @@ export function MegaMenu({
                     onNavigate={onClose}
                     className={cn(
                       "inline-flex items-center rounded-lg px-3 py-2 text-sm leading-6 transition-all duration-300",
-                      selected ? "bg-blue-bright font-semibold text-white" : "text-white hover:text-accent",
+                      // Figma Menu Button_b: regular → bold blue on hover → filled when selected.
+                      selected
+                        ? "bg-blue-bright font-bold text-white"
+                        : "text-white hover:font-bold hover:text-blue-bright",
                     )}
                   >
                     {category.title}
