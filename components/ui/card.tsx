@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 const cardVariants = cva(
   // `group`: the built-in glow (and children) react to hovering the card.
-  "group relative overflow-clip rounded-lg border border-accent/50 transition-[transform,background-color] duration-300 hover:bg-accent/5",
+  "group relative isolate overflow-clip rounded-lg border border-accent/50 transition-[transform,background-color] duration-300 hover:bg-accent/5",
   {
     variants: {
       /** glass: the design's translucent, blurred card background. */

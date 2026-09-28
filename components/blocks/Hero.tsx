@@ -5,6 +5,7 @@ import { ResponsiveBackground } from "@/components/common/section-ui";
 import { CmsButtons } from "@/components/ui/cms-buttons";
 import { Pill } from "@/components/ui/pill";
 import { mediaUrl } from "@/lib/cms/media";
+import { cn } from "@/lib/utils";
 import type { HeroBlock as HeroBlockData } from "@/types/cms";
 
 import type { BlockContext, BlockProps } from "./types";
@@ -71,13 +72,29 @@ function CenteredHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext 
 
 function PageHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
   const certifications = block.showCertificates ? ctx.data.certifications : [];
+  const hasButtons = Boolean(block.buttons?.length);
+  // Figma About hero: only "Show Certificate", 16px under the text, 768px
+  // title, content centred in an 810px hero. Solution hero: CMS buttons 36px
+  // under a 735px column, 720px tall.
+  const certificateOnly = !hasButtons && certifications.length > 0;
   return (
-    <section className="relative isolate flex min-h-[570px] flex-col overflow-hidden pb-[25px] md:min-h-[720px] md:pb-25">
+    <section
+      className={cn(
+        "relative isolate flex min-h-[570px] flex-col overflow-hidden pb-[25px]",
+        certificateOnly ? "md:min-h-[810px] md:pb-0" : "md:min-h-[720px] md:pb-25",
+      )}
+    >
       <Background block={block} />
-      <div className="relative flex flex-1 flex-col px-6 pt-[120px] md:px-20 md:pt-40">
-        <div className="flex flex-col items-start gap-8 md:gap-9">
-          {/* Figma: 735px column; pill 16px above, title and text flush. */}
-          <div className="flex w-full max-w-[735px] flex-col gap-2 md:gap-4">
+      <div
+        className={cn(
+          "relative flex flex-1 flex-col px-6 pt-[120px] md:px-20 md:pt-40",
+          certificateOnly && "md:justify-center md:pb-40",
+        )}
+      >
+        <div className={cn("flex flex-col items-start gap-8", certificateOnly ? "md:gap-4" : "md:gap-9")}>
+          <div
+            className={cn("flex w-full flex-col gap-2 md:gap-4", certificateOnly ? "max-w-[768px]" : "max-w-[735px]")}
+          >
             {block.eyebrow && (
               <Pill size="xs" className="px-2 md:px-4 md:text-base md:leading-6">
                 {block.eyebrow}
@@ -88,15 +105,19 @@ function PageHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
                 {block.title}
               </h1>
               {block.description && (
-                <p className="text-sm leading-5 text-white md:text-base md:leading-6">{block.description}</p>
+                <p className="max-w-[735px] text-sm leading-5 text-white md:text-base md:leading-6">
+                  {block.description}
+                </p>
               )}
             </div>
           </div>
-          <CmsButtons
-            buttons={block.buttons}
-            className="flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap"
-            buttonClassName="w-full md:w-fit"
-          />
+          {hasButtons && (
+            <CmsButtons
+              buttons={block.buttons}
+              className="flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap"
+              buttonClassName="w-full md:w-fit"
+            />
+          )}
           {certifications.length > 0 && <CertificateButton certifications={certifications} />}
         </div>
         {block.showScrollHint && (

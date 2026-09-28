@@ -27,7 +27,7 @@ export function LeadershipBlock({ block }: BlockProps<Data>) {
             const photo = mediaUrl(leader.photo);
             return (
               <div key={leader.id ?? leader.name} className="group relative">
-                <Glow className="-top-[9px] left-1/2 h-[25px] w-[416px] -translate-x-1/2" />
+                <Glow className="z-10 -top-[9px] left-1/2 h-[25px] w-[416px] -translate-x-1/2" />
                 <div
                   className={cn(
                     // Figma Leadership_b: Default at rest, Variant2 on hover.

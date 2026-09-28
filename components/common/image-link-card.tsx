@@ -75,7 +75,7 @@ export function ImageLinkCard({
             : "bg-surface-dark/25 transition-colors duration-300 group-hover:bg-surface-dark/50",
         )}
       />
-      {tone === "highlight" && <Glow />}
+      {tone === "highlight" && <Glow className="z-10" />}
       <div className="relative flex h-full flex-col items-end justify-between p-5">
         {href ? (
           <span

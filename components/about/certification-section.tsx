@@ -34,7 +34,7 @@ export function CertificationGallery({
   useModalEffects(open, close);
 
   return (
-    <section id="certificate" className="relative isolate overflow-hidden px-6 py-12.5 md:px-20">
+    <section id="certificate" className="scroll-mt-16 relative isolate overflow-hidden px-6 py-12.5 md:px-20">
       <ResponsiveBackground src={background} className="-z-20 object-fill" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <SectionTitle
@@ -51,7 +51,7 @@ export function CertificationGallery({
               const image = mediaUrl(card.certificate);
               return (
                 <div key={card.id} className="group relative">
-                  <Glow className="-top-[9px] left-0 h-[25px] w-full" />
+                  <Glow className="z-10 -top-[9px] left-0 h-[25px] w-full" />
                   <button
                     type="button"
                     onClick={() => {

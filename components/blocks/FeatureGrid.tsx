@@ -12,7 +12,8 @@ function CardsVariant({ block }: { block: Data }) {
   const bg = mediaUrl(block.background);
   return (
     <section className="relative isolate overflow-hidden px-6 pt-25 pb-12.5 md:px-20">
-      <ResponsiveBackground src={bg} className="-z-20 object-fill" />
+      {/* Figma: the art is anchored to the section bottom (platform rings under the cards). */}
+      <ResponsiveBackground src={bg} className="-z-20 object-cover object-bottom" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <SectionTitle
           variant="page"
@@ -25,8 +26,8 @@ function CardsVariant({ block }: { block: Data }) {
           {block.items?.map((card) => (
             <Card
               key={card.id ?? card.title}
-              hover="lift"
-              className="relative flex flex-col justify-center gap-6 border-accent/30 p-10"
+              // Figma Card_b: no lift; hover only tints.
+              className="flex flex-col justify-start gap-6 p-10"
             >
               <div className="flex h-[52px] items-center justify-center">
                 <img src={mediaUrl(card.icon)} alt="" className="h-[50px] w-[50px]" />
@@ -66,7 +67,7 @@ function ValuesVariant({ block }: { block: Data }) {
           desc={block.header.description}
         />
         <div className="relative mx-auto flex w-full flex-col items-stretch justify-center rounded-lg backdrop-blur-[5px]">
-          <Glow className="-top-[7px] left-1/2 hidden h-[25px] w-[416px] -translate-x-1/2 md:block" />
+          <Glow className="z-10 -top-[7px] left-1/2 hidden h-[25px] w-[416px] -translate-x-1/2 md:block" />
           <GlowLine width={680} className="absolute left-1/2 top-0 hidden -translate-x-1/2 md:block" />
           {block.quote && (
             <div className="flex flex-col items-center justify-center gap-4 rounded-lg px-4 py-8 backdrop-blur-[5px] md:h-[110px] md:flex-row md:py-0">

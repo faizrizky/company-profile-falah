@@ -53,7 +53,7 @@ export function ProblemTabs({
               <Glow
                 className={cn(
                   // Figma glow per state: Default 15px / Variant3 27px / Variant2 25px.
-                  "w-[416px] transition-[height,top,background-color]",
+                  "z-10 w-[416px] transition-[height,top,background-color]",
                   open
                     ? "-top-[13px] h-[25px] bg-accent/80"
                     : "-top-[8px] h-[15px] group-hover:-top-[14px] group-hover:h-[27px]",

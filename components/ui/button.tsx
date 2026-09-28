@@ -92,3 +92,6 @@ export function Button({
     </button>
   );
 }
+
+/** Button look for elements that need their own click handling. */
+export { buttonVariants };

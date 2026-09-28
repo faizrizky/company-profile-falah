@@ -46,7 +46,7 @@ export function ExpertiseBlock({ block }: BlockProps<Data>) {
             // Figma Expert Section_b: the glow sits on the photo's bottom edge and
             // tints the text area; hover zooms the photo ~5% from the top centre.
             <Card key={e.id ?? e.title} glow={false}>
-              <Glow className="top-[200px] h-[27px] bg-blue-bright group-hover:translate-y-0 group-hover:bg-blue-bright" />
+              <Glow className="z-10 top-[200px] h-[27px] bg-blue-bright group-hover:translate-y-0 group-hover:bg-blue-bright" />
               <div className="relative h-[215px]">
                 <div className="absolute inset-0 overflow-hidden">
                   {image && (

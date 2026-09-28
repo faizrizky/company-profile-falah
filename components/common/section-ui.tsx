@@ -30,7 +30,7 @@ export function Glow({ className }: { className?: string }) {
       className={cn(
         // Thin glow on a card's top edge; brightens and drops a little when
         // the card (a `group`) is hovered.
-        "pointer-events-none absolute z-10 -top-[10px] left-1/2 h-[25px] w-full -translate-x-1/2 rounded-full bg-accent/75 blur-[40px] transition-all duration-300 group-hover:translate-y-[5px] group-hover:bg-accent",
+        "pointer-events-none absolute -z-10 -top-[10px] left-1/2 h-[25px] w-full -translate-x-1/2 rounded-full bg-accent/75 blur-[40px] transition-all duration-300 group-hover:translate-y-[5px] group-hover:bg-accent",
         className,
       )}
     />
@@ -53,8 +53,9 @@ const TITLE_STYLES = {
   },
   page: {
     root: "items-center text-center",
-    pill: "hidden md:inline-flex",
-    body: null,
+    pill: "hidden font-medium md:inline-flex",
+    // Figma Title_b: 12px under the pill, 4px between title and text.
+    body: "flex w-full flex-col items-center gap-3 md:gap-1",
     title: "max-w-[900px] font-display text-[20px] font-bold leading-6 text-accent md:text-[30px] md:leading-9",
     desc: "max-w-[720px] text-sm leading-5 text-white md:text-base md:leading-6",
   },

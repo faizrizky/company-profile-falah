@@ -5,6 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { useI18n } from "@/components/i18n/locale-provider";
+import { buttonVariants } from "@/components/ui/button";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { useDelayedUnmount, useModalEffects } from "@/lib/use-animated";
 import { cn } from "@/lib/utils";
@@ -24,10 +25,19 @@ export function CertificateButton({ certifications }: { certifications: Certific
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
-        className="gradient-brand inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg px-6 text-sm font-sans font-medium text-white shadow-[0_0_10px_rgba(59,130,246,0.6)] transition-colors md:w-fit"
+        onClick={() => {
+          // Figma: on desktop the button scrolls to the certificate gallery;
+          // phones (and pages without the gallery) get the pop-up.
+          const gallery = document.getElementById("certificate");
+          if (gallery && window.matchMedia("(min-width: 768px)").matches) {
+            gallery.scrollIntoView({ behavior: "smooth", block: "start" });
+          } else {
+            setOpen(true);
+          }
+        }}
+        className={cn(buttonVariants({ variant: "fill", size: "lg" }), "w-full font-normal md:w-fit")}
       >
-        <img src={icon} alt="" className="h-5 w-5" />
+        <img src={icon} alt="" className="h-6 w-6" />
         {t.certificates.show}
       </button>
 
