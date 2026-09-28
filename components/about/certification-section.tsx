@@ -6,7 +6,7 @@ import Image from "next/image";
 import { X } from "lucide-react";
 
 import { HoverReveal } from "@/components/common/hover-reveal";
-import { Glow, ResponsiveBackground, SectionTitle } from "@/components/common/section-ui";
+import { FramedBackground, Glow, SectionTitle } from "@/components/common/section-ui";
 import { useI18n } from "@/components/i18n/locale-provider";
 import { Pill } from "@/components/ui/pill";
 import { mediaAlt, mediaUrl } from "@/lib/cms/media";
@@ -35,11 +35,12 @@ export function CertificationGallery({
 
   return (
     <section id="certificate" className="scroll-mt-16 relative isolate overflow-hidden px-6 py-12.5 md:px-20">
-      <ResponsiveBackground src={background} className="-z-20 object-fill" />
+      {/* Figma image fill: 156.56% tall, shifted up 56.6%. */}
+      <FramedBackground src={background} top="-56.6%" height="156.56%" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <SectionTitle
           variant="page"
-          className="max-w-[630px]"
+          className="max-w-[682px]"
           eyebrow={header.eyebrow}
           title={header.title}
           desc={header.description}
@@ -51,7 +52,6 @@ export function CertificationGallery({
               const image = mediaUrl(card.certificate);
               return (
                 <div key={card.id} className="group relative">
-                  <Glow className="z-10 -top-[9px] left-0 h-[25px] w-full" />
                   <button
                     type="button"
                     onClick={() => {
@@ -59,26 +59,35 @@ export function CertificationGallery({
                       setOpen(true);
                     }}
                     aria-label={format(t.certificates.view, { title: card.title })}
-                    className="relative block h-[400px] w-full cursor-pointer overflow-hidden rounded-lg border border-accent/50 transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-accent"
+                    className="relative block h-[400px] w-full cursor-pointer overflow-hidden rounded-lg border border-accent/50 backdrop-blur-[5px] focus-visible:outline-2 focus-visible:outline-accent"
                   >
+                    {/* Figma Certificate_b: the certificate at 355px wide, pinned to the top centre. */}
                     {image && (
-                      <Image
-                        src={image}
-                        alt={mediaAlt(card.certificate, card.title)}
-                        fill
-                        className={cn("object-cover", card.certificateFocus === "top" && "object-top")}
-                      />
+                      <div className="absolute -top-px left-1/2 h-[500px] w-[355px] -translate-x-1/2">
+                        <Image
+                          src={image}
+                          alt={mediaAlt(card.certificate, card.title)}
+                          fill
+                          sizes="355px"
+                          className={cn("object-cover", card.certificateFocus === "top" && "object-top")}
+                        />
+                      </div>
                     )}
+                    <Glow className="z-10 -top-[10px] group-hover:translate-y-0 group-hover:bg-accent/75" />
                     <div className="absolute right-6 top-6 flex h-9 w-9 items-center justify-center rounded-lg border border-white bg-surface-dark/50 backdrop-blur-[5px]">
                       <img src={ICON_MAXIMIZE} alt="" className="h-5 w-5" />
                     </div>
                     {/* Figma Certificate Card_b: hover raises the caption and reveals its details. */}
                     <div className="absolute inset-x-0 bottom-0 flex min-h-[160px] flex-col justify-end gap-2 bg-[linear-gradient(180deg,rgba(5,4,13,0)_0%,rgba(5,4,13,0.5)_86%)] p-6 text-left backdrop-blur-[1px] transition-[backdrop-filter] duration-300 group-hover:bg-[linear-gradient(180deg,rgba(5,4,13,0)_0%,rgba(5,4,13,0.5)_43%)]">
-                      <h3 className="font-display text-xl font-bold leading-6 text-white">{card.title}</h3>
+                      <h3 className="font-display text-xl font-bold leading-7 text-white">{card.title}</h3>
                       {(card.subtitle || card.description) && (
                         <HoverReveal>
-                          <div className="flex flex-col items-start gap-2 pt-1">
-                            {card.subtitle && <Pill size="xs">{card.subtitle}</Pill>}
+                          <div className="flex flex-col items-start gap-2 pt-2">
+                            {card.subtitle && (
+                              <Pill size="xs" className="max-w-full rounded-2xl px-3 text-left">
+                                {card.subtitle}
+                              </Pill>
+                            )}
                             {card.description && <p className="text-sm leading-6 text-white">{card.description}</p>}
                           </div>
                         </HoverReveal>
