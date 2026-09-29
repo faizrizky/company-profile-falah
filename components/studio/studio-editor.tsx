@@ -254,6 +254,9 @@ function StudioEditorClient(props: StudioEditorProps) {
   // Real save progress: bytes sent, then each stage the CMS reports as it
   // reaches it (preparing, checking and saving, website refresh).
   const [progress, setProgress] = useState<{ stage: SaveStage; pct: number }>({ stage: "sending", pct: 0 });
+  // Inside the CMS the CMS page runs the save and shows the toast (it stays up
+  // across tab switches); this editor only shows its own when saving itself.
+  const [ownToast, setOwnToast] = useState(true);
 
   useEffect(() => {
     if (status.kind !== "success") return;
@@ -275,12 +278,27 @@ function StudioEditorClient(props: StudioEditorProps) {
     if (status.kind === "saving") return;
     setStatus({ kind: "saving", publish });
     setProgress({ stage: "sending", pct: 0 });
+    const inCms = window.parent !== window;
+    let savingHere = !inCms;
+    setOwnToast(savingHere);
     try {
-      await savePageWithProgress(cmsUrl, page.id, { title, layout }, { locale, publish }, (stage, pct) =>
-        setProgress((p) => (pct > p.pct ? { stage, pct } : p)),
+      const { handedOver } = await savePageWithProgress(
+        cmsUrl,
+        page.id,
+        { title, layout },
+        { locale, publish },
+        (stage, pct) => {
+          savingHere = true;
+          setOwnToast(true);
+          setProgress((p) => (pct > p.pct ? { stage, pct } : p));
+        },
       );
       savedRef.current = JSON.stringify([title, layout]);
       setDirty(false);
+      if (handedOver) {
+        setStatus({ kind: "idle" });
+        return;
+      }
       setProgress({ stage: "saved", pct: 100 });
       // Let the full bar show before the result replaces it.
       await new Promise((r) => setTimeout(r, 300));
@@ -290,6 +308,8 @@ function StudioEditorClient(props: StudioEditorProps) {
       const message =
         code === 401 ? s.sessionExpired : code === 403 ? s.forbidden : (error as Error).message || "Error";
       setStatus({ kind: "error", message });
+      // Handed over to the CMS: it already shows the error.
+      if (!savingHere) setStatus({ kind: "idle" });
     }
   };
 
@@ -321,7 +341,7 @@ function StudioEditorClient(props: StudioEditorProps) {
       <StudioFieldCollapse />
       {/* Toast in the CMS's style (bottom right), shown from the click on:
           saving can take a few seconds. */}
-      {status.kind !== "idle" ? (
+      {status.kind !== "idle" && ownToast ? (
         <div
           key={status.kind}
           role={status.kind === "error" ? "alert" : "status"}

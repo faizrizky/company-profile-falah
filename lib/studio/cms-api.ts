@@ -121,7 +121,7 @@ export async function savePageWithProgress(
   changes: Pick<Page, "title" | "layout">,
   { locale, publish }: { locale: string; publish: boolean },
   onProgress: (stage: SaveStage, pct: number) => void,
-): Promise<{ doc: Page }> {
+): Promise<{ doc: Page; handedOver: boolean }> {
   const params = new URLSearchParams({ locale, depth: "0" });
   if (!publish) params.set("draft", "true");
   const payload = JSON.stringify({
@@ -131,9 +131,12 @@ export async function savePageWithProgress(
     data: publish ? { ...changes, _status: "published" } : changes,
   });
 
-  let result = await saveRequest(cmsUrl, params.toString(), payload, studioToken(), onProgress);
+  // Inside the CMS, the CMS page runs the save and shows its progress, so it
+  // survives switching tabs; standalone (or an older CMS), save from here.
+  const handedOver = await handOverSave(cmsUrl, params.toString(), payload, publish);
+  let result = handedOver ?? (await saveRequest(cmsUrl, params.toString(), payload, studioToken(), onProgress));
   // An expired handed-over token: ask the CMS for a fresh one and retry once.
-  if (result.status === 401 && studioToken()) {
+  if (!handedOver && result.status === 401 && studioToken()) {
     const fresh = await requestStudioToken(cmsUrl);
     if (fresh) result = await saveRequest(cmsUrl, params.toString(), payload, fresh, onProgress);
   }
@@ -141,12 +144,46 @@ export async function savePageWithProgress(
     doc?: Page;
     errors?: { message?: string; data?: { errors?: { message?: string; path?: string }[] } }[];
   };
-  if (result.status >= 400) {
+  if (result.status >= 400 || result.status === 0) {
     const first = body.errors?.[0];
     const detail = first?.data?.errors?.map((e) => (e.path ? `${e.path}: ${e.message}` : e.message)).join(" · ");
     throw new StudioApiError(detail || first?.message || `HTTP ${result.status}`, result.status);
   }
-  return body as { doc: Page };
+  return { doc: body.doc as Page, handedOver: Boolean(handedOver) };
+}
+
+/**
+ * Asks the embedding CMS page to run the save. Resolves with its result, or
+ * null when there is no CMS around to take it (not embedded, or it doesn't
+ * answer within a moment).
+ */
+function handOverSave(cmsUrl: string, search: string, body: string, publish: boolean): Promise<SaveDone | null> {
+  if (window.parent === window) return Promise.resolve(null);
+  let origin: string;
+  try {
+    origin = new URL(cmsUrl).origin;
+  } catch {
+    return Promise.resolve(null);
+  }
+  return new Promise((resolve) => {
+    const requestId = crypto.randomUUID();
+    let accepted = false;
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin !== origin || event.source !== window.parent || event.data?.requestId !== requestId) return;
+      if (event.data.type === "falah-studio:save-accepted") accepted = true;
+      if (event.data.type === "falah-studio:save-done") {
+        window.removeEventListener("message", onMessage);
+        resolve({ status: event.data.status, body: event.data.body });
+      }
+    };
+    window.addEventListener("message", onMessage);
+    window.parent.postMessage({ type: "falah-studio:save", requestId, search, body, publish }, origin);
+    window.setTimeout(() => {
+      if (accepted) return;
+      window.removeEventListener("message", onMessage);
+      resolve(null);
+    }, 1500);
+  });
 }
 
 export type MediaKind = "image" | "video";
