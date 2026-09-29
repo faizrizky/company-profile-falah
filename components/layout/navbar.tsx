@@ -36,6 +36,8 @@ export function Navbar({
   const [mega, setMega] = useState(false);
   const [mobile, setMobile] = useState(false);
   const megaRendered = useDelayedUnmount(mega, 250);
+  // Kept mounted a moment after closing, so it can slide away.
+  const mobileRendered = useDelayedUnmount(mobile, 250);
 
   useEffect(() => {
     if (!mega) return;
@@ -105,8 +107,9 @@ export function Navbar({
 
       {/* Menus live outside the header: its backdrop-filter would otherwise
           stop their blur from reaching the page and trap them in its box. */}
-      {mobile && (
+      {mobileRendered && (
         <MobileMenu
+          open={mobile}
           solutions={solutions}
           solutionsLabel={solutionsLabel}
           navLinks={navLinks}

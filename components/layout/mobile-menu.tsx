@@ -81,6 +81,7 @@ function CategoryDetail({
 
 /** Figma Menu - expand: drops down under the navbar on phones and tablets. */
 export function MobileMenu({
+  open,
   solutions,
   solutionsLabel,
   navLinks,
@@ -88,6 +89,8 @@ export function MobileMenu({
   onClose,
   onNavigate,
 }: {
+  /** False while it animates out (it stays mounted a moment longer). */
+  open: boolean;
   solutions: MegaMenuCategory[];
   solutionsLabel: string;
   navLinks: NonNullable<Navigation["links"]>;
@@ -108,12 +111,26 @@ export function MobileMenu({
   );
 
   return (
-    <div className="fixed inset-x-0 bottom-0 top-[52px] z-[60] flex flex-col bg-surface-dark/50 backdrop-blur-[5px] lg:hidden">
-      <div className="flex max-h-full min-h-0 flex-col overflow-y-auto border-b border-blue-bright bg-surface-dark/50 backdrop-blur-[14.7px]">
+    <div
+      className={cn(
+        "fixed inset-x-0 bottom-0 top-[52px] z-[60] flex flex-col bg-surface-dark/50 backdrop-blur-[5px] lg:hidden",
+        // Same motion as the desktop mega menu: the backdrop fades, the panel drops in.
+        open ? "animate-fade-in" : "pointer-events-none animate-fade-out",
+      )}
+    >
+      <div
+        className={cn(
+          "flex max-h-full min-h-0 flex-col overflow-y-auto border-b border-blue-bright bg-surface-dark/50 backdrop-blur-[14.7px]",
+          open ? "animate-mega-in" : "animate-mega-out",
+        )}
+      >
+        {/* Switching between the list and a category re-plays the panel entrance. */}
         {category ? (
-          <CategoryDetail category={category} onBack={() => setCategory(null)} onNavigate={onNavigate} />
+          <div key={`category-${category.id}`} className="tab-panel-in">
+            <CategoryDetail category={category} onBack={() => setCategory(null)} onNavigate={onNavigate} />
+          </div>
         ) : (
-          <div className="flex flex-col gap-4 px-6 py-6">
+          <div key="list" className="tab-panel-in flex flex-col gap-4 px-6 py-6">
             {first && link(first)}
             <div className="flex flex-col gap-4">
               <button
@@ -127,15 +144,22 @@ export function MobileMenu({
                   className={cn("h-[18px] w-[18px] transition-transform duration-300", solsOpen && "rotate-180")}
                 />
               </button>
-              {solsOpen && (
-                <div className="flex flex-col gap-1 pl-2">
+              {/* Expands / collapses smoothly (grid rows 0fr ↔ 1fr). */}
+              <div
+                className={cn(
+                  "grid transition-[grid-template-rows,opacity,margin] duration-300 ease-out",
+                  solsOpen ? "grid-rows-[1fr] opacity-100" : "-mt-4 grid-rows-[0fr] opacity-0",
+                )}
+                inert={!solsOpen}
+              >
+                <div className="flex min-h-0 flex-col gap-1 overflow-hidden pl-2">
                   {solutions.map((c) => (
                     <button key={c.id} type="button" onClick={() => setCategory(c)} className={ITEM}>
                       {c.title}
                     </button>
                   ))}
                 </div>
-              )}
+              </div>
             </div>
             {others.map(link)}
             <LanguageSwitcher className="w-fit" />
