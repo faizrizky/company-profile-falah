@@ -45,7 +45,12 @@ function HomeHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
           />
         </div>
       </div>
-      <PartnerMarquee partners={partners} className="mt-5 md:mt-[74px]" trackClassName="h-[75px] md:h-auto" />
+      <PartnerMarquee
+        partners={partners}
+        tooltip={block.partnerTooltip ?? true}
+        className="mt-5 md:mt-[74px]"
+        trackClassName="h-[75px] md:h-auto"
+      />
       {block.showScrollHint && (
         <div className="mt-auto flex justify-center md:mt-[92px]">
           <ScrollHint className="opacity-70" />

@@ -25,11 +25,13 @@ export function PartnersBlock({ block }: BlockProps<Data>) {
         <div className="relative flex w-full flex-col overflow-x-clip md:-mx-20 md:h-[300px] md:w-[calc(100%+160px)]">
           <PartnerMarquee
             partners={rowOne}
+            tooltip={Boolean(block.showTooltip)}
             trackClassName="h-[100px]"
             logoClassName="mr-8 h-7 max-w-[160px] md:mr-10 md:h-[40px] md:max-w-[170px]"
           />
           <PartnerMarquee
             partners={rowTwo}
+            tooltip={Boolean(block.showTooltip)}
             trackClassName="mt-[27px] h-[150px]"
             logoClassName="mr-12 h-14 max-w-[120px] md:mr-[100px] md:h-[90px] md:max-w-[170px]"
             reverse

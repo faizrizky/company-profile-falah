@@ -3,8 +3,9 @@ import { cn } from "@/lib/utils";
 import type { Partner } from "@/types/cms";
 
 /**
- * Endless row of partner logos. Hovering a logo pauses the row, lights the
- * logo up and, when the partner has a description, shows it in a card above.
+ * Endless row of partner logos. Hovering a logo pauses the row and swaps in
+ * the partner's original colour logo (Figma Variant2); with `tooltip`, a
+ * partner's description shows in a card right above it (Figma Logo_b Detail).
  */
 export function PartnerMarquee({
   partners,
@@ -12,6 +13,7 @@ export function PartnerMarquee({
   trackClassName,
   logoClassName = "mr-[45px] h-8",
   reverse,
+  tooltip = false,
 }: {
   partners: Partner[];
   className?: string;
@@ -19,6 +21,8 @@ export function PartnerMarquee({
   /** Size and spacing of each logo. */
   logoClassName?: string;
   reverse?: boolean;
+  /** Show the description card on hover (CMS setting; home hero only by default). */
+  tooltip?: boolean;
 }) {
   const logos = partners.filter((p) => mediaUrl(p.logo));
   if (logos.length === 0) return null;
@@ -37,30 +41,43 @@ export function PartnerMarquee({
           // The second copy only makes the loop seamless: hidden from screen readers.
           const copy = i >= logos.length;
           return (
-            <div key={`${p.id}-${i}`} className="group/logo relative flex shrink-0" aria-hidden={copy || undefined}>
-              <img
-                src={mediaUrl(p.logo)}
-                alt={copy ? "" : mediaAlt(p.logo, p.name)}
-                className={cn(
-                  "w-auto object-contain opacity-70 transition-[opacity,filter] duration-300",
-                  "group-hover/logo:opacity-100 group-hover/logo:[filter:drop-shadow(0_0_8px_rgb(24_102_239/0.9))]",
-                  logoClassName,
-                )}
-              />
-              {p.description && (
-                <div
-                  role="tooltip"
+            <div key={`${p.id}-${i}`} className="group/logo flex shrink-0" aria-hidden={copy || undefined}>
+              {/* Size and spacing sit on this box, so the card centres on the logo itself. */}
+              <span className={cn("relative flex items-center", logoClassName)}>
+                <img
+                  src={mediaUrl(p.logo)}
+                  alt={copy ? "" : mediaAlt(p.logo, p.name)}
                   className={cn(
-                    "pointer-events-none absolute bottom-full left-1/2 z-20 mb-3 w-[260px] -translate-x-1/2 translate-y-1",
-                    "rounded-lg border border-accent/50 bg-[radial-gradient(ellipse_at_top_left,#2b3240,#1d1d22_70%)] px-5 py-4 text-center",
-                    "opacity-0 shadow-[0_12px_30px_-12px_rgb(0_0_0/0.6)] transition-[opacity,transform] duration-300",
-                    "group-hover/logo:translate-y-0 group-hover/logo:opacity-100",
+                    "h-full w-auto max-w-full object-contain transition-opacity duration-300",
+                    mediaUrl(p.logoHover) ? "group-hover/logo:opacity-0" : "opacity-70 group-hover/logo:opacity-100",
                   )}
-                >
-                  <p className="font-display text-base leading-6 text-accent">{p.name}</p>
-                  <p className="text-sm leading-6 text-white">{p.description}</p>
-                </div>
-              )}
+                />
+                {mediaUrl(p.logoHover) && (
+                  <img
+                    src={mediaUrl(p.logoHover)}
+                    alt=""
+                    aria-hidden
+                    // Figma Variant2: the colour logo carries a soft light-blue glow.
+                    className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-300 [filter:drop-shadow(0_0_10px_#93c5fd)] group-hover/logo:opacity-100"
+                  />
+                )}
+                {tooltip && p.description && (
+                  <span
+                    role="tooltip"
+                    className={cn(
+                      // Figma Detail: 173px card, 16px padding, right above the logo.
+                      "pointer-events-none absolute bottom-full left-1/2 z-20 mb-3 flex w-[173px] -translate-x-1/2 translate-y-1 flex-col items-center overflow-clip",
+                      "rounded-lg border border-accent/50 bg-surface-dark/50 p-4 text-center backdrop-blur-[5px]",
+                      "opacity-0 transition-[opacity,transform] duration-300",
+                      "group-hover/logo:translate-y-0 group-hover/logo:opacity-100",
+                    )}
+                  >
+                    <span aria-hidden className="absolute -top-[9px] left-0 h-[15px] w-[138px] rounded-full bg-accent/60 blur-[40px]" />
+                    <span className="relative font-display text-sm leading-5 text-accent">{p.name}</span>
+                    <span className="relative text-xs leading-5 text-white">{p.description}</span>
+                  </span>
+                )}
+              </span>
             </div>
           );
         })}
