@@ -96,7 +96,7 @@ export function Navbar({
             className="text-white lg:hidden"
             onClick={() => setMobile((v) => !v)}
           >
-            {mobile ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {mobile ? <X className="h-[34px] w-[34px]" strokeWidth={1.5} /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </header>
