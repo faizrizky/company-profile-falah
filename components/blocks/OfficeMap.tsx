@@ -11,6 +11,11 @@ export function OfficeMapBlock({ block, ctx }: BlockProps<Data>) {
   const hasPin = typeof contact?.latitude === "number" && typeof contact?.longitude === "number";
   const query = hasPin ? `${contact!.latitude},${contact!.longitude}` : address;
   const bg = mediaUrl(block.background);
+  // The map is a fixed picture (pin and address card are drawn over it);
+  // clicking anywhere opens the office in Google Maps.
+  const mapsHref = query
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+    : undefined;
 
   return (
     <section className="relative isolate flex flex-col items-center gap-8 overflow-hidden bg-[#0A0A0A] pt-[50px] md:bg-transparent md:p-[50px_80px]">
@@ -24,13 +29,22 @@ export function OfficeMapBlock({ block, ctx }: BlockProps<Data>) {
         desc={block.header.description}
       />
       {address && (
-        <div className="relative h-[177px] w-full overflow-hidden md:h-[480px] md:w-[853px] md:rounded-lg md:border md:border-accent md:shadow-[0_0_4px_2px_rgba(147,197,253,1)]">
+        <a
+          href={mapsHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${ctx.t.map.title}: ${address}`}
+          className="group relative block h-[177px] w-full cursor-pointer overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent md:h-[480px] md:w-[853px] md:rounded-lg md:border md:border-accent md:shadow-[0_0_4px_2px_rgba(147,197,253,1)]"
+        >
           {/* Desktop (Figma 853×480): the map is framed so the office sits under the
               address card at (474, 184), zoomed out one step. */}
           <iframe
             title={ctx.t.map.title}
             src={`https://www.google.com/maps?q=${encodeURIComponent(query!)}&z=16&output=embed`}
-            className="h-full w-full border-0 md:absolute md:left-0 md:top-[-124px] md:h-[600px] md:w-[948px]"
+            tabIndex={-1}
+            aria-hidden
+            // Not draggable or zoomable: panning would slide the map away from the pin.
+            className="pointer-events-none h-full w-full border-0 md:absolute md:left-0 md:top-[-124px] md:h-[600px] md:w-[948px]"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
@@ -53,7 +67,7 @@ export function OfficeMapBlock({ block, ctx }: BlockProps<Data>) {
             </div>
             <img src="/contact/icon-address-arrow.svg" alt="" className="h-[10px] w-[20px]" />
           </div>
-        </div>
+        </a>
       )}
     </section>
   );
