@@ -241,6 +241,16 @@ function StudioEditorClient(props: StudioEditorProps) {
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty]);
 
+  // Publish progress. The save is a single request, so the bar eases towards
+  // 90% while it runs and jumps to 100% once the CMS confirms.
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    if (status.kind !== "saving") return;
+    setProgress(8);
+    const id = setInterval(() => setProgress((p) => (p < 90 ? p + (90 - p) * 0.12 : p)), 180);
+    return () => clearInterval(id);
+  }, [status.kind]);
+
   useEffect(() => {
     if (status.kind !== "success") return;
     const timer = setTimeout(() => setStatus({ kind: "idle" }), 4000);
@@ -264,6 +274,7 @@ function StudioEditorClient(props: StudioEditorProps) {
       await savePage(cmsUrl, page.id, { title, layout }, { locale, publish });
       savedRef.current = JSON.stringify([title, layout]);
       setDirty(false);
+      setProgress(100);
       setStatus({ kind: "success", message: publish ? s.published : s.saved });
     } catch (error) {
       const code = error instanceof StudioApiError ? error.status : 0;
@@ -299,7 +310,8 @@ function StudioEditorClient(props: StudioEditorProps) {
         }}
       />
       <StudioFieldCollapse />
-      {/* Shown from the click on: saving can take a few seconds. */}
+      {/* Toast in the CMS's style (bottom right), shown from the click on:
+          saving can take a few seconds. */}
       {status.kind !== "idle" ? (
         <div
           key={status.kind}
@@ -307,8 +319,28 @@ function StudioEditorClient(props: StudioEditorProps) {
           aria-live="polite"
           className={`studio-toast is-${status.kind}`}
         >
-          {status.kind === "saving" ? <span className="studio-spinner" aria-hidden /> : null}
-          {status.kind === "saving" ? (status.publish ? s.publishing : s.savingDraft) : status.message}
+          <span className="studio-toast__icon" aria-hidden>
+            {status.kind === "saving" ? <span className="studio-spinner" /> : status.kind === "success" ? "✓" : "!"}
+          </span>
+          <span className="studio-toast__body">
+            <span className="studio-toast__row">
+              <span>
+                {status.kind === "saving" ? (status.publish ? s.publishing : s.savingDraft) : status.message}
+              </span>
+              {status.kind === "saving" && <span className="studio-toast__pct">{Math.round(progress)}%</span>}
+            </span>
+            {status.kind === "saving" && (
+              <span
+                className="studio-toast__bar"
+                role="progressbar"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(progress)}
+              >
+                <span style={{ width: `${progress}%` }} />
+              </span>
+            )}
+          </span>
         </div>
       ) : null}
     </div>
