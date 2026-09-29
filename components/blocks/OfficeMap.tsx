@@ -13,8 +13,12 @@ export function OfficeMapBlock({ block, ctx }: BlockProps<Data>) {
   const bg = mediaUrl(block.background);
   // The map is a fixed picture (pin and address card are drawn over it);
   // clicking anywhere opens the office in Google Maps.
-  const mapsHref = query
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+  // Searched by company name + address, so Google opens the company's own
+  // listing (reviews, hours, photos) rather than a bare coordinate.
+  const siteName = ctx.data.settings?.siteName;
+  const mapsQuery = [siteName, contact?.shortAddress || address].filter(Boolean).join(", ") || query;
+  const mapsHref = mapsQuery
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`
     : undefined;
 
   return (

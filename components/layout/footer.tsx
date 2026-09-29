@@ -46,7 +46,7 @@ export function Footer({
       <div className="mx-auto w-full max-w-[1269px]">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-[274fr_296fr_296fr_313fr] md:gap-8">
           <div className="flex flex-col gap-1 md:gap-5">
-            {logo && <img src={logo} alt={mediaAlt(settings.logo, settings.siteName)} className="my-[9.5px] h-9 w-fit md:my-0 md:h-10" />}
+            {logo && <img src={logo} alt={mediaAlt(settings.logo, settings.siteName)} className="my-[9.5px] h-9 w-auto max-w-full self-start object-contain md:my-0 md:h-10" />}
             {footer.description && <p className="text-sm leading-5 text-accent md:max-w-[270px] md:leading-6">{footer.description}</p>}
           </div>
 
