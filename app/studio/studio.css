@@ -1154,11 +1154,12 @@ select.studio-input {
   gap: 12px;
   width: min(356px, calc(100vw - 48px));
   box-sizing: border-box;
-  padding: 14px 16px;
-  border: 1px solid #d3e2f3;
+  padding: 16px 20px;
+  /* The CMS form's toast: pale blue glass card, dark blue text. */
+  border: 1px solid #b9dbf7;
   border-radius: 14px;
-  background: #fff;
-  color: #0f2742;
+  background: rgb(230 243 254 / 0.96);
+  color: #0f3a66;
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
@@ -1185,7 +1186,7 @@ select.studio-input {
 }
 
 .studio-toast.is-success .studio-toast__icon {
-  background: #16a34a;
+  background: #1f7ae0;
   color: #fff;
 }
 
