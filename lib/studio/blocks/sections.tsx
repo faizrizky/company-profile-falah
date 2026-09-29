@@ -63,16 +63,24 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
         backgroundMobile: image("Background (mobile)", "Latar belakang (ponsel)"),
         buttons: buttons(),
         showPartners: toggle("Show partner logos", "Tampilkan logo partner"),
+        partners: partnersField("Partner logos (moves left)", "Logo partner (bergerak ke kiri)"),
+        partnerTooltip: toggle(
+          "Show the partner's description on logo hover",
+          "Tampilkan keterangan partner saat logo di-hover",
+        ),
         showCertificates: toggle("Show certificate button", "Tampilkan tombol sertifikat"),
         showScrollHint: toggle("Show scroll icon", "Tampilkan ikon scroll"),
       },
       resolveFields: (item, { fields }) => {
-        const { eyebrow, showPartners, showCertificates, ...rest } = fields as Fields<AnyProps>;
+        const { eyebrow, showPartners, partners, partnerTooltip, showCertificates, ...rest } =
+          fields as Fields<AnyProps>;
         const variant = item.props.variant;
         return {
           ...(variant !== "home" ? { eyebrow } : {}),
           ...rest,
           ...(variant === "home" ? { showPartners } : {}),
+          // Same as the CMS form: the picker and tooltip switch only once logos are on.
+          ...(variant === "home" && item.props.showPartners ? { partners, partnerTooltip } : {}),
           ...(variant !== "home" ? { showCertificates } : {}),
         } as Fields<AnyProps>;
       },
@@ -83,6 +91,7 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
         description: L("Supporting sentence that explains the value.", "Kalimat pendukung yang menjelaskan nilainya."),
         buttons: [],
         showScrollHint: true,
+        partnerTooltip: true,
       },
     }),
     problemShowcase: section("problemShowcase", {
@@ -253,8 +262,12 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
         header: header(),
         rowOne: partnersField("Row 1 (moves left)", "Baris 1 (bergerak ke kiri)"),
         rowTwo: partnersField("Row 2 (moves right)", "Baris 2 (bergerak ke kanan)"),
+        showTooltip: toggle(
+          "Show the partner's description on logo hover",
+          "Tampilkan keterangan partner saat logo di-hover",
+        ),
       },
-      defaultProps: { header: headerDefaults, rowOne: data.partners.slice(0, 6), rowTwo: [] },
+      defaultProps: { header: headerDefaults, rowOne: data.partners.slice(0, 6), rowTwo: [], showTooltip: false },
     }),
     certifications: section("certifications", {
       label: L("Certifications", "Sertifikasi"),
