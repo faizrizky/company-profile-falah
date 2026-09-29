@@ -7,7 +7,7 @@ import { ExternalLink, Save } from "lucide-react";
 import type { SiteData } from "@/components/blocks/types";
 import { locales, localeNames, type Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
-import { StudioApiError, savePage } from "@/lib/studio/cms-api";
+import { type SaveStage, StudioApiError, savePageWithProgress } from "@/lib/studio/cms-api";
 import { createStudioConfig, type StudioMetadata } from "@/lib/studio/config";
 import { layoutToPuck, puckTitle, puckToLayout } from "@/lib/studio/convert";
 import type { LinkGroup } from "@/lib/studio/load";
@@ -19,6 +19,16 @@ import { StudioSkeleton } from "./studio-skeleton";
 
 const VIEWPORTS = { desktop: 1440, tablet: 768, mobile: 375 } as const;
 const IFRAME = { enabled: true, waitForStyles: true };
+
+/** What the CMS is doing at each save stage, [English, Indonesian]. */
+const STAGE_TEXT: Record<SaveStage, [string, string]> = {
+  sending: ["Sending changes", "Mengirim perubahan"],
+  received: ["Received by the CMS", "Diterima CMS"],
+  preparing: ["Preparing the data", "Menyiapkan data"],
+  writing: ["Checking and saving", "Memeriksa dan menyimpan"],
+  saved: ["Saved to the database", "Tersimpan di database"],
+  revalidating: ["Updating the website", "Memperbarui website"],
+};
 
 type Status =
   | { kind: "idle" }
@@ -241,15 +251,9 @@ function StudioEditorClient(props: StudioEditorProps) {
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty]);
 
-  // Publish progress. The save is a single request, so the bar eases towards
-  // 90% while it runs and jumps to 100% once the CMS confirms.
-  const [progress, setProgress] = useState(0);
-  useEffect(() => {
-    if (status.kind !== "saving") return;
-    setProgress(8);
-    const id = setInterval(() => setProgress((p) => (p < 90 ? p + (90 - p) * 0.12 : p)), 180);
-    return () => clearInterval(id);
-  }, [status.kind]);
+  // Real save progress: bytes sent, then each stage the CMS reports as it
+  // reaches it (preparing, checking and saving, website refresh).
+  const [progress, setProgress] = useState<{ stage: SaveStage; pct: number }>({ stage: "sending", pct: 0 });
 
   useEffect(() => {
     if (status.kind !== "success") return;
@@ -270,11 +274,16 @@ function StudioEditorClient(props: StudioEditorProps) {
     const layout = puckToLayout(data);
     if (status.kind === "saving") return;
     setStatus({ kind: "saving", publish });
+    setProgress({ stage: "sending", pct: 0 });
     try {
-      await savePage(cmsUrl, page.id, { title, layout }, { locale, publish });
+      await savePageWithProgress(cmsUrl, page.id, { title, layout }, { locale, publish }, (stage, pct) =>
+        setProgress((p) => (pct > p.pct ? { stage, pct } : p)),
+      );
       savedRef.current = JSON.stringify([title, layout]);
       setDirty(false);
-      setProgress(100);
+      setProgress({ stage: "saved", pct: 100 });
+      // Let the full bar show before the result replaces it.
+      await new Promise((r) => setTimeout(r, 300));
       setStatus({ kind: "success", message: publish ? s.published : s.saved });
     } catch (error) {
       const code = error instanceof StudioApiError ? error.status : 0;
@@ -327,18 +336,21 @@ function StudioEditorClient(props: StudioEditorProps) {
               <span>
                 {status.kind === "saving" ? (status.publish ? s.publishing : s.savingDraft) : status.message}
               </span>
-              {status.kind === "saving" && <span className="studio-toast__pct">{Math.round(progress)}%</span>}
+              {status.kind === "saving" && <span className="studio-toast__pct">{Math.round(progress.pct)}%</span>}
             </span>
             {status.kind === "saving" && (
-              <span
-                className="studio-toast__bar"
-                role="progressbar"
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-valuenow={Math.round(progress)}
-              >
-                <span style={{ width: `${progress}%` }} />
-              </span>
+              <>
+                <span
+                  className="studio-toast__bar"
+                  role="progressbar"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={Math.round(progress.pct)}
+                >
+                  <span style={{ width: `${progress.pct}%` }} />
+                </span>
+                <span className="studio-toast__stage">{STAGE_TEXT[progress.stage][uiLang === "id" ? 1 : 0]}</span>
+              </>
             )}
           </span>
         </div>

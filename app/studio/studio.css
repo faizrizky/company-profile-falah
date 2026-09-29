@@ -1215,6 +1215,14 @@ select.studio-input {
   gap: 12px;
 }
 
+.studio-toast__stage {
+  margin-top: -2px;
+  color: #56708f;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
 .studio-toast__pct {
   color: #1f7ae0;
   font-weight: 600;

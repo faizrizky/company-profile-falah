@@ -42,19 +42,111 @@ async function request<T>(cmsUrl: string, path: string, init: RequestInit = {}):
   return body as T;
 }
 
-export function savePage(
+/** Real stages of a save, as reported by the CMS (its /api/falah-save endpoint). */
+export type SaveStage = "sending" | "received" | "preparing" | "writing" | "saved" | "revalidating";
+
+/** Where each stage puts the progress bar; sending is measured in bytes (0–20%). */
+const STAGE_PCT: Record<Exclude<SaveStage, "sending">, number> = {
+  received: 25,
+  preparing: 35,
+  writing: 50,
+  saved: 80,
+  revalidating: 90,
+};
+
+type SaveDone = { status: number; body: unknown };
+
+function saveRequest(
+  cmsUrl: string,
+  query: string,
+  payload: string,
+  token: string | null,
+  onProgress: (stage: SaveStage, pct: number) => void,
+): Promise<SaveDone> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", new URL(`/api/falah-save?${query}`, cmsUrl).href);
+    xhr.setRequestHeader("content-type", "application/json");
+    if (token) xhr.setRequestHeader("authorization", `JWT ${token}`);
+    else xhr.withCredentials = true;
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) onProgress("sending", (e.loaded / e.total) * 20);
+    };
+
+    let read = 0;
+    let done: SaveDone | null = null;
+    const consume = () => {
+      const text = xhr.responseText;
+      let newline: number;
+      while ((newline = text.indexOf("\n", read)) !== -1) {
+        const line = text.slice(read, newline).trim();
+        read = newline + 1;
+        if (!line) continue;
+        const event = JSON.parse(line) as
+          | { type: "stage"; stage: Exclude<SaveStage, "sending"> }
+          | { type: "done"; status: number; body: unknown };
+        if (event.type === "stage") onProgress(event.stage, STAGE_PCT[event.stage]);
+        else done = { status: event.status, body: event.body };
+      }
+    };
+    xhr.onprogress = consume;
+    xhr.onload = () => {
+      // Not a stream (e.g. session expired): a plain JSON answer.
+      if (!xhr.getResponseHeader("content-type")?.includes("ndjson")) {
+        let body: unknown = {};
+        try {
+          body = JSON.parse(xhr.responseText);
+        } catch {
+          // Empty or not JSON.
+        }
+        resolve({ status: xhr.status, body });
+        return;
+      }
+      consume();
+      if (done) resolve(done);
+      else reject(new StudioApiError("The save was interrupted.", 0));
+    };
+    xhr.onerror = () => reject(new StudioApiError("Network error", 0));
+    xhr.send(payload);
+  });
+}
+
+/**
+ * Saves the page (published, or as a draft) with real progress: bytes sent, then
+ * each stage as the CMS reaches it (preparing, checking and saving, website refresh).
+ */
+export async function savePageWithProgress(
   cmsUrl: string,
   id: number,
   changes: Pick<Page, "title" | "layout">,
   { locale, publish }: { locale: string; publish: boolean },
-) {
+  onProgress: (stage: SaveStage, pct: number) => void,
+): Promise<{ doc: Page }> {
   const params = new URLSearchParams({ locale, depth: "0" });
   if (!publish) params.set("draft", "true");
-  return request<{ doc: Page }>(cmsUrl, `/api/pages/${id}?${params}`, {
-    method: "PATCH",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(publish ? { ...changes, _status: "published" } : changes),
+  const payload = JSON.stringify({
+    target: "collection",
+    slug: "pages",
+    id,
+    data: publish ? { ...changes, _status: "published" } : changes,
   });
+
+  let result = await saveRequest(cmsUrl, params.toString(), payload, studioToken(), onProgress);
+  // An expired handed-over token: ask the CMS for a fresh one and retry once.
+  if (result.status === 401 && studioToken()) {
+    const fresh = await requestStudioToken(cmsUrl);
+    if (fresh) result = await saveRequest(cmsUrl, params.toString(), payload, fresh, onProgress);
+  }
+  const body = result.body as {
+    doc?: Page;
+    errors?: { message?: string; data?: { errors?: { message?: string; path?: string }[] } }[];
+  };
+  if (result.status >= 400) {
+    const first = body.errors?.[0];
+    const detail = first?.data?.errors?.map((e) => (e.path ? `${e.path}: ${e.message}` : e.message)).join(" · ");
+    throw new StudioApiError(detail || first?.message || `HTTP ${result.status}`, result.status);
+  }
+  return body as { doc: Page };
 }
 
 export type MediaKind = "image" | "video";
