@@ -7,10 +7,11 @@ import type { Certification, CertificationsBlock as Data } from "@/types/cms";
 
 import type { BlockProps } from "./types";
 
+// Mobile (Figma Mobile - Certificate_b): every logo fits a 40px-tall slot.
 const ICON_CLASS: Record<NonNullable<Certification["iconShape"]>, string> = {
-  square: "h-[74px] w-[74px]",
-  wide: "w-[182px]",
-  narrow: "w-[73px]",
+  square: "h-10 w-10 md:h-[74px] md:w-[74px]",
+  wide: "h-10 w-auto md:h-auto md:w-[182px]",
+  narrow: "h-10 w-auto md:h-auto md:w-[73px]",
 };
 
 function CertificationCards({ block, items }: { block: Data; items: Certification[] }) {
@@ -32,9 +33,9 @@ function CertificationCards({ block, items }: { block: Data; items: Certificatio
           <Card
             key={c.id}
             // Figma Card_b: no lift; hover tints the card and swaps in the colour logo.
-            className="flex flex-col items-center gap-4 px-7 py-4 text-center"
+            className="flex flex-col items-center gap-2 px-4 py-3 text-center md:gap-4 md:px-7 md:py-4"
           >
-            <div className="relative flex h-[98px] items-center justify-center py-3">
+            <div className="relative flex items-center justify-center md:h-[98px] md:py-3">
               <img
                 src={mediaUrl(c.icon)}
                 alt=""
@@ -56,14 +57,14 @@ function CertificationCards({ block, items }: { block: Data; items: Certificatio
                 />
               )}
             </div>
-            <div className="flex flex-col items-center gap-4">
-              <h3 className="font-display text-xl font-bold leading-7 text-white">{c.title}</h3>
+            <div className="flex w-full flex-col items-center gap-1 md:gap-4">
+              <h3 className="font-display text-sm font-bold leading-6 text-white md:text-xl md:leading-7">{c.title}</h3>
               {c.subtitle && (
-                <span className="whitespace-nowrap rounded-full border border-accent px-3 py-1 text-xs leading-[18px] text-white backdrop-blur-sm">
+                <span className="w-full rounded-full border border-accent px-2 py-1 text-xs leading-[18px] text-white backdrop-blur-sm md:w-auto md:whitespace-nowrap md:px-3">
                   {c.subtitle}
                 </span>
               )}
-              {c.description && <p className="text-sm leading-6 text-white">{c.description}</p>}
+              {c.description && <p className="text-xs leading-5 text-white md:text-sm md:leading-6">{c.description}</p>}
             </div>
           </Card>
         ))}
