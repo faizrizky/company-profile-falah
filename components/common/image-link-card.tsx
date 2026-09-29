@@ -51,7 +51,9 @@ export function ImageLinkCard({
 }) {
   const classes = cn(
     "group relative block h-[200px] overflow-hidden rounded-lg",
-    tone === "highlight" ? "border border-accent/50 bg-accent/5 backdrop-blur-[5px] md:h-[397px]" : "md:h-[330.5px]",
+    tone === "highlight"
+      ? "bg-accent/5 backdrop-blur-[5px] md:h-[397px] md:border md:border-accent/50"
+      : "md:h-[330.5px]",
     href && "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent",
     className,
   );
@@ -75,7 +77,7 @@ export function ImageLinkCard({
             : "bg-surface-dark/25 transition-colors duration-300 group-hover:bg-surface-dark/50",
         )}
       />
-      {tone === "highlight" && <Glow className="z-10" />}
+      {tone === "highlight" && <Glow className="z-10 hidden md:block" />}
       <div className="relative flex h-full flex-col items-end justify-between p-5">
         {href ? (
           <span

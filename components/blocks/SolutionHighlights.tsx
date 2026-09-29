@@ -18,7 +18,7 @@ export function SolutionHighlightsBlock({ block, ctx }: BlockProps<Data>) {
   const featuredImage = mediaUrl(featured.image);
 
   return (
-    <Section bg={mediaUrl(block.background)}>
+    <Section bg={mediaUrl(block.background)} className="pb-0 md:pb-12.5">
       <SectionTitle
         className="max-w-[574px]"
         eyebrow={block.header.eyebrow}
@@ -26,7 +26,17 @@ export function SolutionHighlightsBlock({ block, ctx }: BlockProps<Data>) {
         desc={block.header.description}
       />
       <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:auto-rows-[329px] lg:grid-cols-3">
-        <Card className="h-[329px] md:col-span-2 md:h-full">
+        {/* Figma mobile: the featured solution is just another 200px card. */}
+        {featured.button?.href && (
+          <ImageLinkCard
+            title={featured.title}
+            image={featuredImage}
+            alt={mediaAlt(featured.image, featured.title)}
+            href={featured.button.href}
+            className="h-[200px] md:hidden"
+          />
+        )}
+        <Card className="hidden h-[329px] md:col-span-2 md:block md:h-full">
           <div className="relative h-full overflow-hidden rounded-lg">
             {featuredImage && (
               <Image src={featuredImage} alt={mediaAlt(featured.image)} fill className="object-cover" />
@@ -61,7 +71,7 @@ export function SolutionHighlightsBlock({ block, ctx }: BlockProps<Data>) {
             description={c.description}
             tags={c.tags}
             tagsLabel={tagsLabel}
-            className="h-[329px] md:h-full"
+            className="h-[200px] md:h-full"
           />
         ))}
       </div>

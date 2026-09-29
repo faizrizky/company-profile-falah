@@ -33,9 +33,9 @@ export function VideoShowcaseBlock({ block, ctx }: BlockProps<Data>) {
     <>
       {poster && <Image src={poster} alt={mediaAlt(block.poster)} fill className="object-cover" />}
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,4,13,0)_50%,rgba(5,4,13,1)_100%)]" />
-      <div className="absolute inset-0 flex flex-col items-start justify-end gap-1 p-6 md:p-10">
+      <div className="absolute inset-0 flex flex-col items-start justify-end gap-1 px-6 py-4 md:p-10">
         {block.captionTitle && (
-          <h3 className="font-display text-xl font-bold leading-7 text-accent md:text-[30px] md:leading-9">
+          <h3 className="font-display text-base font-bold leading-5 text-accent md:text-[30px] md:leading-9">
             {block.captionTitle}
           </h3>
         )}
@@ -48,7 +48,7 @@ export function VideoShowcaseBlock({ block, ctx }: BlockProps<Data>) {
     </>
   );
   return (
-    <Section bg={mediaUrl(block.background)}>
+    <Section bg={mediaUrl(block.background)} className="pb-0 md:pb-12.5">
       <SectionTitle
         eyebrow={block.header.eyebrow}
         title={block.header.title}
@@ -56,8 +56,9 @@ export function VideoShowcaseBlock({ block, ctx }: BlockProps<Data>) {
         className="max-w-[560px]"
       />
       {/* The poster fills the whole card, edge to edge. */}
-      <div className="w-full max-w-[864px] overflow-hidden rounded-2xl border border-accent shadow-[0_0_10px_rgba(147,197,253,1)]">
-        <div className="relative aspect-video overflow-hidden">
+      {/* Figma mobile: full-bleed 400px video, no frame. */}
+      <div className="-mx-6 w-[calc(100%+48px)] max-w-none overflow-hidden md:mx-0 md:w-full md:max-w-[864px] md:rounded-2xl md:border md:border-accent md:shadow-[0_0_10px_rgba(147,197,253,1)]">
+        <div className="relative h-[400px] overflow-hidden md:aspect-video md:h-auto">
           {video ? (
             // Uploaded video: plays in place; nothing but the poster loads until then.
             <InlineVideo src={video} type={mediaType(block.video)} poster={poster} label={ctx.t.video.play}>

@@ -45,11 +45,12 @@ export function Glow({ className }: { className?: string }) {
  */
 const TITLE_STYLES = {
   home: {
-    root: "max-w-[682px] items-center text-center",
-    pill: "gap-1 font-medium",
-    body: "flex w-full flex-col items-center gap-1",
-    title: "font-display text-[30px] font-bold leading-9 text-accent",
-    desc: "text-base leading-6 text-white",
+    // Figma mobile (Mobile - Title_b): left-aligned, no pill, 20/24 title, 14/20 text.
+    root: "max-w-[682px] items-start text-left md:items-center md:text-center",
+    pill: "hidden gap-1 font-medium md:inline-flex",
+    body: "flex w-full flex-col items-start gap-1 md:items-center",
+    title: "font-display text-xl font-bold leading-6 text-accent md:text-[30px] md:leading-9",
+    desc: "text-sm leading-5 text-white md:text-base md:leading-6",
   },
   page: {
     root: "items-center text-center",
