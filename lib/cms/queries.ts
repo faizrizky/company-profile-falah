@@ -64,10 +64,10 @@ export const getProducts = cache(async (locale: Locale): Promise<Product[]> => {
   return docs;
 });
 
-export const getPartners = cache(async (): Promise<Partner[]> => {
+export const getPartners = cache(async (locale: Locale): Promise<Partner[]> => {
   if (!cmsConfigured) return [];
   const { docs } = await cmsFetch<PaginatedDocs<Partner>>("/api/partners", {
-    query: { sort: "_order", depth: 1, limit: 100 },
+    query: { ...inLocale(locale), sort: "_order", depth: 1, limit: 100 },
     tags: ["partners", "media"],
   });
   return docs;
@@ -109,7 +109,7 @@ export const getFooter = cache(async (locale: Locale): Promise<Footer | null> =>
 /** Shared data some blocks need besides their own fields (logos, categories, contact info…). */
 export async function getSiteData(locale: Locale) {
   const [partners, certifications, categories, products, settings] = await Promise.all([
-    getPartners(),
+    getPartners(locale),
     getCertifications(locale),
     getSolutionCategories(locale),
     getProducts(locale),
