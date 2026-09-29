@@ -148,7 +148,7 @@ export function MegaMenu({
       <div
         id="mega-menu"
         className={cn(
-          "absolute inset-x-0 top-[50px] z-50 hidden border-b border-blue-bright/60 bg-[#1f1f24]/80 shadow-[0_24px_60px_rgba(0,0,0,0.45)] backdrop-blur-[14px] lg:block",
+          "absolute inset-x-0 top-[52px] z-50 hidden border-b border-blue-bright/60 bg-[#1f1f24]/80 shadow-[0_24px_60px_rgba(0,0,0,0.45)] backdrop-blur-[14px] lg:block",
           open ? "animate-mega-in" : "pointer-events-none animate-mega-out",
         )}
       >

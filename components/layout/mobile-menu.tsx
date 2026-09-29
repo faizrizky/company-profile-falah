@@ -108,7 +108,7 @@ export function MobileMenu({
   );
 
   return (
-    <div className="fixed inset-x-0 bottom-0 top-[50px] z-[60] flex flex-col bg-surface-dark/50 backdrop-blur-[5px] lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 top-[52px] z-[60] flex flex-col bg-surface-dark/50 backdrop-blur-[5px] lg:hidden">
       <div className="flex max-h-full min-h-0 flex-col overflow-y-auto border-b border-blue-bright bg-surface-dark/50 backdrop-blur-[14.7px]">
         {category ? (
           <CategoryDetail category={category} onBack={() => setCategory(null)} onNavigate={onNavigate} />

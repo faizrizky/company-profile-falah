@@ -14,6 +14,7 @@ import { useDelayedUnmount } from "@/lib/use-animated";
 import { cn } from "@/lib/utils";
 import type { Media, Navigation } from "@/types/cms";
 
+import { LoadingBar } from "./loading-bar";
 import { MegaMenu } from "./mega-menu";
 import { MobileMenu } from "./mobile-menu";
 
@@ -99,6 +100,7 @@ export function Navbar({
             {mobile ? <X className="h-[34px] w-[34px]" strokeWidth={1.5} /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
+        <LoadingBar />
       </header>
 
       {/* Menus live outside the header: its backdrop-filter would otherwise
