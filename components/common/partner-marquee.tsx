@@ -57,8 +57,8 @@ export function PartnerMarquee({
                     src={mediaUrl(p.logoHover)}
                     alt=""
                     aria-hidden
-                    // Figma Variant2: the colour logo carries a soft light-blue glow.
-                    className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-300 [filter:drop-shadow(0_0_10px_#93c5fd)] group-hover/logo:opacity-100"
+                    // A faint light-blue glow on the colour logo.
+                    className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-300 [filter:drop-shadow(0_0_4px_rgb(147_197_253/0.35))] group-hover/logo:opacity-100"
                   />
                 )}
                 {tooltip && p.description && (

@@ -4,9 +4,9 @@ import { ScrollHint } from "@/components/common/scroll-hint";
 import { ResponsiveBackground } from "@/components/common/section-ui";
 import { CmsButtons } from "@/components/ui/cms-buttons";
 import { Pill } from "@/components/ui/pill";
-import { mediaUrl } from "@/lib/cms/media";
+import { mediaUrl, populated } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
-import type { HeroBlock as HeroBlockData } from "@/types/cms";
+import type { HeroBlock as HeroBlockData, Partner } from "@/types/cms";
 
 import type { BlockContext, BlockProps } from "./types";
 
@@ -20,7 +20,13 @@ function Background({ block }: { block: HeroBlockData }) {
 }
 
 function HomeHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
-  const partners = block.showPartners ? ctx.data.partners.filter((p) => p.showInHero) : [];
+  // Picked in the block (like Partner Logos); older pages fall back to the "show in Hero" flag.
+  const picked = populated<Partner>(block.partners);
+  const partners = !block.showPartners
+    ? []
+    : picked.length > 0
+      ? picked
+      : ctx.data.partners.filter((p) => p.showInHero);
   return (
     <section className="relative isolate flex min-h-[570px] flex-col overflow-hidden md:block md:min-h-0">
       <Background block={block} />
