@@ -10,7 +10,7 @@ import type { Footer as FooterData, SiteSetting } from "@/types/cms";
 
 function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-2 md:gap-0">
       <h3 className="flex h-[55px] items-center font-display text-xl font-bold leading-6 text-accent">{title}</h3>
       <div className="flex flex-col">{children}</div>
     </div>
@@ -21,7 +21,7 @@ function ContactItem({ label, children }: { label: string; children: ReactNode }
   return (
     <div className="mb-3 flex flex-col gap-1">
       <span className="text-sm font-bold leading-5 text-white">{label}</span>
-      <span className="text-sm leading-6 text-white">{children}</span>
+      <span className="text-xs leading-6 text-white md:text-sm">{children}</span>
     </div>
   );
 }
@@ -42,12 +42,12 @@ export function Footer({
   const copyright = footer.copyright?.replace("{year}", String(new Date().getFullYear()));
 
   return (
-    <footer className="relative overflow-hidden bg-[#020713] px-6 py-12 lg:px-20 lg:py-16">
+    <footer className="relative overflow-hidden bg-[#020713] px-6 pb-[25px] pt-[75px] lg:px-20 lg:py-16">
       <div className="mx-auto w-full max-w-[1269px]">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-[274fr_296fr_296fr_313fr] md:gap-8">
-          <div className="flex flex-col gap-5">
-            {logo && <img src={logo} alt={mediaAlt(settings.logo, settings.siteName)} className="h-10 w-fit" />}
-            {footer.description && <p className="max-w-[270px] text-sm leading-6 text-accent">{footer.description}</p>}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-[274fr_296fr_296fr_313fr] md:gap-8">
+          <div className="flex flex-col gap-1 md:gap-5">
+            {logo && <img src={logo} alt={mediaAlt(settings.logo, settings.siteName)} className="my-[9.5px] h-9 w-fit md:my-0 md:h-10" />}
+            {footer.description && <p className="text-sm leading-5 text-accent md:max-w-[270px] md:leading-6">{footer.description}</p>}
           </div>
 
           {footer.columns?.map((column) => (
@@ -56,7 +56,7 @@ export function Footer({
                 <LocaleLink
                   key={link.id ?? link.href}
                   href={link.href}
-                  className="flex min-h-10 items-center text-sm leading-6 text-white transition-colors hover:text-accent"
+                  className="flex min-h-10 items-center text-xs leading-6 md:text-sm text-white transition-colors hover:text-accent"
                 >
                   {link.label}
                 </LocaleLink>
@@ -80,7 +80,7 @@ export function Footer({
             </ContactItem>
 
             {settings.socials?.length ? (
-              <div className="mt-6 flex flex-wrap items-center justify-between gap-3 md:justify-start">
+              <div className="mt-5 flex flex-wrap md:mt-6 items-center justify-between gap-3 md:justify-start">
                 {settings.socials.map((social) => {
                   const custom = social.platform === "other" ? mediaUrl(social.icon) : undefined;
                   // WhatsApp without its own link opens a chat with the CMS WhatsApp number.
@@ -110,11 +110,11 @@ export function Footer({
           </FooterColumn>
         </div>
 
-        <GlowLine className="mt-10" />
+        <GlowLine className="mt-8 md:mt-10" />
 
         {copyright && (
-          <div className="flex justify-center pt-5">
-            <p className="text-center text-xs text-white/80">{copyright}</p>
+          <div className="flex flex-col items-center gap-2 pt-8 md:pt-5">
+            <p className="text-center text-sm leading-5 text-white md:text-xs md:leading-normal md:text-white/80">{copyright}</p>
           </div>
         )}
       </div>
