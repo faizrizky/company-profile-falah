@@ -38,52 +38,64 @@ export function ProblemTabs({
       <div className="flex flex-col gap-4">
         {items.map((p, i) => {
           const open = i === active;
+          const img = images[i];
           return (
-            <button
-              key={p.key}
-              type="button"
-              aria-expanded={open}
-              onClick={() => setActive(i)}
-              className={cn(
-                "group relative flex cursor-pointer flex-col justify-center overflow-clip rounded-lg border border-accent/50 p-7 text-left backdrop-blur-[5px] transition-colors duration-300 lg:flex-1",
-                // Figma Problem_b: Default → Variant3 on hover → Variant2 when open.
-                open ? "bg-accent/15" : "bg-surface-dark/5 hover:bg-accent/5",
-              )}
-            >
-              <Glow
+            <div key={p.key} className="flex flex-col gap-2 lg:flex-1">
+              <button
+                type="button"
+                aria-expanded={open}
+                onClick={() => setActive(i)}
                 className={cn(
-                  // Figma glow per state: Default 15px / Variant3 27px / Variant2 25px.
-                  "z-10 w-[416px] transition-[height,top,background-color]",
-                  open
-                    ? "-top-[13px] h-[25px] bg-accent/80"
-                    : "-top-[8px] h-[15px] group-hover:-top-[14px] group-hover:h-[27px]",
+                  "group relative flex cursor-pointer flex-col justify-center overflow-clip rounded-lg border border-accent/50 p-5 text-left backdrop-blur-[5px] transition-colors duration-300 lg:flex-1 lg:p-7",
+                  // Figma Problem_b: Default → Variant3 on hover → Variant2 when open
+                  // (mobile Card Problem: 5% blue open, 15% dark closed).
+                  open ? "bg-accent/5 lg:bg-accent/15" : "bg-surface-dark/15 hover:bg-accent/5 lg:bg-surface-dark/5",
                 )}
-              />
-              <div className="flex items-center gap-[31px]">
-                {/* Figma icons carry their own glow, drawn around a 28px glyph. */}
-                {p.icon && <img src={p.icon} alt="" className="-m-1 h-[37px] w-9 shrink-0 object-contain" />}
-                <div className="flex flex-col">
-                  <h3 className="font-display text-xl font-bold leading-6 text-white">{p.title}</h3>
-                  {p.description && (
-                    <div
-                      className={cn(
-                        "grid transition-[grid-template-rows,opacity] duration-300 ease-out",
-                        open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
-                      )}
-                    >
-                      <p className="min-h-0 overflow-hidden pt-2.5 text-base font-medium leading-5 text-white">
-                        {p.description}
-                      </p>
-                    </div>
+              >
+                <Glow
+                  className={cn(
+                    // Figma glow per state: Default 15px / Variant3 27px / Variant2 25px.
+                    "z-10 w-[262px] transition-[height,top,background-color] lg:w-[416px]",
+                    open
+                      ? "-top-[13px] h-[25px] bg-accent/80"
+                      : "-top-[8px] h-[15px] group-hover:-top-[14px] group-hover:h-[27px]",
                   )}
+                />
+                <div className="flex items-center gap-3 lg:gap-[31px]">
+                  {/* Figma icons carry their own glow, drawn around a 28px glyph. */}
+                  {p.icon && <img src={p.icon} alt="" className="-m-1 h-[37px] w-9 shrink-0 object-contain" />}
+                  <div className="flex flex-col">
+                    <h3 className="font-display text-base font-bold leading-[18px] text-white lg:text-xl lg:leading-6">
+                      {p.title}
+                    </h3>
+                  </div>
                 </div>
-              </div>
-            </button>
+                {/* Mobile: full width under the icon row; desktop: under the title. */}
+                {p.description && (
+                  <div
+                    className={cn(
+                      "grid transition-[grid-template-rows,opacity] duration-300 ease-out lg:pl-[67px]",
+                      open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+                    )}
+                  >
+                    <p className="min-h-0 overflow-hidden pt-2 text-xs leading-5 text-white lg:pt-2.5 lg:text-base lg:font-medium">
+                      {p.description}
+                    </p>
+                  </div>
+                )}
+              </button>
+              {/* Mobile (Figma): the open item's picture sits right under it. */}
+              {open && img.src && (
+                <div className="relative h-[150px] overflow-hidden rounded-lg border border-accent/50 lg:hidden">
+                  <Image src={img.src} alt={img.alt} fill sizes="100vw" className="object-cover" />
+                </div>
+              )}
+            </div>
           );
         })}
       </div>
 
-      <Card surface="none" className="h-full min-h-[300px] lg:min-h-0">
+      <Card surface="none" className="hidden h-full lg:block">
         {/* Every item's picture is stacked; the active one fades in. */}
         {images.map(
           (img, i) =>

@@ -16,14 +16,16 @@ export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
       <ResponsiveBackground src={bg} />
       <div className="absolute inset-0 -z-10 bg-[#0A0A0A] lg:bg-surface-dark/60" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
-        <div className="flex w-full max-w-[682px] flex-col items-center gap-3 text-center">
+        <div className="flex w-full max-w-[682px] flex-col items-start gap-3 text-left lg:items-center lg:text-center">
           {header.eyebrow && <Pill className="hidden gap-1 font-medium lg:inline-flex">{header.eyebrow}</Pill>}
           {/* Figma Title_b: 12px under the pill, 4px between title and text. */}
           <div className="flex flex-col gap-1">
-            <h2 className="font-display text-[30px] font-bold leading-9 text-accent">
+            <h2 className="font-display text-xl font-bold leading-6 text-accent lg:text-[30px] lg:leading-9">
               <Lines text={header.title} />
             </h2>
-            {header.description && <p className="text-base leading-6 text-white">{header.description}</p>}
+            {header.description && (
+              <p className="text-sm leading-5 text-white lg:text-base lg:leading-6">{header.description}</p>
+            )}
           </div>
         </div>
         <ProblemTabs

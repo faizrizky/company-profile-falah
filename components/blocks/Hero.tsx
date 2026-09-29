@@ -22,20 +22,32 @@ function Background({ block }: { block: HeroBlockData }) {
 function HomeHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
   const partners = block.showPartners ? ctx.data.partners.filter((p) => p.showInHero) : [];
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate flex min-h-[570px] flex-col overflow-hidden md:block md:min-h-0">
       <Background block={block} />
-      <div className="relative px-6 pt-40 lg:px-20">
-        <div className="flex min-h-[451px] flex-col items-start justify-center gap-8">
-          <h1 className="max-w-[735px] font-display text-[32px] font-bold leading-[1.25] text-white md:text-[48px] md:leading-[60px]">
-            {block.title}
-          </h1>
-          {block.description && <p className="max-w-[684px] text-base leading-6 text-white">{block.description}</p>}
-          <CmsButtons buttons={block.buttons} />
+      {/* Figma mobile: a 50% dark panel under the navbar behind the copy. */}
+      <div className="absolute inset-x-0 bottom-0 top-[54px] -z-10 bg-surface-dark/50 md:hidden" />
+      <div className="relative px-6 pt-[104px] md:pt-40 lg:px-20">
+        <div className="flex flex-col items-start justify-center gap-8 md:min-h-[451px]">
+          <div className="flex flex-col gap-2 md:gap-8">
+            <h1 className="max-w-[735px] font-display text-[20px] font-bold leading-6 text-white md:text-[48px] md:leading-[60px]">
+              {block.title}
+            </h1>
+            {block.description && (
+              <p className="max-w-[684px] text-sm leading-5 text-white md:text-base md:leading-6">
+                {block.description}
+              </p>
+            )}
+          </div>
+          <CmsButtons
+            buttons={block.buttons}
+            className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:flex-wrap md:gap-4"
+            buttonClassName="w-full md:w-fit"
+          />
         </div>
       </div>
-      <PartnerMarquee partners={partners} className="mt-[74px]" />
+      <PartnerMarquee partners={partners} className="mt-5 md:mt-[74px]" trackClassName="h-[75px] md:h-auto" />
       {block.showScrollHint && (
-        <div className="mt-[92px] flex justify-center">
+        <div className="mt-auto flex justify-center md:mt-[92px]">
           <ScrollHint className="opacity-70" />
         </div>
       )}
