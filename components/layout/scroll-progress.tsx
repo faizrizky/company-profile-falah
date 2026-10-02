@@ -38,7 +38,13 @@ export function ScrollProgress() {
 
   return (
     <div aria-hidden className="h-[2px] w-full overflow-hidden bg-surface-dark/50 backdrop-blur-[5px]">
-      <div ref={bar} className="h-full w-full origin-left scale-x-0 rounded-[2px] bg-blue-bright" />
+      <div
+        ref={bar}
+        className="h-full w-full origin-left rounded-[2px] bg-blue-bright"
+        // Inline, not Tailwind's scale-x-0: that sets CSS `scale`, which would
+        // multiply with this transform and keep the bar at zero width.
+        style={{ transform: "scaleX(0)" }}
+      />
     </div>
   );
 }
