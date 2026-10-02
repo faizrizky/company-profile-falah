@@ -14,7 +14,7 @@ import { useDelayedUnmount } from "@/lib/use-animated";
 import { cn } from "@/lib/utils";
 import type { Media, Navigation } from "@/types/cms";
 
-import { LoadingBar } from "./loading-bar";
+import { ScrollProgress } from "./scroll-progress";
 import { MegaMenu } from "./mega-menu";
 import { MobileMenu } from "./mobile-menu";
 
@@ -67,10 +67,8 @@ export function Navbar({
     <>
       <header
         className={cn(
-          "inset-x-0 top-0 z-50 backdrop-blur-sm transition-colors duration-300",
-          // While the phone menu is open the bar stays on screen above it,
-          // wherever the page was scrolled to.
-          mobileRendered ? "fixed lg:absolute" : "absolute",
+          // Stays on screen while the page scrolls (every screen size).
+          "fixed inset-x-0 top-0 z-50 backdrop-blur-sm transition-colors duration-300",
           mega ? "bg-[#1f1f24]/80" : "bg-surface-dark/50",
         )}
       >
@@ -115,7 +113,7 @@ export function Navbar({
             {mobile ? <X className="h-[34px] w-[34px]" strokeWidth={1.5} /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
-        <LoadingBar />
+        <ScrollProgress />
       </header>
 
       {/* Menus live outside the header: its backdrop-filter would otherwise
