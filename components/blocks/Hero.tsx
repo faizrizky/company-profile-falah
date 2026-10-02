@@ -55,7 +55,10 @@ function HomeHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
         partners={partners}
         tooltip={block.partnerTooltip ?? true}
         className="mt-5 md:mt-[74px]"
-        trackClassName="h-[75px] md:h-auto"
+        trackClassName="h-[75px] [--logo-scale:0.7] md:h-[75px] md:[--logo-scale:1]"
+        // Figma Logo Animation_b: logos 45px apart, all about the same weight.
+        logoClassName="mr-8 md:mr-[45px]"
+        balance={{ area: 2600, maxWidth: 120, maxHeight: 60 }}
       />
       {block.showScrollHint && (
         <div className="mt-auto flex justify-center md:mt-[92px]">

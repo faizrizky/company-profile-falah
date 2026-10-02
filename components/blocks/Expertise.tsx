@@ -51,7 +51,7 @@ export function ExpertiseBlock({ block }: BlockProps<Data>) {
                   value={s.value}
                   suffix={s.suffix ?? ""}
                   delay={i * 80}
-                  className="font-display text-[30px] font-bold leading-5 text-accent"
+                  className="font-display text-[26px] font-bold leading-5 text-accent"
                 />
                 <span className="font-display text-base font-normal leading-5 text-white md:text-lg">{s.label}</span>
               </div>

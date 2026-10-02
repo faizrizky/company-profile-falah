@@ -2,6 +2,23 @@ import { mediaAlt, mediaUrl } from "@/lib/cms/media";
 import { cn } from "@/lib/utils";
 import type { Partner } from "@/types/cms";
 
+/** Width × height giving a logo the target area, kept inside the max box. */
+function balancedSize(
+  partner: Partner,
+  { area, maxWidth, maxHeight }: { area: number; maxWidth: number; maxHeight: number },
+) {
+  const logo = typeof partner.logo === "object" ? partner.logo : null;
+  const ratio = logo?.width && logo?.height ? logo.width / logo.height : 3;
+  let height = Math.sqrt(area / ratio);
+  let width = height * ratio;
+  if (width > maxWidth) [width, height] = [maxWidth, maxWidth / ratio];
+  if (height > maxHeight) [width, height] = [maxHeight * ratio, maxHeight];
+  return {
+    width: `calc(var(--logo-scale, 1) * ${width.toFixed(1)}px)`,
+    height: `calc(var(--logo-scale, 1) * ${height.toFixed(1)}px)`,
+  };
+}
+
 /**
  * Endless row of partner logos. Hovering a logo pauses the row and swaps in
  * the partner's original colour logo (Figma Variant2); with `tooltip`, a
@@ -14,6 +31,7 @@ export function PartnerMarquee({
   logoClassName = "mr-[45px] h-8",
   reverse,
   tooltip = false,
+  balance,
 }: {
   partners: Partner[];
   className?: string;
@@ -23,6 +41,13 @@ export function PartnerMarquee({
   reverse?: boolean;
   /** Show the description card on hover (CMS setting; home hero only by default). */
   tooltip?: boolean;
+  /**
+   * Gives every logo about the same visual weight (Figma Logo_b): each is
+   * sized from its own proportions to cover `area` px², within `maxWidth` ×
+   * `maxHeight` — long wordmarks (PLATH) get shorter, round crests larger.
+   * Scaled on phones by `--logo-scale` (set on the track).
+   */
+  balance?: { area: number; maxWidth: number; maxHeight: number };
 }) {
   const logos = partners.filter((p) => mediaUrl(p.logo));
   if (logos.length === 0) return null;
@@ -43,7 +68,10 @@ export function PartnerMarquee({
           return (
             <div key={`${p.id}-${i}`} className="group/logo flex shrink-0" aria-hidden={copy || undefined}>
               {/* Size and spacing sit on this box, so the card centres on the logo itself. */}
-              <span className={cn("relative flex items-center", logoClassName)}>
+              <span
+                className={cn("relative flex items-center justify-center", logoClassName)}
+                style={balance ? balancedSize(p, balance) : undefined}
+              >
                 <img
                   src={mediaUrl(p.logo)}
                   alt={copy ? "" : mediaAlt(p.logo, p.name)}

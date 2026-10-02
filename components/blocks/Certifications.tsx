@@ -33,7 +33,7 @@ function CertificationCards({ block, items }: { block: Data; items: Certificatio
           <Card
             key={c.id}
             // Figma Card_b: no lift; hover tints the card and swaps in the colour logo.
-            className="flex flex-col items-center gap-2 px-4 py-3 text-center md:gap-4 md:px-7 md:py-4"
+            className="flex flex-col items-center gap-2 px-4 py-3 text-center md:gap-4 md:px-5 md:py-4"
           >
             <div className="relative flex items-center justify-center md:h-[98px] md:py-3">
               <img
@@ -58,7 +58,10 @@ function CertificationCards({ block, items }: { block: Data; items: Certificatio
               )}
             </div>
             <div className="flex w-full flex-col items-center gap-1 md:gap-4">
-              <h3 className="font-display text-sm font-bold leading-6 text-white md:text-xl md:leading-7">{c.title}</h3>
+              {/* One line on desktop, so every card's pill and text start at the same height. */}
+              <h3 className="font-display text-sm font-bold leading-6 text-white md:text-xl md:leading-7 xl:whitespace-nowrap">
+                {c.title}
+              </h3>
               {c.subtitle && (
                 <span className="w-full rounded-full border border-accent px-2 py-1 text-xs leading-[18px] text-white backdrop-blur-sm md:w-auto md:whitespace-nowrap md:px-3">
                   {c.subtitle}
