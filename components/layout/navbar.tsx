@@ -48,6 +48,16 @@ export function Navbar({
     return () => window.removeEventListener("keydown", onKey);
   }, [mega]);
 
+  // No page scrolling behind the open phone menu.
+  useEffect(() => {
+    if (!mobile) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobile]);
+
   const closeAll = () => {
     setMega(false);
     setMobile(false);
@@ -57,7 +67,10 @@ export function Navbar({
     <>
       <header
         className={cn(
-          "absolute inset-x-0 top-0 z-50 backdrop-blur-sm transition-colors duration-300",
+          "inset-x-0 top-0 z-50 backdrop-blur-sm transition-colors duration-300",
+          // While the phone menu is open the bar stays on screen above it,
+          // wherever the page was scrolled to.
+          mobileRendered ? "fixed lg:absolute" : "absolute",
           mega ? "bg-[#1f1f24]/80" : "bg-surface-dark/50",
         )}
       >
