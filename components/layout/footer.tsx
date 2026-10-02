@@ -42,7 +42,7 @@ export function Footer({
   const copyright = footer.copyright?.replace("{year}", String(new Date().getFullYear()));
 
   return (
-    <footer className="relative overflow-hidden bg-[#020713] px-6 pb-[25px] pt-[75px] lg:px-20 lg:py-16">
+    <footer className="relative overflow-hidden bg-[#020713] px-6 pb-[25px] pt-[75px] lg:px-page lg:py-16">
       <div className="mx-auto w-full max-w-[1269px]">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-[274fr_296fr_296fr_313fr] md:gap-8">
           <div className="flex flex-col gap-1 md:gap-5">

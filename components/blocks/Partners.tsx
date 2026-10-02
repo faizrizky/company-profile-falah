@@ -11,7 +11,7 @@ export function PartnersBlock({ block }: BlockProps<Data>) {
   const rowTwo = populated<Partner>(block.rowTwo);
 
   return (
-    <section className="relative isolate overflow-hidden bg-surface-dark px-6 py-12.5 md:px-20">
+    <section className="relative isolate overflow-hidden bg-surface-dark px-6 py-12.5 md:px-page">
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <SectionTitle
           variant="page"

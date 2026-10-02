@@ -39,7 +39,7 @@ export function SoundVideo({
   fullscreenLabel,
   exitFullscreenLabel,
   className,
-  controlsClassName = "bottom-6 right-6 md:bottom-12.5 md:right-20",
+  controlsClassName = "bottom-6 right-6 md:bottom-12.5 md:right-[max(5rem,calc((100%-1280px)/2))]",
 }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);

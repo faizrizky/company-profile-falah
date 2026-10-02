@@ -20,7 +20,7 @@ function WithMediaCta({ block, ctx }: BlockProps<Data>) {
     </>
   );
   return (
-    <section className="relative isolate overflow-hidden px-6 pt-12.5 md:pb-12.5 lg:px-20">
+    <section className="relative isolate overflow-hidden px-6 pt-12.5 md:pb-12.5 lg:px-page">
       <ResponsiveBackground src={mediaUrl(block.background)} mobileSrc={mediaUrl(block.backgroundMobile)} />
       <div className="absolute inset-0 -z-10 bg-black/10" />
       <div className="relative mx-auto flex w-full max-w-[1269px] flex-col items-center gap-8">
@@ -56,7 +56,7 @@ function WithMediaCta({ block, ctx }: BlockProps<Data>) {
 
 function SimpleCta({ block }: { block: Data }) {
   return (
-    <section className="relative isolate overflow-hidden px-6 py-12.5 md:px-20">
+    <section className="relative isolate overflow-hidden px-6 py-12.5 md:px-page">
       <ResponsiveBackground src={mediaUrl(block.background)} mobileSrc={mediaUrl(block.backgroundMobile)} />
       <div className="relative mx-auto flex w-full max-w-[800px] flex-col items-center gap-8">
         <SectionTitle

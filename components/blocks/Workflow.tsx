@@ -40,7 +40,7 @@ export function WorkflowBlock({ block }: BlockProps<Data>) {
           ))}
         </ol>
       </div>
-      <div className="hidden flex-col items-center gap-8 px-20 pb-12.5 pt-25 md:flex">
+      <div className="hidden flex-col items-center gap-8 px-page pb-12.5 pt-25 md:flex">
         {head}
         <ol className="flex w-[1280px] max-w-full justify-center">
           {steps.map((f, i) => (

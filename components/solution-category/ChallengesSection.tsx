@@ -17,7 +17,7 @@ export function ChallengesSection({ category }: { category: SolutionCategory }) 
   if (!challenges.items?.length) return null;
 
   return (
-    <section className="w-full bg-surface-dark px-6 pb-12.5 pt-25 md:px-20">
+    <section className="w-full bg-surface-dark px-6 pb-12.5 pt-25 md:px-page">
       <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <SectionTitle
           eyebrow={challenges.eyebrow}

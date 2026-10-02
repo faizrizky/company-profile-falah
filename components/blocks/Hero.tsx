@@ -32,7 +32,7 @@ function HomeHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
       <Background block={block} />
       {/* Figma mobile: a 50% dark panel under the navbar behind the copy. */}
       <div className="absolute inset-x-0 bottom-0 top-[54px] -z-10 bg-surface-dark/50 md:hidden" />
-      <div className="relative px-6 pt-[104px] md:pt-40 lg:px-20">
+      <div className="relative px-6 pt-[104px] md:pt-40 lg:px-page">
         <div className="flex flex-col items-start justify-center gap-8 md:min-h-[451px]">
           <div className="flex flex-col gap-2 md:gap-8">
             <h1 className="max-w-[735px] font-display text-[20px] font-bold leading-6 text-white md:text-[48px] md:leading-[60px]">
@@ -74,7 +74,7 @@ function CenteredHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext 
   return (
     <section className="relative isolate flex min-h-[570px] flex-col overflow-hidden md:min-h-[810px]">
       <Background block={block} />
-      <div className="relative flex flex-1 flex-col items-center justify-center gap-9 px-6 py-12.5 md:px-20 md:py-40">
+      <div className="relative flex flex-1 flex-col items-center justify-center gap-9 px-6 py-12.5 md:px-page md:py-40">
         <div className="flex flex-col items-center gap-4">
           {block.eyebrow && <Pill size="md">{block.eyebrow}</Pill>}
           <div className="flex flex-col items-center">
@@ -113,7 +113,7 @@ function PageHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
       <Background block={block} />
       <div
         className={cn(
-          "relative flex flex-1 flex-col px-6 pt-[120px] md:px-20 md:pt-40",
+          "relative flex flex-1 flex-col px-6 pt-[120px] md:px-page md:pt-40",
           certificateOnly && "md:justify-center md:pb-40",
         )}
       >

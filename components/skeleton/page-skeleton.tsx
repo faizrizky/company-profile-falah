@@ -12,7 +12,7 @@ export function PageSkeleton({ label }: { label: string }) {
     <div role="status" aria-live="polite" aria-busy="true" className="min-h-screen">
       <span className="sr-only">{label}</span>
 
-      <section className="relative px-6 pt-40 lg:px-20">
+      <section className="relative px-6 pt-40 lg:px-page">
         <div className="flex min-h-[451px] flex-col items-start justify-center gap-6">
           <Block className="h-8 w-48 rounded-full" />
           <div className="flex w-full flex-col gap-3">
@@ -35,7 +35,7 @@ export function PageSkeleton({ label }: { label: string }) {
         </div>
       </section>
 
-      <section className="px-6 py-24 md:px-20">
+      <section className="px-6 py-24 md:px-page">
         <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-6">
           <Block className="h-7 w-44 rounded-full" />
           <Block className="h-9 w-full max-w-[560px] rounded-xl" />

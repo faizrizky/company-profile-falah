@@ -13,7 +13,7 @@ export function CtaSection({ category, t }: { category: SolutionCategory; t: Dic
   const background = mediaUrl(cta.background);
 
   return (
-    <section className="relative w-full overflow-hidden px-6 py-12.5 md:px-20">
+    <section className="relative w-full overflow-hidden px-6 py-12.5 md:px-page">
       {background && <Image src={background} alt="" fill className="object-cover" sizes="100vw" />}
       <div className="absolute inset-0 bg-gradient-to-b from-surface-dark to-surface-dark/0 to-50%" />
       <div className="relative z-10 mx-auto flex w-full max-w-[800px] flex-col items-center gap-8">

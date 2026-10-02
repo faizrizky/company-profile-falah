@@ -23,7 +23,7 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
   };
 
   return (
-    <section className="relative isolate overflow-hidden bg-surface-dark md:flex md:items-center md:gap-8 md:px-20 md:py-[100px]">
+    <section className="relative isolate overflow-hidden bg-surface-dark md:flex md:items-center md:gap-8 md:px-page md:py-[100px]">
       <ResponsiveBackground src={bg} className="-z-20 hidden object-cover md:block" />
       <div className="absolute inset-0 -z-10 hidden bg-[linear-gradient(180deg,rgba(5,4,13,0)_51%,rgba(5,4,13,1)_100%)] md:block" />
 

@@ -34,7 +34,7 @@ export function LayoutSectionView({ block, columns }: { block: Data; columns: Re
   return (
     <section
       className={cn(
-        "relative isolate overflow-hidden px-6 lg:px-20",
+        "relative isolate overflow-hidden px-6 lg:px-page",
         BACKGROUND[block.background ?? "dark"],
         PADDING[block.padding ?? "md"],
       )}

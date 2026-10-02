@@ -319,3 +319,12 @@ body {
     animation: none;
   }
 }
+
+/*
+ * Horizontal page gutter: 80px, growing on screens wider than the 1440px design
+ * so the content stays 1280px wide and centred (backgrounds still fill the
+ * screen). Use on a full-width element: percentages here are of its parent.
+ */
+@utility px-page {
+  padding-inline: max(5rem, calc((100% - 1280px) / 2));
+}

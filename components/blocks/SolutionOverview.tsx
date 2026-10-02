@@ -10,7 +10,7 @@ export function SolutionOverviewBlock({ block, ctx }: BlockProps<Data>) {
   const bg = mediaUrl(block.background);
 
   return (
-    <section className="relative isolate overflow-hidden px-6 pb-12.5 pt-25 lg:px-20">
+    <section className="relative isolate overflow-hidden px-6 pb-12.5 pt-25 lg:px-page">
       <ResponsiveBackground src={bg} />
       <div className="absolute inset-0 -z-10 bg-surface-dark/60" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">

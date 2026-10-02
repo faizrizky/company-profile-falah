@@ -11,7 +11,7 @@ type Item = NonNullable<Data["items"]>[number];
 function CardsVariant({ block }: { block: Data }) {
   const bg = mediaUrl(block.background);
   return (
-    <section className="relative isolate overflow-hidden px-6 pt-25 pb-12.5 md:px-20">
+    <section className="relative isolate overflow-hidden px-6 pt-25 pb-12.5 md:px-page">
       {/* Figma: the art is anchored to the section bottom (platform rings under the cards). */}
       <ResponsiveBackground src={bg} className="-z-20 object-cover object-bottom" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
@@ -54,7 +54,7 @@ function ValuesVariant({ block }: { block: Data }) {
   const bg = mediaUrl(block.background);
   const overlay = mediaUrl(block.backgroundOverlay);
   return (
-    <section className="relative isolate overflow-hidden bg-[#0A0A0A] px-6 py-12.5 md:min-h-[650px] md:bg-transparent md:px-20">
+    <section className="relative isolate overflow-hidden bg-[#0A0A0A] px-6 py-12.5 md:min-h-[650px] md:bg-transparent md:px-page">
       {/* Phones (Figma mobile): a plain dark section, no background art.
           Desktop: Figma's two image fills, framed exactly as in the design. */}
       <FramedBackground src={bg} top="73.7%" height="135.19%" className="-z-30 hidden md:block" />

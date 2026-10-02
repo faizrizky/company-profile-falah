@@ -9,7 +9,7 @@ import type { BlockProps } from "./types";
 export function TeamStatsBlock({ block }: BlockProps<Data>) {
   const bg = mediaUrl(block.background);
   return (
-    <section className="relative isolate overflow-hidden px-6 py-12.5 md:px-20">
+    <section className="relative isolate overflow-hidden px-6 py-12.5 md:px-page">
       <ResponsiveBackground src={bg} className="-z-20 object-fill" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
         <SectionTitle

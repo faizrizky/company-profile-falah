@@ -12,7 +12,7 @@ export function ProblemShowcaseBlock({ block }: BlockProps<Data>) {
   const image = mediaUrl(block.image);
 
   return (
-    <section className="relative isolate overflow-hidden px-6 pt-12.5 lg:px-20 lg:pt-25 lg:pb-12.5">
+    <section className="relative isolate overflow-hidden px-6 pt-12.5 lg:px-page lg:pt-25 lg:pb-12.5">
       <ResponsiveBackground src={bg} />
       <div className="absolute inset-0 -z-10 bg-[#0A0A0A] lg:bg-surface-dark/60" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">

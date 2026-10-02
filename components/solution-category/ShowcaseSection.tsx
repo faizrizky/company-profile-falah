@@ -57,7 +57,7 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
 
   return (
     <section ref={sectionRef} className="w-full scroll-mt-16 bg-surface-dark">
-      <div className="px-6 pb-8 pt-12.5 md:px-20 md:pb-12.5">
+      <div className="px-6 pb-8 pt-12.5 md:px-page md:pb-12.5">
         <div
           role="tablist"
           className="mx-auto flex w-full max-w-[1279px] gap-4 overflow-x-auto pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"

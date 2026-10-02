@@ -72,7 +72,7 @@ export function Navbar({
           mega ? "bg-[#1f1f24]/80" : "bg-surface-dark/50",
         )}
       >
-        <div className="flex h-[50px] items-center justify-between px-6 lg:px-20">
+        <div className="flex h-[50px] items-center justify-between px-6 lg:px-page">
           <LocaleLink href="/" aria-label={t.nav.home}>
             {logoUrl && <Image src={logoUrl} alt={logo?.alt || t.nav.home} width={128} height={30} priority />}
           </LocaleLink>

@@ -12,7 +12,7 @@ import type { BlockProps } from "./types";
 export function LeadershipBlock({ block }: BlockProps<Data>) {
   const bg = mediaUrl(block.background);
   return (
-    <section className="relative isolate overflow-hidden px-6 py-12.5 md:h-[671px] md:px-20">
+    <section className="relative isolate overflow-hidden px-6 py-12.5 md:h-[671px] md:px-page">
       {/* Figma image fill: 123.7% tall, shifted up 23.66%. */}
       <FramedBackground src={bg} top="-23.66%" height="123.7%" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">

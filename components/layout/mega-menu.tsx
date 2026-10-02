@@ -152,7 +152,7 @@ export function MegaMenu({
           open ? "animate-mega-in" : "pointer-events-none animate-mega-out",
         )}
       >
-        <div className="mx-auto grid h-[320px] max-w-[1600px] grid-cols-[220px_minmax(0,1fr)_minmax(0,1fr)] gap-8 px-10 py-10 box-content xl:h-[340px] xl:grid-cols-[250px_minmax(0,1fr)_minmax(0,1fr)] xl:px-12">
+        <div className="mx-auto grid h-[320px] max-w-[1344px] grid-cols-[220px_minmax(0,1fr)_minmax(0,1fr)] gap-8 px-10 py-10 box-content xl:h-[340px] xl:grid-cols-[250px_minmax(0,1fr)_minmax(0,1fr)] xl:px-12">
           <ul className="mega-scroll -mr-3 flex flex-col gap-2 overflow-y-auto pr-3">
             {solutions.map((category) => {
               const selected = category.id === active.id;

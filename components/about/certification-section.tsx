@@ -34,7 +34,7 @@ export function CertificationGallery({
   useModalEffects(open, close);
 
   return (
-    <section id="certificate" className="scroll-mt-16 relative isolate overflow-hidden px-6 py-12.5 md:px-20">
+    <section id="certificate" className="scroll-mt-16 relative isolate overflow-hidden px-6 py-12.5 md:px-page">
       {/* Figma image fill: 156.56% tall, shifted up 56.6%. */}
       <FramedBackground src={background} top="-56.6%" height="156.56%" />
       <div className="relative mx-auto flex w-full max-w-[1280px] flex-col items-center gap-8">
