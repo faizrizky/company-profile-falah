@@ -32,8 +32,9 @@ export function VideoShowcaseBlock({ block, ctx }: BlockProps<Data>) {
   const cover = (
     <>
       {poster && <Image src={poster} alt={mediaAlt(block.poster)} fill className="object-cover" />}
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,4,13,0)_50%,rgba(5,4,13,1)_100%)]" />
-      <div className="absolute inset-0 flex flex-col items-start justify-end gap-1 px-6 py-4 md:p-10">
+      {/* Phones (like the solution pages): dark from the top. Desktop: from the bottom, under the caption. */}
+      <div className="absolute inset-0 bg-gradient-to-b from-surface-dark via-transparent to-transparent md:bg-[linear-gradient(180deg,rgba(5,4,13,0)_50%,rgba(5,4,13,1)_100%)]" />
+      <div className="absolute inset-0 hidden flex-col items-start justify-end gap-1 md:flex md:p-10">
         {block.captionTitle && (
           <h3 className="font-display text-base font-bold leading-5 text-accent md:text-[30px] md:leading-9">
             {block.captionTitle}
@@ -61,7 +62,7 @@ export function VideoShowcaseBlock({ block, ctx }: BlockProps<Data>) {
         <div className="relative h-[400px] overflow-hidden md:aspect-video md:h-auto">
           {video ? (
             // Uploaded video: plays in place; nothing but the poster loads until then.
-            <InlineVideo src={video} type={mediaType(block.video)} poster={poster} label={ctx.t.video.play}>
+            <InlineVideo src={video} type={mediaType(block.video)} poster={poster} labels={ctx.t.video}>
               {cover}
             </InlineVideo>
           ) : (
@@ -71,6 +72,15 @@ export function VideoShowcaseBlock({ block, ctx }: BlockProps<Data>) {
             </>
           )}
         </div>
+        {/* Phones: the caption sits under the video instead of over it. */}
+        {(block.captionTitle || block.captionDescription) && (
+          <div className="flex flex-col gap-1 px-6 pt-4 md:hidden">
+            {block.captionTitle && (
+              <h3 className="font-display text-base font-bold leading-5 text-accent">{block.captionTitle}</h3>
+            )}
+            {block.captionDescription && <p className="text-sm leading-5 text-white">{block.captionDescription}</p>}
+          </div>
+        )}
       </div>
     </Section>
   );

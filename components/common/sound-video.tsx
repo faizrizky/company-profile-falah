@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Volume2, VolumeX } from "lucide-react";
-
+import { VideoControls } from "@/components/common/video-controls";
 import { PlayIcon } from "@/components/ui/play-icon";
 import { prefersStill } from "@/lib/use-media";
 import { cn } from "@/lib/utils";
@@ -17,7 +16,11 @@ type Props = {
   playLabel: string;
   soundOnLabel: string;
   soundOffLabel: string;
+  fullscreenLabel: string;
+  exitFullscreenLabel: string;
   className?: string;
+  /** Where the sound / full-screen buttons sit. */
+  controlsClassName?: string;
 };
 
 /**
@@ -33,9 +36,13 @@ export function SoundVideo({
   playLabel,
   soundOnLabel,
   soundOffLabel,
+  fullscreenLabel,
+  exitFullscreenLabel,
   className,
+  controlsClassName = "bottom-6 right-6 md:bottom-12.5 md:right-20",
 }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
   const [muted, setMuted] = useState(false);
   const [playing, setPlaying] = useState(false);
   const mutedRef = useRef(muted);
@@ -57,21 +64,23 @@ export function SoundVideo({
     return watchVisibility(video, (visible) => (visible ? start(video) : video.pause()), { threshold: 0.4 });
   }, [src, autoPlay]);
 
-  const toggleSound = () => {
+  // Keep `muted` in step with the sound button (it toggles the video directly).
+  useEffect(() => {
     const video = ref.current;
     if (!video) return;
-    const next = !muted;
-    video.muted = next;
-    setMuted(next);
-    if (video.paused) start(video);
-  };
+    const sync = () => setMuted(video.muted);
+    video.addEventListener("volumechange", sync);
+    return () => video.removeEventListener("volumechange", sync);
+  }, [src]);
 
   return (
-    <>
+    // The frame is what goes full screen: video and its buttons together.
+    <div ref={frameRef} className="absolute inset-0">
       <video
         key={src}
         ref={ref}
-        className={className}
+        // Full screen shows the whole picture instead of cropping it.
+        className={cn(className, "[:fullscreen_&]:object-contain")}
         poster={poster}
         loop
         playsInline
@@ -102,19 +111,18 @@ export function SoundVideo({
         </button>
       )}
       {playing && (
-        <button
-          type="button"
-          aria-label={muted ? soundOnLabel : soundOffLabel}
-          aria-pressed={!muted}
-          onClick={toggleSound}
-          className={cn(
-            "absolute bottom-6 right-6 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/60 bg-surface-dark/40 text-white backdrop-blur-[5px] transition-colors hover:border-accent md:bottom-12.5 md:right-20",
-            muted && "animate-pulse",
-          )}
-        >
-          {muted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
-        </button>
+        <VideoControls
+          videoRef={ref}
+          frameRef={frameRef}
+          labels={{
+            soundOn: soundOnLabel,
+            soundOff: soundOffLabel,
+            fullscreen: fullscreenLabel,
+            exitFullscreen: exitFullscreenLabel,
+          }}
+          className={controlsClassName}
+        />
       )}
-    </>
+    </div>
   );
 }

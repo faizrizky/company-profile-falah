@@ -12,7 +12,13 @@ import type { BlockProps } from "./types";
 function WithMediaCta({ block, ctx }: BlockProps<Data>) {
   const media = mediaUrl(block.media);
   const video = mediaUrl(block.video);
-  const cover = media && <Image src={media} alt={mediaAlt(block.media)} fill className="object-cover" />;
+  const cover = media && (
+    <>
+      <Image src={media} alt={mediaAlt(block.media)} fill className="object-cover" />
+      {/* Phones (like the solution pages): the picture fades into the page at the top. */}
+      <div className="absolute inset-0 bg-gradient-to-b from-surface-dark via-transparent to-transparent md:hidden" />
+    </>
+  );
   return (
     <section className="relative isolate overflow-hidden px-6 pt-12.5 md:pb-12.5 lg:px-20">
       <ResponsiveBackground src={mediaUrl(block.background)} mobileSrc={mediaUrl(block.backgroundMobile)} />
@@ -31,7 +37,7 @@ function WithMediaCta({ block, ctx }: BlockProps<Data>) {
           <div className="-mx-6 w-[calc(100%+48px)] max-w-none overflow-hidden md:mx-0 md:w-full md:max-w-[862px] md:rounded-2xl md:border md:border-accent md:shadow-[0_0_10px_rgba(147,197,253,1)]">
             <div className="relative h-[400px] overflow-hidden md:aspect-video md:h-auto">
               {video ? (
-                <InlineVideo src={video} type={mediaType(block.video)} poster={media} label={ctx.t.video.play}>
+                <InlineVideo src={video} type={mediaType(block.video)} poster={media} labels={ctx.t.video}>
                   {cover}
                 </InlineVideo>
               ) : (

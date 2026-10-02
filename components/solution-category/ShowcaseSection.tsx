@@ -96,6 +96,8 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
               playLabel={t.video.play}
               soundOnLabel={t.video.soundOn}
               soundOffLabel={t.video.soundOff}
+              fullscreenLabel={t.video.fullscreen}
+              exitFullscreenLabel={t.video.exitFullscreen}
               className="absolute inset-0 h-full w-full object-cover"
             />
           )}
@@ -113,6 +115,8 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
             playLabel={t.video.play}
             soundOnLabel={t.video.soundOn}
             soundOffLabel={t.video.soundOff}
+              fullscreenLabel={t.video.fullscreen}
+              exitFullscreenLabel={t.video.exitFullscreen}
             className="absolute inset-0 h-full w-full animate-fade-in object-cover"
           />
         )}
