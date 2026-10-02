@@ -23,12 +23,15 @@ export function WorkflowBlock({ block }: BlockProps<Data>) {
         <ol className="flex w-full flex-col px-6">
           {steps.map((f, i) => (
             <li key={f.id ?? f.n} className={cn("flex gap-1", i === 0 && "pt-[15px]", i === last && "pb-[87px]")}>
-              <div className="relative flex w-3 flex-col items-center">
+              <div className="relative w-3 shrink-0">
+                {/* From this dot's centre (15px down) to the next dot's centre (15px into the next step). */}
+                {i !== last && (
+                  <span className="absolute -bottom-[15px] left-1/2 top-[15px] w-px -translate-x-1/2 bg-accent" />
+                )}
                 <span
-                  className="workflow-dot absolute left-0 top-[9px] h-3 w-3 rounded-full bg-[#1866EF]"
+                  className="workflow-dot absolute left-0 top-[9px] z-10 h-3 w-3 rounded-full bg-[#1866EF]"
                   style={{ animationDelay: `${i * 0.3}s` }}
                 />
-                {i !== last && <span className="w-px flex-1 bg-accent" />}
               </div>
               <div className="flex flex-1 flex-col gap-2 pb-6 pl-2">
                 <h3 className="font-display text-[15px] font-bold leading-[30px] text-accent">
