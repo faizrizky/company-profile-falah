@@ -27,8 +27,15 @@ type Props = {
  * Looping video with its sound on. Browsers refuse to autoplay audio before
  * the visitor has interacted with the site; then it starts muted and the
  * speaker button turns the sound on.
+ *
+ * A different video (another tab) is a fresh player: keyed by its source, so
+ * the play / sound state and the buttons never stay bound to the old video.
  */
-export function SoundVideo({
+export function SoundVideo(props: Props) {
+  return <SoundVideoPlayer key={props.src} {...props} />;
+}
+
+function SoundVideoPlayer({
   src,
   type,
   poster,
