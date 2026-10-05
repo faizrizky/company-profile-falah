@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 
 import { LocaleProvider } from "@/components/i18n/locale-provider";
 import { Footer } from "@/components/layout/footer";
@@ -13,6 +14,9 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import "../globals.css";
 
 const FALLBACK_TITLE = "Falah Inovasi Teknologi";
+
+/** Microsoft Clarity project (public id). Only the live site is measured: not local dev, not the editor. */
+const CLARITY_ID = process.env.CLARITY_PROJECT_ID || "v03jaczk0n";
 
 type Params = { locale: string };
 
@@ -70,6 +74,11 @@ export default async function LocaleLayout({
           <main>{children}</main>
           {footer && settings && <Footer footer={footer} settings={settings} labels={t.footer} />}
         </LocaleProvider>
+        {process.env.NODE_ENV === "production" && (
+          <Script id="clarity" strategy="afterInteractive">
+            {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${CLARITY_ID}");`}
+          </Script>
+        )}
       </body>
     </html>
   );

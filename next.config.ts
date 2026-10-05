@@ -58,12 +58,13 @@ if (isProduction) {
       key: "Content-Security-Policy",
       value: [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline'",
+        // Microsoft Clarity (visitor statistics): its script, its data endpoint and its pixel.
+        "script-src 'self' 'unsafe-inline' https://www.clarity.ms https://*.clarity.ms",
         "style-src 'self' 'unsafe-inline'",
-        imgSrc,
+        `${imgSrc} https://*.clarity.ms https://c.bing.com`,
         mediaSrc,
         "font-src 'self'",
-        "connect-src 'self'",
+        "connect-src 'self' https://*.clarity.ms https://c.bing.com",
         "frame-src https://www.google.com",
         "object-src 'none'",
         "frame-ancestors 'none'",
