@@ -60,7 +60,8 @@ export function Button({
 }: ButtonProps) {
   const classes = cn(buttonVariants({ variant, size }), className);
 
-  if (href?.startsWith("/")) {
+  // Files (external) are not pages: no language prefix.
+  if (href?.startsWith("/") && !external) {
     return (
       <LocaleLink href={href} aria-label={ariaLabel} className={classes}>
         {children}
