@@ -62,7 +62,7 @@ function HomeHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
       />
       {block.showScrollHint && (
         <div className="mt-auto flex justify-center md:mt-[92px]">
-          <ScrollHint className="opacity-70" />
+          <ScrollHint />
         </div>
       )}
     </section>
@@ -91,7 +91,7 @@ function CenteredHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext 
           {certifications.length > 0 && <CertificateButton certifications={certifications} />}
         </div>
       </div>
-      {block.showScrollHint && <ScrollHint className="absolute bottom-0 left-1/2 -translate-x-1/2 opacity-70" />}
+      {block.showScrollHint && <ScrollHint className="absolute bottom-0 left-1/2 -translate-x-1/2" />}
     </section>
   );
 }
@@ -148,13 +148,13 @@ function PageHero({ block, ctx }: { block: HeroBlockData; ctx: BlockContext }) {
         </div>
         {block.showScrollHint && (
           <div className="mt-auto flex justify-center pt-[92px] md:hidden">
-            <ScrollHint className="opacity-70" />
+            <ScrollHint />
           </div>
         )}
       </div>
       {/* Figma: the swipe hint sits on the hero's bottom edge. */}
       {block.showScrollHint && (
-        <ScrollHint className="absolute bottom-0 left-1/2 hidden -translate-x-1/2 opacity-70 md:block" />
+        <ScrollHint className="absolute bottom-0 left-1/2 hidden -translate-x-1/2 md:block" />
       )}
     </section>
   );

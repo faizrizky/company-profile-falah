@@ -90,7 +90,7 @@ export function ContactFormBlock({ block, ctx }: BlockProps<Data>) {
         />
       </Card>
 
-      <ScrollHint className="absolute bottom-0 left-1/2 hidden -translate-x-1/2 opacity-70 md:block" />
+      <ScrollHint className="absolute bottom-0 left-1/2 hidden -translate-x-1/2 md:block" />
     </section>
   );
 }

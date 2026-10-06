@@ -43,7 +43,7 @@ export function HeroSection({ category, t }: { category: SolutionCategory; t: Di
           <MoveRight className="h-6 w-6" strokeWidth={1.5} />
         </Button>
       </div>
-      <ScrollHint className="absolute bottom-0 left-1/2 -translate-x-1/2 opacity-70" />
+      <ScrollHint className="absolute bottom-0 left-1/2 -translate-x-1/2" />
     </section>
   );
 }
