@@ -113,6 +113,8 @@ const studioHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Self-contained server for the Docker image (see Dockerfile); Vercel ignores it.
+  output: process.env.BUILD_STANDALONE === "true" ? "standalone" : undefined,
   poweredByHeader: false,
   images: { remotePatterns },
   // The CMS may hand out media as /media/<file> (host-independent): proxy it

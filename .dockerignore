@@ -1,0 +1,20 @@
+# Keep secrets and local state out of the build context (and so out of the image).
+.env
+.env.*
+
+# Rebuilt inside the image.
+node_modules
+.next
+*.tsbuildinfo
+coverage
+
+.git
+.github
+.gitignore
+.prettierignore
+.DS_Store
+npm-debug.log*
+
+# The Docker files themselves.
+Dockerfile
+.dockerignore
