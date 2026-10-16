@@ -12,7 +12,7 @@ import type { Product, SolutionCategory } from "@/types/cms";
  * A product in the Solution overview. When its category has a detail page,
  * the whole card links there and opens that product's tab (#anchor).
  */
-function ProductCard({ product, href }: { product: Product; href?: string }) {
+export function ProductCard({ product, href }: { product: Product; href?: string }) {
   const { t } = useI18n();
   const { wide, largeTitle } = product.layout ?? {};
   return (
