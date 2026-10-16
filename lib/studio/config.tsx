@@ -2,16 +2,12 @@
 
 import type { ComponentConfig, Config } from "@puckeditor/core";
 
-import { LocaleProvider } from "@/components/i18n/locale-provider";
-import { Footer } from "@/components/layout/footer";
-import { Navbar } from "@/components/layout/navbar";
 import { PageSettingsField } from "@/components/studio/fields";
-import { buildMegaMenu } from "@/lib/cms/mega-menu";
-import { asMedia } from "@/lib/cms/media";
 import { ELEMENT_TYPES } from "@/lib/studio/convert";
 
 import { createFields, type StudioContext } from "./blocks/fields";
 import { layoutComponents } from "./blocks/layout";
+import { renderStudioRoot } from "./blocks/root";
 import { meta, type AnyProps } from "./blocks/metadata";
 import { sectionComponents } from "./blocks/sections";
 
@@ -46,30 +42,18 @@ export function createStudioConfig(context: StudioContext): Config {
           type: "custom",
           label: L("Editor", "Editor"),
           render: () => (
-            <PageSettingsField lang={lang} locale={locale} cmsUrl={cmsUrl} pageId={pageId} embedded={embedded} s={s} />
+            <PageSettingsField
+              lang={lang}
+              locale={locale}
+              cmsUrl={cmsUrl}
+              backPath={`/admin/collections/pages/${pageId}/form`}
+              embedded={embedded}
+              s={s}
+            />
           ),
         },
       },
-      render: ({ children, puck }: { children: React.ReactNode; puck: { metadata: unknown } }) => {
-        const { ctx, fontClass, chrome } = meta(puck);
-        return (
-          <div className={`${fontClass} min-h-screen bg-surface-dark font-sans antialiased`}>
-            <LocaleProvider locale={ctx.locale} t={ctx.t}>
-              {chrome.navigation && (
-                <Navbar
-                  navigation={chrome.navigation}
-                  solutions={buildMegaMenu(ctx.data.categories, ctx.data.products)}
-                  logo={asMedia(ctx.data.settings?.logo)}
-                />
-              )}
-              <main>{children}</main>
-              {chrome.footer && ctx.data.settings && (
-                <Footer footer={chrome.footer} settings={ctx.data.settings} labels={ctx.t.footer} />
-              )}
-            </LocaleProvider>
-          </div>
-        );
-      },
+      render: renderStudioRoot,
     },
   };
 }

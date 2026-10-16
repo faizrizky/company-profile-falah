@@ -9,14 +9,15 @@ export function PageSettingsField({
   lang,
   locale,
   cmsUrl,
-  pageId,
+  backPath,
   embedded,
   s,
 }: {
   lang: "id" | "en";
   locale: string;
   cmsUrl: string;
-  pageId: number;
+  /** The document's form in the CMS, e.g. /admin/collections/pages/1/form. */
+  backPath: string;
   embedded: boolean;
   s: StudioStrings;
 }) {
@@ -40,7 +41,7 @@ export function PageSettingsField({
         </div>
       </FieldLabel>
       {!embedded && (
-        <a className="studio-link" href={`${cmsUrl}/admin/collections/pages/${pageId}/form`}>
+        <a className="studio-link" href={`${cmsUrl}${backPath}`}>
           ← {s.backToCms}
         </a>
       )}

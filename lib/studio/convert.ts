@@ -46,7 +46,7 @@ export function layoutToPuck(layout: Page["layout"], title: string): Data {
 }
 
 /** Upload / relationship values are sent back to the CMS as ids, not the populated documents. */
-function toReference(value: unknown): unknown {
+export function toReference(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(toReference);
   if (value && typeof value === "object") {
     const record = value as Record<string, unknown>;

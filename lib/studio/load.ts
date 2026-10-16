@@ -13,7 +13,7 @@ import type { Navigation, Page, User } from "@/types/cms";
 /** Grouped link choices for the editor's link fields. */
 export type LinkGroup = { label: string; options: { label: string; href: string }[] };
 
-async function buildLinkGroups(
+export async function buildLinkGroups(
   authorization: string,
   locale: Locale,
   uiLang: StudioLang,

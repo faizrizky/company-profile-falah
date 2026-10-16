@@ -111,23 +111,26 @@ function saveRequest(
   });
 }
 
+/** The documents the visual editor edits (CMS collection slugs). */
+export type StudioCollection = "pages" | "solution-categories" | "products";
+
 /**
- * Saves the page (published, or as a draft) with real progress: bytes sent, then
+ * Saves a document (published, or as a draft) with real progress: bytes sent, then
  * each stage as the CMS reaches it (preparing, checking and saving, website refresh).
  */
-export async function savePageWithProgress(
+export async function saveDocumentWithProgress<T = unknown>(
   cmsUrl: string,
-  id: number,
-  changes: Pick<Page, "title" | "layout">,
+  target: { collection: StudioCollection; id: number },
+  changes: Record<string, unknown>,
   { locale, publish }: { locale: string; publish: boolean },
   onProgress: (stage: SaveStage, pct: number) => void,
-): Promise<{ doc: Page; handedOver: boolean }> {
+): Promise<{ doc: T; handedOver: boolean }> {
   const params = new URLSearchParams({ locale, depth: "0" });
   if (!publish) params.set("draft", "true");
   const payload = JSON.stringify({
     target: "collection",
-    slug: "pages",
-    id,
+    slug: target.collection,
+    id: target.id,
     data: publish ? { ...changes, _status: "published" } : changes,
   });
 
@@ -141,7 +144,7 @@ export async function savePageWithProgress(
     if (fresh) result = await saveRequest(cmsUrl, params.toString(), payload, fresh, onProgress);
   }
   const body = result.body as {
-    doc?: Page;
+    doc?: T;
     errors?: { message?: string; data?: { errors?: { message?: string; path?: string }[] } }[];
   };
   if (result.status >= 400 || result.status === 0) {
@@ -149,7 +152,18 @@ export async function savePageWithProgress(
     const detail = first?.data?.errors?.map((e) => (e.path ? `${e.path}: ${e.message}` : e.message)).join(" · ");
     throw new StudioApiError(detail || first?.message || `HTTP ${result.status}`, result.status);
   }
-  return { doc: body.doc as Page, handedOver: Boolean(handedOver) };
+  return { doc: body.doc as T, handedOver: Boolean(handedOver) };
+}
+
+/** A page's title and layout (kept for the Pages editor). */
+export function savePageWithProgress(
+  cmsUrl: string,
+  id: number,
+  changes: Pick<Page, "title" | "layout">,
+  options: { locale: string; publish: boolean },
+  onProgress: (stage: SaveStage, pct: number) => void,
+) {
+  return saveDocumentWithProgress<Page>(cmsUrl, { collection: "pages", id }, changes, options, onProgress);
 }
 
 /**
