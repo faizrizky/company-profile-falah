@@ -361,6 +361,7 @@ select.studio-input {
 
 .studio-media {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   align-items: center;
 }
@@ -389,8 +390,14 @@ select.studio-input {
 
 .studio-media__actions {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 6px;
+}
+
+/* A button label stays on one line (the row wraps instead when the panel is narrow). */
+.studio-media__actions .studio-btn {
+  white-space: nowrap;
 }
 
 .studio-media__library {
@@ -477,8 +484,10 @@ select.studio-input {
 }
 
 .studio-tags__input {
-  flex: 1;
-  min-width: 90px;
+  /* A line of its own once the chips fill the row: the hint is never cut off. */
+  flex: 1 1 100%;
+  min-width: 0;
+  width: 100%;
   border: 0;
   outline: none;
   background: transparent;
@@ -1317,4 +1326,20 @@ select.studio-input {
   field-sizing: content;
   min-height: 76px;
   max-height: 240px;
+}
+
+/* A list row's copy / delete buttons only show on hover; they used to hold
+   their room all the time, squeezing the row's title into three lines. They
+   now float over the row's end when shown. */
+.studio-body [class*="_ArrayFieldItem-summary_"] {
+  position: relative;
+}
+
+.studio-body [class*="_ArrayFieldItem-actions_"] {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 38px;
+  align-items: center;
+  padding-inline: 6px 2px;
+  background: #eef5fe;
 }
