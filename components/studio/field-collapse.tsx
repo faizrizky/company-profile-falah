@@ -124,6 +124,7 @@ function onArrayClick(event: MouseEvent) {
     });
   } else {
     // Opening: after Puck renders the body, grow from the summary's height.
+    announceOpened(item);
     const from = item.getBoundingClientRect().height;
     requestAnimationFrame(() => {
       if (reduceMotion()) return;
@@ -137,6 +138,26 @@ function onArrayClick(event: MouseEvent) {
       );
     });
   }
+}
+
+/** Sent when a list row is opened in the right panel, so the canvas can show that row. */
+export type ArrayItemOpened = { label: string; index: number; n: number };
+export const ARRAY_ITEM_OPENED = "studio:array-item-opened";
+let openedCount = 0;
+
+function announceOpened(item: HTMLElement) {
+  const field = item.closest<HTMLElement>(FIELD);
+  const label = field?.querySelector(LABEL)?.textContent?.trim();
+  if (!field || !label) return;
+  // Only this list's own rows, not those of a list nested inside a row.
+  const rows = [...field.querySelectorAll<HTMLElement>(ARRAY_ITEM)].filter(
+    (row) => !row.parentElement?.closest(ARRAY_ITEM),
+  );
+  const index = rows.indexOf(item);
+  if (index === -1) return;
+  window.dispatchEvent(
+    new CustomEvent<ArrayItemOpened>(ARRAY_ITEM_OPENED, { detail: { label, index, n: ++openedCount } }),
+  );
 }
 
 export function StudioFieldCollapse() {

@@ -1,8 +1,9 @@
 "use client";
 
 import { createUsePuck, type ComponentConfig, type Config } from "@puckeditor/core";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
+import { ARRAY_ITEM_OPENED, type ArrayItemOpened } from "@/components/studio/field-collapse";
 import { PageSettingsField } from "@/components/studio/fields";
 import { ChallengesSection } from "@/components/solution-category/ChallengesSection";
 import { CtaSection } from "@/components/solution-category/CtaSection";
@@ -18,6 +19,10 @@ import { renderStudioRoot } from "./root";
 export type CategoryStudioMetadata = StudioMetadata & { category: SolutionCategory };
 
 const usePuck = createUsePuck();
+
+/** The showcase list's title in the right panel: how the canvas knows which list a click belongs to. */
+const TABS_LABEL_EN = "Tabs (one per product)";
+const TABS_LABEL_ID = "Tab (satu per produk)";
 
 type Item = { props: AnyProps & { id: string } };
 
@@ -118,6 +123,16 @@ export function createCategoryConfig(context: StudioContext & { backPath: string
     const { category: base } = meta(puck) as CategoryStudioMetadata;
     const { category } = useLiveCategory(base, "showcase");
     const tabs = (props.tabs as unknown[]) ?? [];
+    // Opening a tab in the right panel shows that tab on the canvas.
+    const [focus, setFocus] = useState<{ index: number; n: number } | null>(null);
+    useEffect(() => {
+      const onOpened = (event: Event) => {
+        const { label, index, n } = (event as CustomEvent<ArrayItemOpened>).detail;
+        if (label.startsWith(TABS_LABEL_EN) || label.startsWith(TABS_LABEL_ID)) setFocus({ index, n });
+      };
+      window.addEventListener(ARRAY_ITEM_OPENED, onOpened);
+      return () => window.removeEventListener(ARRAY_ITEM_OPENED, onOpened);
+    }, []);
     if (!tabs.length)
       return (
         <Empty>
@@ -126,6 +141,7 @@ export function createCategoryConfig(context: StudioContext & { backPath: string
       );
     return (
       <ShowcaseSection
+        focus={focus}
         category={{
           ...category,
           showcase: {
@@ -219,8 +235,8 @@ export function createCategoryConfig(context: StudioContext & { backPath: string
           "Brosur (PDF) diubah di tab Form, bagian Showcase.",
         ),
         tabs: list(
-          "Tabs (one per product)",
-          "Tab (satu per produk)",
+          TABS_LABEL_EN,
+          TABS_LABEL_ID,
           {
             name: text("Name", "Nama"),
             description: textarea("Description", "Deskripsi"),

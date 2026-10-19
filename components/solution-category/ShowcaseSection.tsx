@@ -15,7 +15,14 @@ import { useIsMobile } from "@/lib/use-media";
 import { slugify } from "@/lib/utils";
 import type { SolutionCategory } from "@/types/cms";
 
-export function ShowcaseSection({ category }: { category: SolutionCategory }) {
+export function ShowcaseSection({
+  category,
+  focus,
+}: {
+  category: SolutionCategory;
+  /** The editor asks for a tab to be shown (`n` changes on every request, so the same tab can be asked again). */
+  focus?: { index: number; n: number } | null;
+}) {
   const { t } = useI18n();
   const [activeTab, setActiveTab] = useState(0);
   // Only one video element is mounted, for the current screen size.
@@ -25,6 +32,14 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
   const tab = tabs[activeTab];
   const sectionRef = useRef<HTMLElement>(null);
   const tabRow = useDragScroll<HTMLDivElement>();
+
+  useEffect(() => {
+    if (!focus) return;
+    setActiveTab(Math.min(focus.index, Math.max(tabs.length - 1, 0)));
+    sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    // Only a new request moves the tab; editing the tabs must not.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focus?.n]);
 
   // Keep the active tab in view in the row (without moving the page).
   useEffect(() => {
