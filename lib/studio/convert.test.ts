@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { Page } from "@/types/cms";
 
-import { layoutToPuck, puckTitle, puckToLayout } from "./convert";
+import { layoutToPuck, puckTitle, puckToLayout, withUniqueRowIds } from "./convert";
 
 const media = { id: 42, url: "/media/a.webp", alt: "A", createdAt: "2026-01-01", updatedAt: "2026-01-01" };
 
@@ -62,5 +62,27 @@ describe("CMS layout ↔ visual editor", () => {
   it("reads the page title from the Page panel, falling back when empty", () => {
     expect(puckTitle({ root: { props: { title: "  About  " } }, content: [] }, "x")).toBe("About");
     expect(puckTitle({ root: { props: { title: " " } }, content: [] }, "Fallback")).toBe("Fallback");
+  });
+});
+
+describe("withUniqueRowIds", () => {
+  it("keeps the first row's id and renames the copies", () => {
+    const rows = withUniqueRowIds({
+      tabs: [
+        { id: "aaa", name: "One" },
+        { id: "aaa", name: "One (copy)" },
+        { id: "bbb", name: "Two" },
+      ],
+    }).tabs;
+    expect(rows[0]!.id).toBe("aaa");
+    expect(rows[2]!.id).toBe("bbb");
+    expect(rows[1]!.id).not.toBe("aaa");
+    expect(rows[1]!.id).toMatch(/^[0-9a-f]{24}$/);
+    expect(rows[1]!.name).toBe("One (copy)");
+  });
+
+  it("leaves unique ids and relationship ids alone", () => {
+    const value = { items: [{ id: "x1" }, { id: "x2" }], image: 7 };
+    expect(withUniqueRowIds(value)).toEqual(value);
   });
 });

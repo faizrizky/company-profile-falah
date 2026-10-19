@@ -2,7 +2,7 @@ import type { Data } from "@puckeditor/core";
 
 import type { SolutionCategory } from "@/types/cms";
 
-import { toReference } from "./convert";
+import { toReference, withUniqueRowIds } from "./convert";
 
 /**
  * The visual editor of a solution category and the CMS form edit the same
@@ -106,7 +106,7 @@ export function puckToCategory(data: Data, base: SolutionCategory): Record<strin
         heroTitle === title
         ? ""
         : heroTitle;
-  return {
+  return withUniqueRowIds({
     title,
     hero: {
       title: heroValue,
@@ -135,5 +135,5 @@ export function puckToCategory(data: Data, base: SolutionCategory): Record<strin
       buttonLabel: text(cta.buttonLabel),
       buttonHref: text(cta.buttonHref) || "/contact",
     },
-  };
+  });
 }

@@ -3,6 +3,8 @@ import type { Data } from "@puckeditor/core";
 import { COLUMN_KEYS } from "@/components/blocks/LayoutSection";
 import type { Page } from "@/types/cms";
 
+import { randomId } from "./random-id";
+
 /**
  * The visual editor and the CMS form edit the same thing: `pages.layout`.
  * These two functions translate between Payload's block array and Puck's
@@ -45,6 +47,35 @@ export function layoutToPuck(layout: Page["layout"], title: string): Data {
   return { root: { props: { title } }, content: layout.map(toPuckItem) };
 }
 
+/**
+ * Array and block rows are matched to their translations by their id, so two
+ * rows with the same id make the CMS refuse the save ("_locale, _parent_id").
+ * The editor's duplicate button copies a row with its id: the first keeps it,
+ * every later copy gets a new one.
+ */
+export function withUniqueRowIds<T>(value: T): T {
+  const seen = new Set<string>();
+  const walk = (node: unknown): unknown => {
+    if (Array.isArray(node)) return node.map(walk);
+    if (node && typeof node === "object") {
+      const out: Record<string, unknown> = {};
+      for (const [key, child] of Object.entries(node)) {
+        if (key === "id" && typeof child === "string") {
+          let id = child;
+          while (seen.has(id)) id = randomId().replace(/-/g, "").slice(0, 24);
+          seen.add(id);
+          out[key] = id;
+        } else {
+          out[key] = walk(child);
+        }
+      }
+      return out;
+    }
+    return node;
+  };
+  return walk(value) as T;
+}
+
 /** Upload / relationship values are sent back to the CMS as ids, not the populated documents. */
 export function toReference(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(toReference);
@@ -81,5 +112,5 @@ export const puckTitle = (data: Data, fallback: string): string => {
 export const ELEMENT_TYPES = ["badge", "heading", "paragraph", "image", "button", "card", "spacer"];
 
 export function puckToLayout(data: Data): Page["layout"] {
-  return (data.content as PuckItem[]).map(fromPuckItem) as unknown as Block[];
+  return withUniqueRowIds((data.content as PuckItem[]).map(fromPuckItem)) as unknown as Block[];
 }
