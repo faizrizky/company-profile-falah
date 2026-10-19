@@ -226,9 +226,51 @@ export function listMedia(
   return request<{ docs: Media[]; hasNextPage: boolean; page: number }>(cmsUrl, `/api/media?${params}`);
 }
 
-export function uploadMedia(cmsUrl: string, file: File, alt: string) {
+/** Bytes sent so far (0–100), then null while the CMS checks and stores the file. */
+export type UploadProgress = (pct: number) => void;
+
+function uploadRequest(cmsUrl: string, form: FormData, token: string | null, onProgress: UploadProgress) {
+  return new Promise<{ status: number; body: unknown }>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", new URL("/api/media", cmsUrl).href);
+    if (token) xhr.setRequestHeader("authorization", `JWT ${token}`);
+    else xhr.withCredentials = true;
+    xhr.upload.onprogress = (e) => {
+      if (e.lengthComputable) onProgress((e.loaded / e.total) * 100);
+    };
+    xhr.onload = () => {
+      let body: unknown = {};
+      try {
+        body = JSON.parse(xhr.responseText);
+      } catch {
+        // Empty or not JSON.
+      }
+      resolve({ status: xhr.status, body });
+    };
+    xhr.onerror = () => reject(new StudioApiError("Network error", 0));
+    xhr.send(form);
+  });
+}
+
+/** Uploads a file to the media library, reporting how much has been sent. */
+export async function uploadMedia(cmsUrl: string, file: File, alt: string, onProgress: UploadProgress = () => {}) {
   const form = new FormData();
   form.append("file", file);
   form.append("_payload", JSON.stringify({ alt }));
-  return request<{ doc: Media }>(cmsUrl, "/api/media", { method: "POST", body: form });
+  let res = await uploadRequest(cmsUrl, form, studioToken(), onProgress);
+  // An expired handed-over token: ask the CMS for a fresh one and retry once.
+  if (res.status === 401 && studioToken()) {
+    const fresh = await requestStudioToken(cmsUrl);
+    if (fresh) res = await uploadRequest(cmsUrl, form, fresh, onProgress);
+  }
+  const body = res.body as {
+    doc?: Media;
+    errors?: { message?: string; data?: { errors?: { message?: string; path?: string }[] } }[];
+  };
+  if (res.status >= 400 || res.status === 0) {
+    const first = body.errors?.[0];
+    const detail = first?.data?.errors?.map((e) => (e.path ? `${e.path}: ${e.message}` : e.message)).join(" · ");
+    throw new StudioApiError(detail || first?.message || `HTTP ${res.status}`, res.status);
+  }
+  return { doc: body.doc as Media };
 }
