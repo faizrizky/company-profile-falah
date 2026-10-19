@@ -1259,8 +1259,3 @@ select.studio-input {
     animation: none;
   }
 }
-
-/* Upload toast: above the save toast when both are up. */
-.studio-toast--upload {
-  bottom: 96px;
-}

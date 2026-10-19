@@ -380,7 +380,7 @@ export function StudioShell(props: StudioShellProps) {
       {/* Toast in the CMS's style (bottom right), shown from the click on:
           saving can take a few seconds. */}
       {upload ? (
-        <div role="status" aria-live="polite" className="studio-toast studio-toast--upload">
+        <div role="status" aria-live="polite" className="studio-toast">
           <span className="studio-toast__icon" aria-hidden>
             <span className="studio-spinner" />
           </span>
