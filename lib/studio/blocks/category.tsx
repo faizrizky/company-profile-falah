@@ -230,10 +230,6 @@ export function createCategoryConfig(context: StudioContext & { backPath: string
       fields: {
         background: image("Background image (and video poster)", "Gambar latar (dan poster video)"),
         backgroundVideo: video("Background video (shared)", "Video latar (umum)"),
-        brochureNote: note(
-          "Each tab has its own brochure (PDF), set below. The fallback brochure, for tabs without one, is in the Form tab under Showcase.",
-          "Tiap tab punya brosur (PDF) sendiri, diatur di bawah. Brosur cadangan untuk tab tanpa brosur ada di tab Form, bagian Showcase.",
-        ),
         tabs: list(
           TABS_LABEL_EN,
           TABS_LABEL_ID,
