@@ -4,6 +4,7 @@ import type { Media, Page } from "@/types/cms";
 
 import { randomId } from "./random-id";
 import { requestStudioToken, studioToken } from "./token";
+import { setUploadState } from "./upload-progress";
 
 /**
  * Browser → CMS calls made by the visual editor. They carry the editor's CMS
@@ -253,7 +254,17 @@ function uploadRequest(cmsUrl: string, form: FormData, token: string | null, onP
 }
 
 /** Uploads a file to the media library, reporting how much has been sent. */
-export async function uploadMedia(cmsUrl: string, file: File, alt: string, onProgress: UploadProgress = () => {}) {
+export async function uploadMedia(cmsUrl: string, file: File, alt: string) {
+  const onProgress: UploadProgress = (pct) => setUploadState({ name: file.name, pct });
+  onProgress(0);
+  try {
+    return await sendMedia(cmsUrl, file, alt, onProgress);
+  } finally {
+    setUploadState(null);
+  }
+}
+
+async function sendMedia(cmsUrl: string, file: File, alt: string, onProgress: UploadProgress) {
   const form = new FormData();
   form.append("file", file);
   form.append("_payload", JSON.stringify({ alt }));

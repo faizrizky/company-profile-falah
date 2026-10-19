@@ -16,6 +16,7 @@ import { ExternalLink, Save } from "lucide-react";
 import { locales, localeNames, type Locale } from "@/lib/i18n/config";
 import { type SaveStage, type StudioCollection, StudioApiError, saveDocumentWithProgress } from "@/lib/studio/cms-api";
 import { puckDictionaryId, studioStrings, type StudioLang, type StudioStrings } from "@/lib/studio/strings";
+import { useUploadState } from "@/lib/studio/upload-progress";
 import { StudioFieldCollapse } from "./field-collapse";
 import { signalStudioReady } from "./ready-signal";
 import { useTutorialBridge } from "./tutorial-bridge";
@@ -271,6 +272,7 @@ export function StudioShell(props: StudioShellProps) {
   const [draftPending, setDraftPending] = useState(doc.status === "draft");
   const canPublish = dirty || draftPending;
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const upload = useUploadState();
 
   // Leaving with unsaved changes (closing, switching language) asks first.
   useEffect(() => {
@@ -377,6 +379,29 @@ export function StudioShell(props: StudioShellProps) {
       <StudioFieldCollapse />
       {/* Toast in the CMS's style (bottom right), shown from the click on:
           saving can take a few seconds. */}
+      {upload ? (
+        <div role="status" aria-live="polite" className="studio-toast studio-toast--upload">
+          <span className="studio-toast__icon" aria-hidden>
+            <span className="studio-spinner" />
+          </span>
+          <span className="studio-toast__body">
+            <span className="studio-toast__row">
+              <span>{upload.pct >= 100 ? s.processingUpload : s.uploading}</span>
+              <span className="studio-toast__pct">{Math.round(upload.pct)}%</span>
+            </span>
+            <span
+              className="studio-toast__bar"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(upload.pct)}
+            >
+              <span style={{ width: `${upload.pct}%` }} />
+            </span>
+            <span className="studio-toast__stage">{upload.name}</span>
+          </span>
+        </div>
+      ) : null}
       {status.kind !== "idle" && ownToast ? (
         <div
           key={status.kind}

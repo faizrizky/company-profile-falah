@@ -40,7 +40,6 @@ export function MediaField({
   const [hasMore, setHasMore] = useState(false);
   const [search, setSearch] = useState("");
   const [busy, setBusy] = useState(false);
-  const [uploadPct, setUploadPct] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const current = value && typeof value === "object" ? value : null;
@@ -75,16 +74,14 @@ export function MediaField({
     if (!file) return;
     setBusy(true);
     setError(null);
-    setUploadPct(0);
     try {
-      const { doc } = await uploadMedia(cmsUrl, file, file.name.replace(/\.[^.]+$/, ""), setUploadPct);
+      const { doc } = await uploadMedia(cmsUrl, file, file.name.replace(/\.[^.]+$/, ""));
       onChange(doc);
       setOpen(false);
     } catch (e) {
       setError((e as Error).message);
     } finally {
       setBusy(false);
-      setUploadPct(null);
     }
   }
 
@@ -118,30 +115,13 @@ export function MediaField({
             <button
               type="button"
               className="studio-btn studio-btn--primary"
-              disabled={uploadPct !== null}
+              disabled={busy}
               onClick={() => fileRef.current?.click()}
             >
               {s.upload}
             </button>
             <input ref={fileRef} type="file" accept={MEDIA_ACCEPT[kind]} hidden onChange={onUpload} />
           </div>
-          {uploadPct !== null && (
-            <div className="studio-media__upload">
-              <span className="studio-media__upload-text">
-                <span>{uploadPct >= 100 ? s.processingUpload : s.uploading}</span>
-                <span>{Math.round(uploadPct)}%</span>
-              </span>
-              <span
-                className="studio-toast__bar"
-                role="progressbar"
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-valuenow={Math.round(uploadPct)}
-              >
-                <span style={{ width: `${uploadPct}%` }} />
-              </span>
-            </div>
-          )}
           {error && <p className="studio-error">{error}</p>}
           <div className="studio-media__grid">
             {items.map((item) => (

@@ -1260,15 +1260,7 @@ select.studio-input {
   }
 }
 
-.studio-media__upload {
-  display: grid;
-  gap: 6px;
-  margin: 8px 0;
-  font-size: 12px;
-}
-
-.studio-media__upload-text {
-  display: flex;
-  justify-content: space-between;
-  font-variant-numeric: tabular-nums;
+/* Upload toast: above the save toast when both are up. */
+.studio-toast--upload {
+  bottom: 96px;
 }
