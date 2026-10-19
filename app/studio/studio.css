@@ -1286,3 +1286,35 @@ select.studio-input {
   overflow: hidden;
   word-break: break-all;
 }
+
+/* ── Right panel: room and alignment ──────────────────────────────────── */
+
+/* Puck gives the section a fixed width and pins it to the right of the
+   sidebar, so when the scrollbar takes room the section overflowed to the
+   left and the cards lost their left edge. It follows the sidebar's width. */
+.studio-body [class*="_Sidebar--right_"] > [class*="_SidebarSection_"] {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Titles line up the same whether or not Puck gives them an icon. */
+.studio-body [class*="_PuckFields_"] [class*="_Input-labelIcon_"] {
+  display: none;
+}
+
+/* A list row sits inside a card: less padding of its own, more room between fields. */
+.studio-body [class*="_ArrayFieldItem-fieldset_"] {
+  padding: 12px 10px;
+}
+
+.studio-body [class*="_ArrayFieldItem-fieldset_"] > [class*="_InputWrapper_"] + [class*="_InputWrapper_"] {
+  margin-top: 16px;
+}
+
+/* A text area shows all its text (up to a limit) instead of cutting a line in half. */
+.studio-body [class*="_PuckFields_"] textarea {
+  field-sizing: content;
+  min-height: 76px;
+  max-height: 240px;
+}
