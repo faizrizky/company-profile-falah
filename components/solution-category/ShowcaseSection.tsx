@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Pill } from "@/components/ui/pill";
 import { TabButton } from "@/components/ui/tab-button";
 import { mediaType, mediaUrl } from "@/lib/cms/media";
+import { useDragScroll } from "@/lib/use-drag-scroll";
 import { useIsMobile } from "@/lib/use-media";
 import { slugify } from "@/lib/utils";
 import type { SolutionCategory } from "@/types/cms";
@@ -23,6 +24,16 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
   const tabs = useMemo(() => category.showcase?.tabs ?? [], [category.showcase?.tabs]);
   const tab = tabs[activeTab];
   const sectionRef = useRef<HTMLElement>(null);
+  const tabRow = useDragScroll<HTMLDivElement>();
+
+  // Keep the active tab in view in the row (without moving the page).
+  useEffect(() => {
+    const row = tabRow.ref.current;
+    const button = row?.children[activeTab] as HTMLElement | undefined;
+    if (!row || !button) return;
+    const left = button.offsetLeft - (row.clientWidth - button.offsetWidth) / 2;
+    row.scrollTo({ left: Math.max(0, left), behavior: "smooth" });
+  }, [activeTab, tabRow.ref]);
 
   // Arriving from a product card (/solution/<category>#<product>): open that
   // product's tab and bring the showcase into view.
@@ -59,8 +70,9 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
     <section ref={sectionRef} className="w-full scroll-mt-16 bg-surface-dark">
       <div className="px-6 pb-8 pt-12.5 md:px-page md:pb-12.5">
         <div
+          {...tabRow}
           role="tablist"
-          className="mx-auto flex w-full max-w-[1279px] gap-4 overflow-x-auto pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="mx-auto flex w-full max-w-[1279px] cursor-grab gap-4 overflow-x-auto pt-1 [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden"
         >
           {tabs.map((t, i) => {
             const active = i === activeTab;
@@ -115,8 +127,8 @@ export function ShowcaseSection({ category }: { category: SolutionCategory }) {
             playLabel={t.video.play}
             soundOnLabel={t.video.soundOn}
             soundOffLabel={t.video.soundOff}
-              fullscreenLabel={t.video.fullscreen}
-              exitFullscreenLabel={t.video.exitFullscreen}
+            fullscreenLabel={t.video.fullscreen}
+            exitFullscreenLabel={t.video.exitFullscreen}
             className="absolute inset-0 h-full w-full animate-fade-in object-cover"
           />
         )}
