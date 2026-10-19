@@ -75,7 +75,7 @@ function useLiveCategory(base: SolutionCategory, own: "hero" | "challenges" | "s
 export function createCategoryConfig(context: StudioContext & { backPath: string }): Config {
   const { lang, locale, cmsUrl, embedded, backPath } = context;
   const f = createFields(context);
-  const { s, L, text, textarea, plain, link, select, image, video, tags, list } = f;
+  const { s, L, text, textarea, plain, link, select, image, video, pdf, tags, list } = f;
 
   const Hero = ({ puck, ...props }: AnyProps & { puck: { metadata: unknown } }) => {
     const { ctx, category: base } = meta(puck) as CategoryStudioMetadata;
@@ -231,8 +231,8 @@ export function createCategoryConfig(context: StudioContext & { backPath: string
         background: image("Background image (and video poster)", "Gambar latar (dan poster video)"),
         backgroundVideo: video("Background video (shared)", "Video latar (umum)"),
         brochureNote: note(
-          "The brochure (PDF) is changed in the Form tab, under Showcase.",
-          "Brosur (PDF) diubah di tab Form, bagian Showcase.",
+          "Each tab has its own brochure (PDF), set below. The fallback brochure, for tabs without one, is in the Form tab under Showcase.",
+          "Tiap tab punya brosur (PDF) sendiri, diatur di bawah. Brosur cadangan untuk tab tanpa brosur ada di tab Form, bagian Showcase.",
         ),
         tabs: list(
           TABS_LABEL_EN,
@@ -243,9 +243,10 @@ export function createCategoryConfig(context: StudioContext & { backPath: string
             tags: tags("Recommended for (chips)", "Direkomendasikan untuk (chip)"),
             video: video("Video (desktop)", "Video (desktop)"),
             videoMobile: video("Video (phone)", "Video (HP)"),
+            brochure: pdf("Brochure (PDF)", "Brosur (PDF)"),
           },
           "name",
-          { name: L("New tab", "Tab baru"), description: "", tags: [], video: null, videoMobile: null },
+          { name: L("New tab", "Tab baru"), description: "", tags: [], video: null, videoMobile: null, brochure: null },
           10,
         ),
       },

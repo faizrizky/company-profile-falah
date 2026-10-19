@@ -201,13 +201,17 @@ function handOverSave(cmsUrl: string, search: string, body: string, publish: boo
   });
 }
 
-export type MediaKind = "image" | "video";
+export type MediaKind = "image" | "video" | "document";
 
 /** What the upload picker accepts for each kind (the CMS re-checks the real type). */
 export const MEDIA_ACCEPT: Record<MediaKind, string> = {
   image: "image/jpeg,image/png,image/webp,image/avif,image/gif,image/svg+xml",
   video: "video/mp4,video/webm",
+  document: "application/pdf",
 };
+
+/** What the library filters on (the start of the stored mime type). */
+const MEDIA_MIME: Record<MediaKind, string> = { image: "image", video: "video", document: "application/pdf" };
 
 export function listMedia(
   cmsUrl: string,
@@ -218,7 +222,7 @@ export function listMedia(
     page: String(page),
     sort: "-createdAt",
     depth: "0",
-    "where[mimeType][like]": kind,
+    "where[mimeType][like]": MEDIA_MIME[kind],
   });
   if (search) {
     params.set("where[or][0][alt][like]", search);

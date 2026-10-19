@@ -75,6 +75,13 @@ export function createFields({ lang, cmsUrl, data, linkGroups }: StudioContext) 
       <MediaField label={field.label ?? ""} value={value} onChange={onChange} cmsUrl={cmsUrl} s={s} kind="video" />
     ),
   });
+  const pdf = (en: string, id: string): Field => ({
+    type: "custom",
+    label: L(en, id),
+    render: ({ field, value, onChange }) => (
+      <MediaField label={field.label ?? ""} value={value} onChange={onChange} cmsUrl={cmsUrl} s={s} kind="document" />
+    ),
+  });
   const tags = (en: string, id: string): Field => ({
     type: "custom",
     label: L(en, id),
@@ -182,6 +189,7 @@ export function createFields({ lang, cmsUrl, data, linkGroups }: StudioContext) 
     toggle,
     image,
     video,
+    pdf,
     tags,
     partnersField,
     certificationsField,

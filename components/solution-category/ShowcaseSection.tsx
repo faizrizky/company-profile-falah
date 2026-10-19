@@ -72,7 +72,8 @@ export function ShowcaseSection({
   const videoField = tab.video ?? showcase.backgroundVideo;
   const video = mediaUrl(videoField);
   const videoMobile = tab.video ? tab.videoMobile : undefined;
-  const brochure = mediaUrl(showcase.brochure);
+  // The tab's own brochure, else the category's.
+  const brochure = mediaUrl(tab.brochure) ?? mediaUrl(showcase.brochure);
   const mobileVideo = mediaUrl(videoMobile);
   const brochureButton = (className?: string) => (
     <Button href={brochure ?? "/contact"} external={Boolean(brochure)} variant="fill" size="lg" className={className}>

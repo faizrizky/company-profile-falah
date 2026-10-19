@@ -11,6 +11,14 @@ type MediaValue = Media | number | null | undefined;
 
 /** Thumbnail for a media item: the image itself, or the first frame of a video. */
 function MediaThumb({ item, alt = "" }: { item: Media; alt?: string }) {
+  if (item.mimeType === "application/pdf") {
+    return (
+      <span className="studio-media__doc" title={item.filename ?? ""}>
+        <strong>PDF</strong>
+        <span>{item.displayName || item.filename}</span>
+      </span>
+    );
+  }
   if (item.mimeType?.startsWith("video/")) {
     return <video src={item.url ?? undefined} muted playsInline preload="metadata" aria-label={alt} />;
   }
@@ -34,6 +42,10 @@ export function MediaField({
   kind?: MediaKind;
 }) {
   const isVideo = kind === "video";
+  const isDocument = kind === "document";
+  const none = isDocument ? s.noDocument : isVideo ? s.noVideo : s.noImage;
+  const chooseLabel = isDocument ? s.chooseDocument : isVideo ? s.chooseVideo : s.choose;
+  const searchLabel = isDocument ? s.searchDocuments : isVideo ? s.searchVideos : s.searchImages;
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<Media[]>([]);
   const [page, setPage] = useState(1);
@@ -89,11 +101,11 @@ export function MediaField({
     <FieldLabel label={label} el="div">
       <div className="studio-media">
         <div className="studio-media__preview">
-          {current?.url ? <MediaThumb item={current} /> : <span>{isVideo ? s.noVideo : s.noImage}</span>}
+          {current?.url ? <MediaThumb item={current} /> : <span>{none}</span>}
         </div>
         <div className="studio-media__actions">
           <button type="button" className="studio-btn studio-btn--ghost" onClick={() => setOpen((v) => !v)}>
-            {open ? s.close : current ? s.replace : isVideo ? s.chooseVideo : s.choose}
+            {open ? s.close : current ? s.replace : chooseLabel}
           </button>
           {current && (
             <button type="button" className="studio-btn studio-btn--ghost" onClick={() => onChange(null)}>
@@ -108,7 +120,7 @@ export function MediaField({
           <div className="studio-media__toolbar">
             <input
               className="studio-input"
-              placeholder={isVideo ? s.searchVideos : s.searchImages}
+              placeholder={searchLabel}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />

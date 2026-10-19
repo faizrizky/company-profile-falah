@@ -956,7 +956,7 @@ export interface SolutionCategory {
      */
     backgroundVideo?: (number | null) | Media;
     /**
-     * Brochure PDF. Empty = the button links to the contact page.
+     * PDF brosur cadangan: dipakai tab yang tidak punya brosur sendiri. Kosongkan = tombol mengarah ke halaman contact.
      */
     brochure?: (number | null) | Media;
     tabs?:
@@ -972,6 +972,10 @@ export interface SolutionCategory {
            * Optional. Lighter version for phones: MP4 720p, ≤ 4 MB. Empty = the desktop video.
            */
           videoMobile?: (number | null) | Media;
+          /**
+           * PDF brosur produk di tab ini. Kosongkan = pakai brosur kategori (di atas), atau tombol mengarah ke halaman contact.
+           */
+          brochure?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
@@ -2017,6 +2021,7 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
               tags?: T;
               video?: T;
               videoMobile?: T;
+              brochure?: T;
               id?: T;
             };
       };

@@ -1259,3 +1259,30 @@ select.studio-input {
     animation: none;
   }
 }
+
+.studio-media__doc {
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 10px;
+  line-height: 12px;
+  color: #0f3a66;
+  overflow: hidden;
+}
+
+.studio-media__doc > strong {
+  font-size: 13px;
+}
+
+.studio-media__doc > span {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-all;
+}
