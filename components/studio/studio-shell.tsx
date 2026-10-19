@@ -242,26 +242,45 @@ export function StudioShell(props: StudioShellProps) {
   const remount = useCallback(() => setGeneration((g) => g + 1), []);
   usePreviewFrameGuard(remount, generation);
 
-  // Once Puck's canvas has loaded its styles, tell the CMS to drop its skeleton.
+  // Once the canvas shows the page (content in, styles in, fonts loaded), tell
+  // the CMS to drop its skeleton. Puck marks the canvas "ready" earlier, while
+  // its frame is still empty: the CMS then showed a blank canvas for a moment,
+  // then the page, then the fonts swapping: a flash at the start.
   useEffect(() => {
-    let done = false;
+    let stopped = false;
+    let frameId = 0;
     const signal = () => {
-      if (done) return;
-      done = true;
-      observer.disconnect();
+      if (stopped) return;
+      stopped = true;
+      cancelAnimationFrame(frameId);
       window.clearTimeout(fallback);
       signalStudioReady(cmsUrl);
     };
-    const check = () => {
-      if (document.querySelector('[class*="_PuckCanvas--ready"]')) signal();
+    const settle = (frameDocument: Document) => {
+      // One frame after the content is in, let the fonts it asked for finish, then one more to paint.
+      frameId = requestAnimationFrame(() => {
+        void frameDocument.fonts.ready.then(() => {
+          if (stopped) return;
+          frameId = requestAnimationFrame(() => requestAnimationFrame(signal));
+        });
+      });
     };
-    const observer = new MutationObserver(check);
-    observer.observe(document.body, { subtree: true, attributes: true, attributeFilter: ["class"] });
+    const check = () => {
+      if (stopped) return;
+      const frame = document.querySelector<HTMLIFrameElement>("#preview-frame");
+      const frameDocument = frame?.contentDocument;
+      const shown =
+        document.querySelector('[class*="_PuckCanvas--ready"]') &&
+        frameDocument?.getElementById("frame-root")?.childElementCount &&
+        frameDocument.styleSheets.length > 0;
+      if (shown && frameDocument) settle(frameDocument);
+      else frameId = requestAnimationFrame(check);
+    };
     const fallback = window.setTimeout(signal, 8000);
     check();
     return () => {
-      done = true;
-      observer.disconnect();
+      stopped = true;
+      cancelAnimationFrame(frameId);
       window.clearTimeout(fallback);
     };
   }, [cmsUrl]);
