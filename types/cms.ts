@@ -939,9 +939,8 @@ export interface SolutionCategory {
     description?: string | null;
     items?:
       | {
-          icon: 'downtime' | 'cost' | 'error' | 'inconsistent';
           /**
-           * Opsional. Gambar persegi (SVG/PNG); menggantikan ikon di atas.
+           * Square image, SVG or transparent PNG. Shown at 50 × 50.
            */
           iconImage?: (number | null) | Media;
           title: string;
@@ -2005,7 +2004,6 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
         items?:
           | T
           | {
-              icon?: T;
               iconImage?: T;
               title?: T;
               description?: T;

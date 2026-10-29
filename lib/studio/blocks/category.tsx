@@ -75,7 +75,7 @@ function useLiveCategory(base: SolutionCategory, own: "hero" | "challenges" | "s
 export function createCategoryConfig(context: StudioContext & { backPath: string }): Config {
   const { lang, locale, cmsUrl, embedded, backPath } = context;
   const f = createFields(context);
-  const { s, L, text, textarea, plain, link, select, image, video, pdf, tags, list } = f;
+  const { s, L, text, textarea, plain, link, image, video, pdf, tags, list } = f;
 
   const Hero = ({ puck, ...props }: AnyProps & { puck: { metadata: unknown } }) => {
     const { ctx, category: base } = meta(puck) as CategoryStudioMetadata;
@@ -209,18 +209,12 @@ export function createCategoryConfig(context: StudioContext & { backPath: string
           "Challenges",
           "Tantangan",
           {
-            icon: select("Icon", "Ikon", [
-              ["downtime", "Clock (downtime)", "Jam (downtime)"],
-              ["cost", "Coins (cost)", "Koin (biaya)"],
-              ["error", "User X (human error)", "Pengguna X (kesalahan manusia)"],
-              ["inconsistent", "Shuffle (inconsistent)", "Acak (tidak konsisten)"],
-            ]),
-            iconImage: image("Custom icon (replaces the one above)", "Ikon sendiri (menggantikan ikon di atas)"),
+            iconImage: image("Icon", "Ikon"),
             title: text("Title", "Judul"),
             description: textarea("Description", "Deskripsi"),
           },
           "title",
-          { icon: "downtime", title: L("New challenge", "Tantangan baru"), description: "" },
+          { title: L("New challenge", "Tantangan baru"), description: "" },
           8,
         ),
       },

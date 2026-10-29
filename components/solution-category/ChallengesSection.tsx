@@ -3,16 +3,6 @@ import { Card } from "@/components/ui/card";
 import { mediaUrl } from "@/lib/cms/media";
 import type { SolutionCategory } from "@/types/cms";
 
-type ChallengeIcon = NonNullable<NonNullable<SolutionCategory["challenges"]>["items"]>[number]["icon"];
-
-/** Figma "The Challenges_b" icons (public/solution/challenges). */
-const ICONS: Record<ChallengeIcon, string> = {
-  downtime: "/solution/challenges/downtime.svg",
-  cost: "/solution/challenges/cost.svg",
-  error: "/solution/challenges/error.svg",
-  inconsistent: "/solution/challenges/inconsistent.svg",
-};
-
 export function ChallengesSection({ category }: { category: SolutionCategory }) {
   const challenges = category.challenges ?? {};
   if (!challenges.items?.length) return null;
@@ -28,6 +18,7 @@ export function ChallengesSection({ category }: { category: SolutionCategory }) 
         />
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
           {challenges.items.map((c) => {
+            const icon = mediaUrl(c.iconImage);
             return (
               <Card
                 key={c.id ?? c.title}
@@ -35,7 +26,7 @@ export function ChallengesSection({ category }: { category: SolutionCategory }) 
                 className="flex flex-col items-center justify-start gap-6 overflow-clip p-10 text-center text-white"
               >
                 <div className="flex h-[52px] items-center justify-center">
-                  <img src={mediaUrl(c.iconImage) || ICONS[c.icon]} alt="" className="h-[50px] w-[50px] object-contain" />
+                  {icon && <img src={icon} alt="" className="h-[50px] w-[50px] object-contain" />}
                 </div>
                 <div className="flex flex-col gap-4">
                   <h3 className="text-xl font-bold leading-[30px]">{c.title}</h3>
