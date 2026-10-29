@@ -1,5 +1,6 @@
 import { SectionTitle } from "@/components/common/section-ui";
 import { Card } from "@/components/ui/card";
+import { mediaUrl } from "@/lib/cms/media";
 import type { SolutionCategory } from "@/types/cms";
 
 type ChallengeIcon = NonNullable<NonNullable<SolutionCategory["challenges"]>["items"]>[number]["icon"];
@@ -31,10 +32,10 @@ export function ChallengesSection({ category }: { category: SolutionCategory }) 
               <Card
                 key={c.id ?? c.title}
                 // Figma Card_b: no lift; hover only tints the card.
-                className="flex flex-col items-center justify-center gap-6 overflow-clip p-10 text-center text-white"
+                className="flex flex-col items-center justify-start gap-6 overflow-clip p-10 text-center text-white"
               >
                 <div className="flex h-[52px] items-center justify-center">
-                  <img src={ICONS[c.icon]} alt="" className="h-[50px] w-[50px]" />
+                  <img src={mediaUrl(c.iconImage) || ICONS[c.icon]} alt="" className="h-[50px] w-[50px] object-contain" />
                 </div>
                 <div className="flex flex-col gap-4">
                   <h3 className="text-xl font-bold leading-[30px]">{c.title}</h3>

@@ -215,6 +215,7 @@ export function createCategoryConfig(context: StudioContext & { backPath: string
               ["error", "User X (human error)", "Pengguna X (kesalahan manusia)"],
               ["inconsistent", "Shuffle (inconsistent)", "Acak (tidak konsisten)"],
             ]),
+            iconImage: image("Custom icon (replaces the one above)", "Ikon sendiri (menggantikan ikon di atas)"),
             title: text("Title", "Judul"),
             description: textarea("Description", "Deskripsi"),
           },

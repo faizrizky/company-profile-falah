@@ -940,6 +940,10 @@ export interface SolutionCategory {
     items?:
       | {
           icon: 'downtime' | 'cost' | 'error' | 'inconsistent';
+          /**
+           * Opsional. Gambar persegi (SVG/PNG); menggantikan ikon di atas.
+           */
+          iconImage?: (number | null) | Media;
           title: string;
           description?: string | null;
           id?: string | null;
@@ -2002,6 +2006,7 @@ export interface SolutionCategoriesSelect<T extends boolean = true> {
           | T
           | {
               icon?: T;
+              iconImage?: T;
               title?: T;
               description?: T;
               id?: T;
