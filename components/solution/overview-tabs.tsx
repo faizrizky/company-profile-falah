@@ -32,7 +32,7 @@ export function ProductCard({ product, href }: { product: Product; href?: string
   );
 }
 
-const categoryId = (p: Product) => (typeof p.category === "object" ? p.category.id : p.category);
+const categoryId = (p: Product) => (typeof p.category === "object" ? p.category?.id : p.category);
 
 export function SolutionOverviewTabs({
   categories,

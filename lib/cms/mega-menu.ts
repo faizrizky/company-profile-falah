@@ -17,7 +17,7 @@ export type MegaMenuCategory = {
   products: MegaMenuProduct[];
 };
 
-const categoryId = (p: Product) => (typeof p.category === "object" ? p.category.id : p.category);
+const categoryId = (p: Product) => (typeof p.category === "object" ? p.category?.id : p.category);
 
 /**
  * The "Our Solutions" mega menu: every solution category with its products,
