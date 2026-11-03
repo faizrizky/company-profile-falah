@@ -23,11 +23,12 @@ export function LeadershipBlock({ block }: BlockProps<Data>) {
           title={block.header.title}
           desc={block.header.description}
         />
-        <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-4">
+        {/* A quarter of the row each, centered: fewer than four leaders sit in the middle. */}
+        <div className="flex w-full flex-wrap justify-center gap-4">
           {block.leaders?.map((leader) => {
             const photo = mediaUrl(leader.photo);
             return (
-              <div key={leader.id ?? leader.name} className="group relative">
+              <div key={leader.id ?? leader.name} className="group relative w-full md:w-[calc((100%-3rem)/4)]">
                 <div
                   className={cn(
                     // Figma Leadership_b: Default at rest, Variant2 on hover.
