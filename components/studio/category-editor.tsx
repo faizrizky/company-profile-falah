@@ -26,6 +26,8 @@ export type CategoryEditorProps = {
   dictionary: Dictionary;
   fontClass: string;
   linkGroups: LinkGroup[];
+  /** Its first product, opened by Solution | Product (null: none yet). */
+  firstProductId: number | null;
 };
 
 /** The visual editor of a solution category: its four sections, edited on the page itself. */
@@ -36,7 +38,8 @@ export function CategoryEditor(props: CategoryEditorProps) {
 }
 
 function CategoryEditorClient(props: CategoryEditorProps) {
-  const { category, locale, uiLang, embedded, cmsUrl, siteData, chrome, dictionary, fontClass, linkGroups } = props;
+  const { category, locale, uiLang, embedded, cmsUrl, siteData, chrome, dictionary, fontClass, linkGroups, firstProductId } =
+    props;
 
   const document = useMemo<StudioDocument>(() => {
     const initialData = categoryToPuck(category);
@@ -70,8 +73,12 @@ function CategoryEditorClient(props: CategoryEditorProps) {
       // Four fixed sections: nothing to add, move or remove.
       permissions: { insert: false, drag: false, delete: false, duplicate: false },
       leftPanel: false,
+      switcher: {
+        current: "product",
+        other: firstProductId ? { collection: "products", id: firstProductId } : null,
+      },
     };
-  }, [category, uiLang, locale, cmsUrl, siteData, embedded, linkGroups, dictionary, fontClass, chrome]);
+  }, [category, uiLang, locale, cmsUrl, siteData, embedded, linkGroups, dictionary, fontClass, chrome, firstProductId]);
 
   return <StudioShell document={document} locale={locale} uiLang={uiLang} embedded={embedded} cmsUrl={cmsUrl} />;
 }

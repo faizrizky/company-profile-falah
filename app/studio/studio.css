@@ -1343,3 +1343,54 @@ select.studio-input {
   padding-inline: 6px 2px;
   background: #eef5fe;
 }
+
+/* Solution | Product: the CMS's segmented switch (language switch in the account menu). */
+.studio-switch {
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 12px;
+  background: #eef6fd;
+}
+
+.studio-switch__option {
+  min-width: 84px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #5b6b7f;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.studio-switch__option:hover:not(:disabled) {
+  color: #0f2742;
+}
+
+.studio-switch__option.is-active {
+  background: #fff;
+  color: #0f2742;
+  box-shadow:
+    0 1px 2px rgb(6 41 79 / 0.08),
+    0 4px 10px -4px rgb(6 41 79 / 0.2);
+  cursor: default;
+}
+
+.studio-switch__option:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.studio-switch__option:focus-visible {
+  outline: 2px solid #1f7ae0;
+  outline-offset: 1px;
+}

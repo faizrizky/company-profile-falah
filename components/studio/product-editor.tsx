@@ -6,7 +6,7 @@ import type { SiteData } from "@/components/blocks/types";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { createProductConfig, type ProductStudioMetadata } from "@/lib/studio/blocks/product";
-import { productToPuck, puckToProduct } from "@/lib/studio/product";
+import { productCategoryId, productToPuck, puckToProduct } from "@/lib/studio/product";
 import type { StudioLang } from "@/lib/studio/strings";
 import type { Footer, Navigation, Product, User } from "@/types/cms";
 
@@ -68,6 +68,13 @@ function ProductEditorClient(props: ProductEditorProps) {
       // One card: nothing to add, move or remove.
       permissions: { insert: false, drag: false, delete: false, duplicate: false },
       leftPanel: false,
+      switcher: {
+        current: "solution",
+        other: (() => {
+          const categoryId = productCategoryId(product);
+          return categoryId ? { collection: "solution-categories" as const, id: categoryId } : null;
+        })(),
+      },
     };
   }, [product, uiLang, locale, cmsUrl, siteData, embedded, dictionary, fontClass, chrome]);
 

@@ -67,6 +67,14 @@ export type StudioDocument = {
   permissions?: Partial<Permissions>;
   /** The blocks / outline panel on the left (default: shown when the window is wide enough). */
   leftPanel?: boolean;
+  /**
+   * Solution | Product (categories and products): which side this is, and the
+   * other side's document of the same category (null: nothing to open yet).
+   */
+  switcher?: {
+    current: "solution" | "product";
+    other: { collection: "solution-categories" | "products"; id: number } | null;
+  };
 };
 
 export type StudioShellProps = {
@@ -86,12 +94,15 @@ function HeaderActions({
   s,
   saving,
   canPublish,
+  dirty,
   onSave,
 }: {
   children: ReactNode;
   props: StudioShellProps;
   s: StudioStrings;
   saving: boolean;
+  /** Unsaved edits: switching to the other side asks first. */
+  dirty: boolean;
   /** Something to publish: unsaved edits, or a saved draft newer than the live page. */
   canPublish: boolean;
   onSave: SaveFn;
@@ -105,8 +116,47 @@ function HeaderActions({
     window.location.search = params.toString();
   };
 
+  const switcher = props.document.switcher;
+  const openOther = (target: NonNullable<NonNullable<typeof switcher>["other"]>) => {
+    if (dirty && !window.confirm(s.leaveUnsaved)) return;
+    if (props.embedded) {
+      // Inside the CMS: the CMS opens the other document (VisualEditorView).
+      const path = `/collections/${target.collection}/${target.id}`;
+      window.parent.postMessage({ type: "falah-studio:open", path }, new URL(props.cmsUrl).origin);
+    } else {
+      window.location.href = `/studio/${target.collection}/${target.id}${window.location.search}`;
+    }
+  };
+
   return (
     <div className="studio-actions">
+      {switcher && (
+        <div className="studio-switch" role="group" aria-label="Solution & Product">
+          {(["solution", "product"] as const).map((side) => {
+            const label = side === "solution" ? "Solution" : "Product";
+            if (side === switcher.current) {
+              return (
+                <span key={side} className="studio-switch__option is-active" aria-current="page">
+                  {label}
+                </span>
+              );
+            }
+            const other = switcher.other;
+            return (
+              <button
+                key={side}
+                type="button"
+                className="studio-switch__option"
+                disabled={!other}
+                title={other ? undefined : switcher.current === "product" ? s.noProductsYet : s.noCategoryYet}
+                onClick={() => other && openOther(other)}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      )}
       <label className="studio-select" title={`${s.contentLanguage} — ${s.structureShared}`}>
         <span className="sr-only">{s.contentLanguage}</span>
         <select
@@ -389,7 +439,14 @@ export function StudioShell(props: StudioShellProps) {
         onPublish={(data) => (canPublish ? save(data, true) : undefined)}
         overrides={{
           headerActions: ({ children }) => (
-            <HeaderActions props={props} s={s} saving={status.kind === "saving"} canPublish={canPublish} onSave={save}>
+            <HeaderActions
+              props={props}
+              s={s}
+              saving={status.kind === "saving"}
+              canPublish={canPublish}
+              dirty={dirty}
+              onSave={save}
+            >
               {children}
             </HeaderActions>
           ),

@@ -69,12 +69,32 @@ export async function loadStudioDocument({
   };
 
   if (collection === "solution-categories") {
-    const linkGroups = await buildLinkGroups(authorization, locale, uiLang, siteData.categories, navigation);
+    const [linkGroups, firstProductId] = await Promise.all([
+      buildLinkGroups(authorization, locale, uiLang, siteData.categories, navigation),
+      firstProductOf(id, authorization),
+    ]);
     return {
       status: "ok",
       collection,
-      props: { ...shared, category: doc as SolutionCategory, linkGroups },
+      props: { ...shared, category: doc as SolutionCategory, linkGroups, firstProductId },
     };
   }
   return { status: "ok", collection, props: { ...shared, product: doc as Product } };
+}
+
+/** The category's first product (drafts included), for Solution | Product; null when it has none. */
+async function firstProductOf(categoryId: number, authorization: string): Promise<number | null> {
+  const url = new URL("/api/products", env.CMS_URL);
+  url.search = new URLSearchParams({
+    "where[category][equals]": String(categoryId),
+    sort: "_order",
+    limit: "1",
+    depth: "0",
+    draft: "true",
+    "select[id]": "true",
+  }).toString();
+  const res = await fetch(url, { headers: { authorization }, cache: "no-store" }).catch(() => null);
+  if (!res?.ok) return null;
+  const { docs } = (await res.json()) as { docs?: { id: number }[] };
+  return docs?.[0]?.id ?? null;
 }
