@@ -10,6 +10,7 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { cmsPublicUrl } from "@/lib/studio/auth";
 import { buildLinkGroups } from "@/lib/studio/load";
 import type { StudioLang } from "@/lib/studio/strings";
+import { productCategoryId } from "@/lib/studio/product";
 import type { Product, SolutionCategory, User } from "@/types/cms";
 
 /** The documents the editor opens besides pages. */
@@ -79,7 +80,12 @@ export async function loadStudioDocument({
       props: { ...shared, category: doc as SolutionCategory, linkGroups, firstProductId },
     };
   }
-  return { status: "ok", collection, props: { ...shared, product: doc as Product } };
+  const product = doc as Product;
+  return {
+    status: "ok",
+    collection,
+    props: { ...shared, product, category: await categoryShowcaseOf(product, locale, authorization) },
+  };
 }
 
 /** The category's first product (drafts included), for Solution | Product; null when it has none. */
@@ -97,4 +103,29 @@ async function firstProductOf(categoryId: number, authorization: string): Promis
   if (!res?.ok) return null;
   const { docs } = (await res.json()) as { docs?: { id: number }[] };
   return docs?.[0]?.id ?? null;
+}
+
+/**
+ * The product's category Showcase (latest draft, media as ids): the product
+ * editor edits its tabs, one per product. Null without a category.
+ */
+async function categoryShowcaseOf(
+  product: Product,
+  locale: Locale,
+  authorization: string,
+): Promise<{ id: number; showcase: NonNullable<SolutionCategory["showcase"]> } | null> {
+  const id = productCategoryId(product);
+  if (!id) return null;
+  const url = new URL(`/api/solution-categories/${id}`, env.CMS_URL);
+  url.search = new URLSearchParams({
+    draft: "true",
+    depth: "0",
+    locale,
+    "fallback-locale": defaultLocale,
+    "select[showcase]": "true",
+  }).toString();
+  const res = await fetch(url, { headers: { authorization }, cache: "no-store" }).catch(() => null);
+  if (!res?.ok) return null;
+  const doc = (await res.json()) as Pick<SolutionCategory, "showcase">;
+  return { id, showcase: doc.showcase ?? {} };
 }

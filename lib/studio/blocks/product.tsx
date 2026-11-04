@@ -18,10 +18,16 @@ export type ProductStudioMetadata = StudioMetadata & { product: Product };
 /** What the product's category tab shows next to it: published products in their dragged order. */
 const byOrder = (a: Product, b: Product) => (a._order ?? "").localeCompare(b._order ?? "");
 
-export function createProductConfig(context: StudioContext & { backPath: string }): Config {
-  const { lang, locale, cmsUrl, embedded, backPath, data } = context;
+export function createProductConfig(
+  context: StudioContext & {
+    backPath: string;
+    /** The category whose Showcase tabs the card carries (see lib/studio/product.ts). */
+    tabsCategoryId: number | null;
+  },
+): Config {
+  const { lang, locale, cmsUrl, embedded, backPath, data, tabsCategoryId } = context;
   const f = createFields(context);
-  const { s, L, text, image, tags, toggle } = f;
+  const { s, L, text, image, tags, toggle, list } = f;
 
   const Card = ({ puck, ...props }: AnyProps & { puck: { metadata: unknown } }) => {
     const { product: base, ctx } = meta(puck) as ProductStudioMetadata;
@@ -68,9 +74,16 @@ export function createProductConfig(context: StudioContext & { backPath: string 
     );
   };
 
-  /** The card's form; the tab choices follow the chosen category. */
-  const cardFields = (categoryId: number): Fields<AnyProps> => {
-    const tabs = data.categories.find((c) => c.id === categoryId)?.showcase?.tabs ?? [];
+  /**
+   * The card's form; the tab choices follow the chosen category. For the
+   * loaded category they are the tab list below, as edited (one tab per
+   * product, saved to the category with the card).
+   */
+  const cardFields = (categoryId: number, liveTabs?: unknown): Fields<AnyProps> => {
+    const own = categoryId === tabsCategoryId;
+    const tabs = ((own ? liveTabs : undefined) ??
+      data.categories.find((c) => c.id === categoryId)?.showcase?.tabs ??
+      []) as { id?: string | null; name?: string | null }[];
     return {
       title: text("Title", "Judul"),
       summary: { type: "textarea", label: L("Short description (on hover)", "Deskripsi singkat (saat di-hover)") },
@@ -87,9 +100,21 @@ export function createProductConfig(context: StudioContext & { backPath: string 
         label: L("Card opens tab", "Kartu membuka tab"),
         options: [
           { label: L("Automatic (the tab named like the product)", "Otomatis (tab yang bernama sama)"), value: "" },
-          ...tabs.filter((t) => t.id).map((t) => ({ label: t.name, value: t.id as string })),
+          ...tabs.filter((t) => t.id).map((t) => ({ label: t.name || "…", value: t.id as string })),
         ],
       },
+      ...(own
+        ? {
+            tabs: list(
+              "Tabs (one per product)",
+              "Tab (satu per produk)",
+              { name: text("Name", "Nama") },
+              "name",
+              { name: L("New tab", "Tab baru") },
+              10,
+            ),
+          }
+        : {}),
       wide: toggle("Wide (2 columns on desktop)", "Lebar (2 kolom di desktop)"),
       largeTitle: toggle("Large title", "Judul besar"),
     };
@@ -99,7 +124,7 @@ export function createProductConfig(context: StudioContext & { backPath: string 
     productCard: {
       label: L("Product card", "Kartu produk"),
       fields: cardFields(Number.NaN),
-      resolveFields: (item) => cardFields(Number(item.props.category)),
+      resolveFields: (item) => cardFields(Number(item.props.category), item.props.tabs),
       render: Card as never,
     },
   };

@@ -75,6 +75,16 @@ export type StudioDocument = {
     current: "solution" | "product";
     other: { collection: "solution-categories" | "products"; id: number } | null;
   };
+  /**
+   * Another document saved with this one, first (a product's category tabs);
+   * null when it has nothing to save. `saved` is called once it is.
+   */
+  alsoSave?: (data: Data) => {
+    collection: StudioCollection;
+    id: number;
+    changes: Record<string, unknown>;
+    saved: () => void;
+  } | null;
 };
 
 export type StudioShellProps = {
@@ -381,17 +391,23 @@ export function StudioShell(props: StudioShellProps) {
     const inCms = window.parent !== window;
     let savingHere = !inCms;
     setOwnToast(savingHere);
+    const onProgress = (stage: SaveStage, pct: number) => {
+      savingHere = true;
+      setOwnToast(true);
+      setProgress((p) => (pct > p.pct ? { stage, pct } : p));
+    };
     try {
+      const also = doc.alsoSave?.(data);
+      if (also) {
+        await saveDocumentWithProgress(cmsUrl, also, also.changes, { locale, publish }, onProgress);
+        also.saved();
+      }
       const { handedOver } = await saveDocumentWithProgress(
         cmsUrl,
         { collection: doc.collection, id: doc.id },
         changes,
         { locale, publish },
-        (stage, pct) => {
-          savingHere = true;
-          setOwnToast(true);
-          setProgress((p) => (pct > p.pct ? { stage, pct } : p));
-        },
+        onProgress,
       );
       savedRef.current = snapshot;
       setDirty(false);

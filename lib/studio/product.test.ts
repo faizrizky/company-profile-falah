@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { productCategoryId, productToPuck, puckToProduct } from "./product";
+import { productCategoryId, productToPuck, puckToCategoryShowcase, puckToProduct } from "./product";
 import type { Product } from "@/types/cms";
 
 const media = { id: 12, createdAt: "2026-01-01" } as never;
@@ -27,13 +27,12 @@ describe("product ↔ visual editor", () => {
     expect(productCategoryId({ category: 9 })).toBe(9);
   });
 
-  it("round-trips unchanged, media as ids", () => {
+  it("round-trips unchanged, media as ids (an untouched tab link isn't sent)", () => {
     expect(puckToProduct(productToPuck(product), product)).toEqual({
       title: "Virtual Operational Training",
       summary: "Train safely",
       tags: ["Army"],
       category: 2,
-      showcaseTab: "t1",
       image: 12,
       imageMobile: null,
       layout: { wide: true, largeTitle: false },
@@ -52,5 +51,56 @@ describe("product ↔ visual editor", () => {
     const data = productToPuck(product);
     (data.content[0].props as Record<string, unknown>).title = "   ";
     expect(puckToProduct(data, product).title).toBe("Virtual Operational Training");
+  });
+
+  describe("the category's tabs on the card", () => {
+    const showcase = {
+      background: 7,
+      tabs: [
+        { id: "t1", name: "Virtual Operational Training", description: "Ops", brochure: 40 },
+        { id: "t2", name: "Virtual Maintenance Training", description: "Fix" },
+      ],
+    } as never;
+    const tabs = (showcase as { tabs: { id: string; name: string }[] }).tabs;
+    const withTabs = (rows: { id: string; name: string }[]) => {
+      const data = productToPuck(product, tabs);
+      (data.content[0].props as { tabs: unknown }).tabs = rows;
+      return data;
+    };
+
+    it("saves nothing to the category when the tabs are as loaded", () => {
+      expect(puckToCategoryShowcase(productToPuck(product, tabs), showcase)).toBeNull();
+    });
+
+    it("renames, reorders and adds tabs, keeping what else each tab had", () => {
+      const changes = puckToCategoryShowcase(
+        withTabs([
+          { id: "t2", name: "Maintenance" },
+          { id: "t1", name: "Virtual Operational Training" },
+          { id: "t3", name: "Medical" },
+        ]),
+        showcase,
+      ) as { showcase: { background: number; tabs: Record<string, unknown>[] } };
+      expect(changes.showcase.background).toBe(7);
+      expect(changes.showcase.tabs).toEqual([
+        { id: "t2", name: "Maintenance", description: "Fix" },
+        { id: "t1", name: "Virtual Operational Training", description: "Ops", brochure: 40 },
+        { id: "t3", name: "Medical" },
+      ]);
+    });
+
+    it("renaming the product's own tab renames the product", () => {
+      const data = withTabs([
+        { id: "t1", name: "Operations Trainer" },
+        { id: "t2", name: "Virtual Maintenance Training" },
+      ]);
+      expect(puckToProduct(data, product, tabs).title).toBe("Operations Trainer");
+      // Another product's tab: the card keeps its own title.
+      const other = withTabs([
+        { id: "t1", name: "Virtual Operational Training" },
+        { id: "t2", name: "Maintenance" },
+      ]);
+      expect(puckToProduct(other, product, tabs).title).toBe("Virtual Operational Training");
+    });
   });
 });

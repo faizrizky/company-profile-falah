@@ -1,14 +1,14 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 
 import type { SiteData } from "@/components/blocks/types";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { createProductConfig, type ProductStudioMetadata } from "@/lib/studio/blocks/product";
-import { productCategoryId, productToPuck, puckToProduct } from "@/lib/studio/product";
+import { productCategoryId, productToPuck, puckToCategoryShowcase, puckToProduct } from "@/lib/studio/product";
 import type { StudioLang } from "@/lib/studio/strings";
-import type { Footer, Navigation, Product, User } from "@/types/cms";
+import type { Footer, Navigation, Product, SolutionCategory, User } from "@/types/cms";
 
 import { StudioShell, useHydrated, type StudioDocument } from "./studio-shell";
 import { StudioSkeleton } from "./studio-skeleton";
@@ -24,6 +24,8 @@ export type ProductEditorProps = {
   chrome: { navigation: Navigation | null; footer: Footer | null };
   dictionary: Dictionary;
   fontClass: string;
+  /** Its category's Showcase (latest draft): the tabs are edited here too, one per product. */
+  category: { id: number; showcase: NonNullable<SolutionCategory["showcase"]> } | null;
 };
 
 /** The visual editor of a product: its card, among the others of its category. */
@@ -34,11 +36,16 @@ export function ProductEditor(props: ProductEditorProps) {
 }
 
 function ProductEditorClient(props: ProductEditorProps) {
-  const { product, locale, uiLang, embedded, cmsUrl, siteData, chrome, dictionary, fontClass } = props;
+  const { product, locale, uiLang, embedded, cmsUrl, siteData, chrome, dictionary, fontClass, category } = props;
+  // The category's Showcase as last saved from here: what the tab list is compared with.
+  const showcaseRef = useRef(category?.showcase ?? {});
 
   const document = useMemo<StudioDocument>(() => {
-    const initialData = productToPuck(product);
-    const snapshot = (data: typeof initialData) => JSON.stringify(puckToProduct(data, product));
+    const tabsBefore = category?.showcase.tabs ?? [];
+    const initialData = productToPuck(product, tabsBefore);
+    const toProduct = (data: typeof initialData) => puckToProduct(data, product, tabsBefore);
+    const snapshot = (data: typeof initialData) =>
+      JSON.stringify([toProduct(data), category && puckToCategoryShowcase(data, category.showcase)]);
     return {
       collection: "products",
       id: product.id,
@@ -53,6 +60,7 @@ function ProductEditorClient(props: ProductEditorProps) {
         embedded,
         linkGroups: [],
         backPath: `/admin/collections/products/${product.id}/form`,
+        tabsCategoryId: category?.id ?? null,
       }),
       metadata: {
         ctx: { locale, t: dictionary, data: siteData },
@@ -63,7 +71,19 @@ function ProductEditorClient(props: ProductEditorProps) {
       initialData,
       snapshot,
       initialSnapshot: snapshot(initialData),
-      changes: (data) => puckToProduct(data, product),
+      changes: toProduct,
+      alsoSave: (data) => {
+        const changes = category && puckToCategoryShowcase(data, showcaseRef.current);
+        if (!category || !changes) return null;
+        return {
+          collection: "solution-categories",
+          id: category.id,
+          changes,
+          saved: () => {
+            showcaseRef.current = changes.showcase as typeof showcaseRef.current;
+          },
+        };
+      },
       livePath: (code) => `/${code}/solution`,
       // One card: nothing to add, move or remove.
       permissions: { insert: false, drag: false, delete: false, duplicate: false },
@@ -76,7 +96,7 @@ function ProductEditorClient(props: ProductEditorProps) {
         })(),
       },
     };
-  }, [product, uiLang, locale, cmsUrl, siteData, embedded, dictionary, fontClass, chrome]);
+  }, [product, uiLang, locale, cmsUrl, siteData, embedded, dictionary, fontClass, chrome, category]);
 
   return <StudioShell document={document} locale={locale} uiLang={uiLang} embedded={embedded} cmsUrl={cmsUrl} />;
 }
