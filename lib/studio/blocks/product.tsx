@@ -14,7 +14,11 @@ import { renderStudioRoot } from "./root";
 import { ownMedia, productCategoryId } from "../product";
 
 /** The canvas metadata of a product: the site's, plus the product as it was loaded. */
-export type ProductStudioMetadata = StudioMetadata & { product: Product };
+export type ProductStudioMetadata = StudioMetadata & {
+  product: Product;
+  /** The other products of the loaded category, latest drafts included. */
+  siblings: Product[];
+};
 
 /** What the product's category tab shows next to it: published products in their dragged order. */
 const byOrder = (a: Product, b: Product) => (a._order ?? "").localeCompare(b._order ?? "");
@@ -33,7 +37,7 @@ export function createProductConfig(
   const { s, L, text, image, tags, toggle } = f;
 
   const Card = ({ puck, ...props }: AnyProps & { puck: { metadata: unknown } }) => {
-    const { product: base, ctx } = meta(puck) as ProductStudioMetadata;
+    const { product: base, ctx, siblings } = meta(puck) as ProductStudioMetadata;
     const { categories, products } = ctx.data;
     const categoryId = typeof props.category === "number" ? props.category : productCategoryId(base);
 
@@ -57,7 +61,11 @@ export function createProductConfig(
     } as Product;
 
     // The category's tab as the live Solution overview shows it, the product among its neighbours.
-    const neighbours = products
+    // In the loaded category: its products as they are now, drafts too (a tab
+    // saved a moment ago has a draft product, not yet published). In another
+    // one the site's published products are all there is to show.
+    const around = categoryId === tabsCategoryId ? siblings : products;
+    const neighbours = around
       .filter((p) => p.id !== base.id && productCategoryId(p) === categoryId)
       // Their images as the tab list holds them now.
       .map((p) => {

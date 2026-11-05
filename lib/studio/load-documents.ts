@@ -10,7 +10,7 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { cmsPublicUrl } from "@/lib/studio/auth";
 import { buildLinkGroups } from "@/lib/studio/load";
 import type { StudioLang } from "@/lib/studio/strings";
-import { productCategoryId, type SiblingProduct } from "@/lib/studio/product";
+import { productCategoryId } from "@/lib/studio/product";
 import type { Product, SolutionCategory, User } from "@/types/cms";
 
 /** The documents the editor opens besides pages. */
@@ -106,16 +106,16 @@ async function firstProductOf(categoryId: number, authorization: string): Promis
 }
 
 /**
- * The product's category Showcase (latest draft) and the category's products
- * with their images (media populated for the previews, saved back as ids): the
- * product editor edits the tabs, and the images of each tab's product. Null
- * without a category.
+ * The product's category Showcase (latest draft) and the category's other
+ * products as they are now, drafts included (media populated for the previews,
+ * saved back as ids): the editor shows them as the cards around this one, and
+ * edits their tabs and images. Null without a category.
  */
 async function categoryShowcaseOf(
   product: Product,
   locale: Locale,
   authorization: string,
-): Promise<{ id: number; showcase: NonNullable<SolutionCategory["showcase"]>; products: SiblingProduct[] } | null> {
+): Promise<{ id: number; showcase: NonNullable<SolutionCategory["showcase"]>; products: Product[] } | null> {
   const id = productCategoryId(product);
   if (!id) return null;
   const get = (path: string, params: Record<string, string>) => {
@@ -135,13 +135,10 @@ async function categoryShowcaseOf(
       "where[category][equals]": String(id),
       sort: "_order",
       limit: "100",
-      "select[showcaseTab]": "true",
-      "select[image]": "true",
-      "select[imageMobile]": "true",
     }),
   ]);
   if (!categoryRes?.ok) return null;
   const category = (await categoryRes.json()) as Pick<SolutionCategory, "showcase">;
-  const products = productsRes?.ok ? (((await productsRes.json()) as { docs?: SiblingProduct[] }).docs ?? []) : [];
+  const products = productsRes?.ok ? (((await productsRes.json()) as { docs?: Product[] }).docs ?? []) : [];
   return { id, showcase: category.showcase ?? {}, products: products.filter((p) => p.id !== product.id) };
 }

@@ -36,7 +36,7 @@ export type ProductEditorProps = {
     id: number;
     showcase: NonNullable<SolutionCategory["showcase"]>;
     /** The category's other products: the tab list edits their images. */
-    products: SiblingProduct[];
+    products: Product[];
   } | null;
 };
 
@@ -86,6 +86,8 @@ function ProductEditorClient(props: ProductEditorProps) {
         fontClass,
         chrome,
         product,
+        // The cards around this one: the category's products as they are now, drafts included.
+        siblings: category?.products ?? [],
       } satisfies ProductStudioMetadata,
       initialData,
       snapshot,
