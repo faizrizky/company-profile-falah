@@ -72,10 +72,36 @@ function useLiveCategory(base: SolutionCategory, own: "hero" | "challenges" | "s
   };
 }
 
+/**
+ * The Showcase tab list (one tab per product): all of a tab on the category
+ * page (Product); on the product card (Solution, `card`) only its name and
+ * media — the rest is kept as it is when saved.
+ */
+export function showcaseTabsField(f: ReturnType<typeof createFields>, card = false) {
+  const { L, text, textarea, tags, video, pdf, list } = f;
+  return list(
+    TABS_LABEL_EN,
+    TABS_LABEL_ID,
+    {
+      name: text("Name", "Nama"),
+      ...(!card && {
+        description: textarea("Description", "Deskripsi"),
+        tags: tags("Recommended for (chips)", "Direkomendasikan untuk (chip)"),
+      }),
+      video: video("Video (desktop)", "Video (desktop)"),
+      videoMobile: video("Video (phone)", "Video (HP)"),
+      ...(!card && { brochure: pdf("Brochure (PDF)", "Brosur (PDF)") }),
+    },
+    "name",
+    { name: L("New tab", "Tab baru"), description: "", tags: [], video: null, videoMobile: null, brochure: null },
+    10,
+  );
+}
+
 export function createCategoryConfig(context: StudioContext & { backPath: string }): Config {
   const { lang, locale, cmsUrl, embedded, backPath } = context;
   const f = createFields(context);
-  const { s, L, text, textarea, plain, link, image, video, pdf, tags, list } = f;
+  const { s, L, text, textarea, plain, link, image, video, tags, list } = f;
 
   const Hero = ({ puck, ...props }: AnyProps & { puck: { metadata: unknown } }) => {
     const { ctx, category: base } = meta(puck) as CategoryStudioMetadata;
@@ -225,21 +251,7 @@ export function createCategoryConfig(context: StudioContext & { backPath: string
       fields: {
         background: image("Background image (and video poster)", "Gambar latar (dan poster video)"),
         backgroundVideo: video("Background video (shared)", "Video latar (umum)"),
-        tabs: list(
-          TABS_LABEL_EN,
-          TABS_LABEL_ID,
-          {
-            name: text("Name", "Nama"),
-            description: textarea("Description", "Deskripsi"),
-            tags: tags("Recommended for (chips)", "Direkomendasikan untuk (chip)"),
-            video: video("Video (desktop)", "Video (desktop)"),
-            videoMobile: video("Video (phone)", "Video (HP)"),
-            brochure: pdf("Brochure (PDF)", "Brosur (PDF)"),
-          },
-          "name",
-          { name: L("New tab", "Tab baru"), description: "", tags: [], video: null, videoMobile: null, brochure: null },
-          10,
-        ),
+        tabs: showcaseTabsField(f),
       },
       render: Showcase as never,
     },

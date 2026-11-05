@@ -72,20 +72,28 @@ describe("product ↔ visual editor", () => {
       expect(puckToCategoryShowcase(productToPuck(product, tabs), showcase)).toBeNull();
     });
 
-    it("renames, reorders and adds tabs, keeping what else each tab had", () => {
-      const changes = puckToCategoryShowcase(
-        withTabs([
-          { id: "t2", name: "Maintenance" },
-          { id: "t1", name: "Virtual Operational Training" },
-          { id: "t3", name: "Medical" },
-        ]),
-        showcase,
-      ) as { showcase: { background: number; tabs: Record<string, unknown>[] } };
+    it("saves every tab field, reordered and added, keeping what else each tab had", () => {
+      const data = productToPuck(product, tabs);
+      const props = data.content[0].props as { tabs: Record<string, unknown>[] };
+      const [ops, fix] = props.tabs;
+      const empty = { description: "", tags: [], video: null, videoMobile: null, brochure: null };
+      props.tabs = [{ ...fix, name: "Maintenance", video: media }, ops, { id: "t3", name: "Medical", ...empty }];
+      const changes = puckToCategoryShowcase(data, showcase) as {
+        showcase: { background: number; tabs: Record<string, unknown>[] };
+      };
       expect(changes.showcase.background).toBe(7);
       expect(changes.showcase.tabs).toEqual([
-        { id: "t2", name: "Maintenance", description: "Fix" },
-        { id: "t1", name: "Virtual Operational Training", description: "Ops", brochure: 40 },
-        { id: "t3", name: "Medical" },
+        { id: "t2", name: "Maintenance", description: "Fix", tags: [], video: 12, videoMobile: null, brochure: null },
+        {
+          id: "t1",
+          name: "Virtual Operational Training",
+          description: "Ops",
+          tags: [],
+          video: null,
+          videoMobile: null,
+          brochure: 40,
+        },
+        { id: "t3", name: "Medical", ...empty },
       ]);
     });
 

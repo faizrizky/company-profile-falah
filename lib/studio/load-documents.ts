@@ -106,8 +106,9 @@ async function firstProductOf(categoryId: number, authorization: string): Promis
 }
 
 /**
- * The product's category Showcase (latest draft, media as ids): the product
- * editor edits its tabs, one per product. Null without a category.
+ * The product's category Showcase (latest draft, media populated for the
+ * previews; saved back as ids): the product editor edits its tabs, one per
+ * product. Null without a category.
  */
 async function categoryShowcaseOf(
   product: Product,
@@ -119,7 +120,7 @@ async function categoryShowcaseOf(
   const url = new URL(`/api/solution-categories/${id}`, env.CMS_URL);
   url.search = new URLSearchParams({
     draft: "true",
-    depth: "0",
+    depth: "1",
     locale,
     "fallback-locale": defaultLocale,
     "select[showcase]": "true",

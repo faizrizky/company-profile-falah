@@ -7,6 +7,7 @@ import { ProductCard } from "@/components/solution/overview-tabs";
 import { TabButton } from "@/components/ui/tab-button";
 import type { Product } from "@/types/cms";
 
+import { showcaseTabsField } from "./category";
 import { createFields, type StudioContext } from "./fields";
 import { meta, type AnyProps, type StudioMetadata } from "./metadata";
 import { renderStudioRoot } from "./root";
@@ -27,7 +28,7 @@ export function createProductConfig(
 ): Config {
   const { lang, locale, cmsUrl, embedded, backPath, data, tabsCategoryId } = context;
   const f = createFields(context);
-  const { s, L, text, image, tags, toggle, list } = f;
+  const { s, L, text, image, tags, toggle } = f;
 
   const Card = ({ puck, ...props }: AnyProps & { puck: { metadata: unknown } }) => {
     const { product: base, ctx } = meta(puck) as ProductStudioMetadata;
@@ -105,14 +106,7 @@ export function createProductConfig(
       },
       ...(own
         ? {
-            tabs: list(
-              "Tabs (one per product)",
-              "Tab (satu per produk)",
-              { name: text("Name", "Nama") },
-              "name",
-              { name: L("New tab", "Tab baru") },
-              10,
-            ),
+            tabs: showcaseTabsField(f, true),
           }
         : {}),
       wide: toggle("Wide (2 columns on desktop)", "Lebar (2 kolom di desktop)"),

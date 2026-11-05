@@ -15,13 +15,24 @@ import { toReference } from "./convert";
  * when the product is created; the order is set by dragging in the list).
  *
  * The card also carries its category's Showcase tabs (one per product, see
- * the CMS's showcaseSync): their names and order are edited here and saved
- * to the category; everything else about a tab stays as loaded.
+ * the CMS's showcaseSync), edited here as on the category page and saved to
+ * the category.
  */
 
 type Props = Record<string, unknown>;
 type Showcase = NonNullable<SolutionCategory["showcase"]>;
-type TabRow = { id?: string | null; name?: string | null };
+type TabRow = { id?: string | null; name?: string | null } & Record<string, unknown>;
+
+/** A tab as the editor edits it (the Showcase tab list's fields); media stay as loaded. */
+const tabProps = (tab: TabRow) => ({
+  id: tab.id,
+  name: text(tab.name),
+  description: text(tab.description),
+  tags: list(tab.tags),
+  video: tab.video ?? null,
+  videoMobile: tab.videoMobile ?? null,
+  brochure: tab.brochure ?? null,
+});
 
 const text = (value: unknown) => (typeof value === "string" ? value : "");
 const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
@@ -52,7 +63,7 @@ export function productToPuck(product: Product, tabs: TabRow[] = []): Data {
           imageMobile: product.imageMobile ?? null,
           wide: Boolean(product.layout?.wide),
           largeTitle: Boolean(product.layout?.largeTitle),
-          tabs: tabs.map((tab) => ({ id: tab.id, name: text(tab.name) })),
+          tabs: tabs.map(tabProps),
         },
       },
     ],
@@ -89,22 +100,20 @@ export function puckToProduct(data: Data, base: Product, tabsBefore: TabRow[] = 
 }
 
 /**
- * The category's Showcase to save with the card's tab names and order, or
- * null when they are as loaded. Tabs keep everything else they had.
+ * The category's Showcase to save with the card's tabs, or null when they are
+ * as loaded (compared field by field, media as ids).
  */
 export function puckToCategoryShowcase(data: Data, showcase: Showcase): Record<string, unknown> | null {
+  const saved = (rows: TabRow[]) => JSON.stringify(toReference(rows.map(tabProps)));
   const rows = tabRows(productProps(data).tabs);
-  const before = showcase.tabs ?? [];
-  const unchanged =
-    rows.length === before.length &&
-    rows.every((row, i) => row.id === before[i].id && text(row.name) === text(before[i].name));
-  if (unchanged) return null;
+  const before = (showcase.tabs ?? []) as TabRow[];
+  if (saved(rows) === saved(before)) return null;
   return {
     showcase: toReference({
       ...showcase,
       tabs: rows.map((row) => {
         const base = before.find((tab) => tab.id === row.id);
-        return { ...base, id: row.id, name: text(row.name).trim() || text(base?.name) };
+        return { ...base, ...tabProps(row), name: text(row.name).trim() || text(base?.name) };
       }),
     }),
   };

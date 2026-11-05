@@ -1372,16 +1372,15 @@ select.studio-input {
     color 0.2s ease;
 }
 
-.studio-switch__option:hover:not(:disabled) {
+.studio-switch__option:not(.is-active):hover:not(:disabled) {
   color: #0f2742;
 }
 
+/* The chosen side: the CMS's primary button blue (--falah-accent-gradient). */
 .studio-switch__option.is-active {
-  background: #fff;
-  color: #0f2742;
-  box-shadow:
-    0 1px 2px rgb(6 41 79 / 0.08),
-    0 4px 10px -4px rgb(6 41 79 / 0.2);
+  background: linear-gradient(135deg, #38bdf8 0%, #1f7ae0 100%);
+  color: #fff;
+  box-shadow: 0 10px 22px -12px rgb(31 122 224 / 0.8);
   cursor: default;
 }
 
