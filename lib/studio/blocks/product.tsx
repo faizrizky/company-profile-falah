@@ -90,8 +90,8 @@ export function createProductConfig(
             ))}
           </div>
           <div role="tabpanel" className="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
-            {cards.map((p) => (
-              <ProductCard key={p.id} product={p} />
+            {cards.map((p, index) => (
+              <ProductCard key={p.id} product={p} first={index === 0} />
             ))}
           </div>
         </div>
@@ -170,8 +170,8 @@ export function createProductConfig(
               />
               <p className="studio-note">
                 {L(
-                  "The card as it appears in Solution overview and the menu. The order is set by dragging in the list.",
-                  "Kartu seperti di Solution overview dan menu. Urutan diatur dengan menggeser di daftar.",
+                  "The card as it appears in Solution overview and the menu. The order is set by dragging in the list. The first card of a category is always the big one (2 columns, large title).",
+                  "Kartu seperti di Solution overview dan menu. Urutan diatur dengan menggeser di daftar. Kartu pertama tiap kategori selalu yang besar (2 kolom, judul besar).",
                 )}
               </p>
             </>

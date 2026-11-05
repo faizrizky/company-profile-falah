@@ -12,9 +12,12 @@ import type { Product, SolutionCategory } from "@/types/cms";
  * A product in the Solution overview. When its category has a detail page,
  * the whole card links there and opens that product's tab (#anchor).
  */
-export function ProductCard({ product, href }: { product: Product; href?: string }) {
+/** `first`: the first card of a category is always the big one (2 columns, large title). */
+export function ProductCard({ product, href, first }: { product: Product; href?: string; first?: boolean }) {
   const { t } = useI18n();
-  const { wide, largeTitle } = product.layout ?? {};
+  const layout = product.layout ?? {};
+  const wide = first || layout.wide;
+  const largeTitle = first || layout.largeTitle;
   return (
     <ImageLinkCard
       title={product.title}
@@ -74,8 +77,8 @@ export function SolutionOverviewTabs({
       </div>
       {/* Keyed by tab: the cards replay their enter animation on every switch. */}
       <div key={activeId} role="tabpanel" className="tab-panel-in grid w-full grid-cols-1 gap-4 md:grid-cols-3">
-        {visible.map((p) => (
-          <ProductCard key={p.id} product={p} href={productHref(p)} />
+        {visible.map((p, index) => (
+          <ProductCard key={p.id} product={p} href={productHref(p)} first={index === 0} />
         ))}
         {visible.length === 0 && (
           <p className="col-span-full py-16 text-center text-sm text-white/70">{t.solutions.comingSoon}</p>
