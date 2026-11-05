@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentConfig, Config, Fields } from "@puckeditor/core";
+import type { ComponentConfig, Config, Data, Fields } from "@puckeditor/core";
 
 import { PageSettingsField } from "@/components/studio/fields";
 import { ProductCard } from "@/components/solution/overview-tabs";
@@ -11,7 +11,7 @@ import { showcaseTabsField } from "./category";
 import { createFields, type StudioContext } from "./fields";
 import { meta, type AnyProps, type StudioMetadata } from "./metadata";
 import { renderStudioRoot } from "./root";
-import { productCategoryId } from "../product";
+import { ownMedia, productCategoryId } from "../product";
 
 /** The canvas metadata of a product: the site's, plus the product as it was loaded. */
 export type ProductStudioMetadata = StudioMetadata & { product: Product };
@@ -35,19 +35,33 @@ export function createProductConfig(
     const { categories, products } = ctx.data;
     const categoryId = typeof props.category === "number" ? props.category : productCategoryId(base);
 
+    // The card as the editor holds it (for the images, which the tab list edits too).
+    const cardData = { root: { props: {} }, content: [{ type: "productCard", props }] } as unknown as Data;
+    const rows = (Array.isArray(props.tabs) ? props.tabs : []) as {
+      id?: string;
+      image?: unknown;
+      imageMobile?: unknown;
+    }[];
+
     const self = {
       ...base,
       title: props.title as string,
       summary: props.summary as string,
       tags: props.tags as string[],
       category: categoryId ?? base.category,
-      image: props.image as never,
-      imageMobile: props.imageMobile as never,
+      image: ownMedia(cardData, base, "image") as never,
+      imageMobile: ownMedia(cardData, base, "imageMobile") as never,
       layout: { wide: Boolean(props.wide), largeTitle: Boolean(props.largeTitle) },
     } as Product;
 
     // The category's tab as the live Solution overview shows it, the product among its neighbours.
-    const neighbours = products.filter((p) => p.id !== base.id && productCategoryId(p) === categoryId);
+    const neighbours = products
+      .filter((p) => p.id !== base.id && productCategoryId(p) === categoryId)
+      // Their images as the tab list holds them now.
+      .map((p) => {
+        const row = rows.find((tab) => tab.id && tab.id === p.showcaseTab);
+        return row ? ({ ...p, image: row.image ?? null, imageMobile: row.imageMobile ?? null } as Product) : p;
+      });
     const cards = [...neighbours, self].sort(byOrder);
 
     return (

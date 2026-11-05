@@ -73,27 +73,33 @@ function useLiveCategory(base: SolutionCategory, own: "hero" | "challenges" | "s
 }
 
 /**
- * The Showcase tab list (one tab per product): all of a tab on the category
- * page (Product); on the product card (Solution, `card`) only its name and
- * media — the rest is kept as it is when saved.
+ * The Showcase tab list (one tab per product). On the category page (Product):
+ * all of a tab. On the product card (Solution, `card`): the tab's name and the
+ * images of its product, as in the Solution overview.
  */
 export function showcaseTabsField(f: ReturnType<typeof createFields>, card = false) {
-  const { L, text, textarea, tags, video, pdf, list } = f;
+  const { L, text, textarea, tags, image, video, pdf, list } = f;
   return list(
     TABS_LABEL_EN,
     TABS_LABEL_ID,
-    {
-      name: text("Name", "Nama"),
-      ...(!card && {
-        description: textarea("Description", "Deskripsi"),
-        tags: tags("Recommended for (chips)", "Direkomendasikan untuk (chip)"),
-      }),
-      video: video("Video (desktop)", "Video (desktop)"),
-      videoMobile: video("Video (phone)", "Video (HP)"),
-      ...(!card && { brochure: pdf("Brochure (PDF)", "Brosur (PDF)") }),
-    },
+    card
+      ? {
+          name: text("Name", "Nama"),
+          image: image("Image", "Gambar"),
+          imageMobile: image("Image (mobile)", "Gambar (HP)"),
+        }
+      : {
+          name: text("Name", "Nama"),
+          description: textarea("Description", "Deskripsi"),
+          tags: tags("Recommended for (chips)", "Direkomendasikan untuk (chip)"),
+          video: video("Video (desktop)", "Video (desktop)"),
+          videoMobile: video("Video (phone)", "Video (HP)"),
+          brochure: pdf("Brochure (PDF)", "Brosur (PDF)"),
+        },
     "name",
-    { name: L("New tab", "Tab baru"), description: "", tags: [], video: null, videoMobile: null, brochure: null },
+    card
+      ? { name: L("New tab", "Tab baru"), image: null, imageMobile: null }
+      : { name: L("New tab", "Tab baru"), description: "", tags: [], video: null, videoMobile: null, brochure: null },
     10,
   );
 }

@@ -10,7 +10,7 @@ import { getDictionary } from "@/lib/i18n/dictionaries";
 import { cmsPublicUrl } from "@/lib/studio/auth";
 import { buildLinkGroups } from "@/lib/studio/load";
 import type { StudioLang } from "@/lib/studio/strings";
-import { productCategoryId } from "@/lib/studio/product";
+import { productCategoryId, type SiblingProduct } from "@/lib/studio/product";
 import type { Product, SolutionCategory, User } from "@/types/cms";
 
 /** The documents the editor opens besides pages. */
@@ -106,27 +106,42 @@ async function firstProductOf(categoryId: number, authorization: string): Promis
 }
 
 /**
- * The product's category Showcase (latest draft, media populated for the
- * previews; saved back as ids): the product editor edits its tabs, one per
- * product. Null without a category.
+ * The product's category Showcase (latest draft) and the category's products
+ * with their images (media populated for the previews, saved back as ids): the
+ * product editor edits the tabs, and the images of each tab's product. Null
+ * without a category.
  */
 async function categoryShowcaseOf(
   product: Product,
   locale: Locale,
   authorization: string,
-): Promise<{ id: number; showcase: NonNullable<SolutionCategory["showcase"]> } | null> {
+): Promise<{ id: number; showcase: NonNullable<SolutionCategory["showcase"]>; products: SiblingProduct[] } | null> {
   const id = productCategoryId(product);
   if (!id) return null;
-  const url = new URL(`/api/solution-categories/${id}`, env.CMS_URL);
-  url.search = new URLSearchParams({
-    draft: "true",
-    depth: "1",
-    locale,
-    "fallback-locale": defaultLocale,
-    "select[showcase]": "true",
-  }).toString();
-  const res = await fetch(url, { headers: { authorization }, cache: "no-store" }).catch(() => null);
-  if (!res?.ok) return null;
-  const doc = (await res.json()) as Pick<SolutionCategory, "showcase">;
-  return { id, showcase: doc.showcase ?? {} };
+  const get = (path: string, params: Record<string, string>) => {
+    const url = new URL(path, env.CMS_URL);
+    url.search = new URLSearchParams({
+      draft: "true",
+      depth: "1",
+      locale,
+      "fallback-locale": defaultLocale,
+      ...params,
+    }).toString();
+    return fetch(url, { headers: { authorization }, cache: "no-store" }).catch(() => null);
+  };
+  const [categoryRes, productsRes] = await Promise.all([
+    get(`/api/solution-categories/${id}`, { "select[showcase]": "true" }),
+    get("/api/products", {
+      "where[category][equals]": String(id),
+      sort: "_order",
+      limit: "100",
+      "select[showcaseTab]": "true",
+      "select[image]": "true",
+      "select[imageMobile]": "true",
+    }),
+  ]);
+  if (!categoryRes?.ok) return null;
+  const category = (await categoryRes.json()) as Pick<SolutionCategory, "showcase">;
+  const products = productsRes?.ok ? (((await productsRes.json()) as { docs?: SiblingProduct[] }).docs ?? []) : [];
+  return { id, showcase: category.showcase ?? {}, products: products.filter((p) => p.id !== product.id) };
 }

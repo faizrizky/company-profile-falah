@@ -15,24 +15,23 @@ import { toReference } from "./convert";
  * when the product is created; the order is set by dragging in the list).
  *
  * The card also carries its category's Showcase tabs (one per product, see
- * the CMS's showcaseSync), edited here as on the category page and saved to
- * the category.
+ * the CMS's showcaseSync) as a list: each row is a tab's name and the images
+ * of that tab's product (its card, as the Solution overview shows it). Names
+ * and order are saved to the category, the images to each product.
  */
 
 type Props = Record<string, unknown>;
 type Showcase = NonNullable<SolutionCategory["showcase"]>;
 type TabRow = { id?: string | null; name?: string | null } & Record<string, unknown>;
+/** A product of the category, as far as the tab list needs it. */
+export type SiblingProduct = Pick<Product, "id" | "showcaseTab" | "image" | "imageMobile">;
 
-/** A tab as the editor edits it (the Showcase tab list's fields); media stay as loaded. */
-const tabProps = (tab: TabRow) => ({
-  id: tab.id,
-  name: text(tab.name),
-  description: text(tab.description),
-  tags: list(tab.tags),
-  video: tab.video ?? null,
-  videoMobile: tab.videoMobile ?? null,
-  brochure: tab.brochure ?? null,
-});
+const mediaId = (media: unknown): number | null =>
+  media && typeof media === "object"
+    ? ((media as { id?: number }).id ?? null)
+    : typeof media === "number"
+      ? media
+      : null;
 
 const text = (value: unknown) => (typeof value === "string" ? value : "");
 const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
@@ -45,7 +44,20 @@ export const productCategoryId = (product: Pick<Product, "category">): number | 
 
 const tabRows = (value: unknown): TabRow[] => list(value) as TabRow[];
 
-export function productToPuck(product: Product, tabs: TabRow[] = []): Data {
+/** The tab list as the editor holds it: name and the images of the tab's product. */
+function tabRowsOf(product: Product, tabs: TabRow[], siblings: SiblingProduct[]) {
+  return tabs.map((tab) => {
+    const owner = tab.id && tab.id === product.showcaseTab ? product : siblings.find((p) => p.showcaseTab === tab.id);
+    return {
+      id: tab.id,
+      name: text(tab.name),
+      image: owner?.image ?? null,
+      imageMobile: owner?.imageMobile ?? null,
+    };
+  });
+}
+
+export function productToPuck(product: Product, tabs: TabRow[] = [], siblings: SiblingProduct[] = []): Data {
   return {
     root: { props: {} },
     content: [
@@ -63,7 +75,7 @@ export function productToPuck(product: Product, tabs: TabRow[] = []): Data {
           imageMobile: product.imageMobile ?? null,
           wide: Boolean(product.layout?.wide),
           largeTitle: Boolean(product.layout?.largeTitle),
-          tabs: tabs.map(tabProps),
+          tabs: tabRowsOf(product, tabs, siblings),
         },
       },
     ],
@@ -71,6 +83,17 @@ export function productToPuck(product: Product, tabs: TabRow[] = []): Data {
 }
 
 export const productProps = (data: Data): Props => (data.content[0]?.props ?? {}) as Props;
+
+/**
+ * The card's own image or mobile image: its own field, or its row in the tab
+ * list when only that was changed (both show the same picture).
+ */
+export function ownMedia(data: Data, base: Product, key: "image" | "imageMobile"): unknown {
+  const card = productProps(data);
+  const row = base.showcaseTab ? tabRows(card.tabs).find((tab) => tab.id === base.showcaseTab) : undefined;
+  const fieldChanged = mediaId(card[key]) !== mediaId(base[key]);
+  return !fieldChanged && row && mediaId(row[key]) !== mediaId(base[key]) ? row[key] : (card[key] ?? null);
+}
 
 /**
  * The body of a save. `tabsBefore`: the category's tabs as loaded — renaming
@@ -93,28 +116,52 @@ export function puckToProduct(data: Data, base: Product, tabsBefore: TabRow[] = 
     // tab saved with this card, see puckToCategoryShowcase), which an
     // unchanged value would undo.
     ...(text(card.showcaseTab) !== text(base.showcaseTab) && { showcaseTab: text(card.showcaseTab) || null }),
-    image: toReference(card.image ?? null),
-    imageMobile: toReference(card.imageMobile ?? null),
+    image: toReference(ownMedia(data, base, "image")),
+    imageMobile: toReference(ownMedia(data, base, "imageMobile")),
     layout: { wide: Boolean(card.wide), largeTitle: Boolean(card.largeTitle) },
   };
 }
 
 /**
- * The category's Showcase to save with the card's tabs, or null when they are
- * as loaded (compared field by field, media as ids).
+ * The category's Showcase to save with the card's tab list, or null when the
+ * names and order are as loaded. Everything else of a tab (text, chips, videos,
+ * brochure) is kept as it was.
  */
 export function puckToCategoryShowcase(data: Data, showcase: Showcase): Record<string, unknown> | null {
-  const saved = (rows: TabRow[]) => JSON.stringify(toReference(rows.map(tabProps)));
   const rows = tabRows(productProps(data).tabs);
   const before = (showcase.tabs ?? []) as TabRow[];
-  if (saved(rows) === saved(before)) return null;
+  const key = (tabs: TabRow[]) => JSON.stringify(tabs.map((tab) => [tab.id, text(tab.name)]));
+  if (key(rows) === key(before)) return null;
   return {
     showcase: toReference({
       ...showcase,
       tabs: rows.map((row) => {
         const base = before.find((tab) => tab.id === row.id);
-        return { ...base, ...tabProps(row), name: text(row.name).trim() || text(base?.name) };
+        return { ...base, id: row.id, name: text(row.name).trim() || text(base?.name) };
       }),
     }),
   };
+}
+
+/**
+ * The other products of the category whose images were changed in the tab
+ * list: { id, changes } for each, to save with the card. (This product's own
+ * row goes through puckToProduct.)
+ */
+export function puckToSiblingImages(
+  data: Data,
+  base: Product,
+  siblings: SiblingProduct[],
+): { id: number; changes: Record<string, unknown> }[] {
+  const rows = tabRows(productProps(data).tabs);
+  const changed: { id: number; changes: Record<string, unknown> }[] = [];
+  for (const sibling of siblings) {
+    const row = rows.find((tab) => tab.id && tab.id === sibling.showcaseTab && tab.id !== base.showcaseTab);
+    if (!row) continue;
+    const changes: Record<string, unknown> = {};
+    for (const key of ["image", "imageMobile"] as const)
+      if (mediaId(row[key]) !== mediaId(sibling[key])) changes[key] = toReference(row[key] ?? null);
+    if (Object.keys(changes).length) changed.push({ id: sibling.id, changes });
+  }
+  return changed;
 }
