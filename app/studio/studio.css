@@ -1355,8 +1355,26 @@ select.studio-input {
   inset-block: 0;
   inset-inline-end: 38px;
   align-items: center;
-  padding-inline: 6px 2px;
-  background: #eef5fe;
+  /* Fades in over the title's end instead of cutting a letter in half. */
+  padding-inline: 22px 2px;
+  background: linear-gradient(90deg, rgb(238 245 254 / 0), #eef5fe 18px);
+}
+
+/* The open row shows its buttons all the time: they get their own strip above
+   the title, which keeps the whole width (nothing runs under them). */
+.studio-body [class*="_ArrayFieldItem--isExpanded_"] > [class*="_ArrayFieldItem-summary_"] {
+  padding-block-start: 36px;
+}
+
+.studio-body
+  [class*="_ArrayFieldItem--isExpanded_"]
+  > [class*="_ArrayFieldItem-summary_"]
+  [class*="_ArrayFieldItem-actions_"] {
+  inset-block: 6px auto;
+  inset-inline-end: 12px;
+  height: 26px;
+  padding-inline: 0;
+  background: none;
 }
 
 /* Solution | Product: the CMS's segmented switch (language switch in the account menu). */

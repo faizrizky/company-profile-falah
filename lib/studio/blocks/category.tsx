@@ -77,9 +77,9 @@ function useLiveCategory(base: SolutionCategory, own: "hero" | "challenges" | "s
  * all of a tab. On the product card (Solution, `card`): the tab's name and the
  * images of its product, as in the Solution overview.
  */
-export function showcaseTabsField(f: ReturnType<typeof createFields>, card = false) {
+export function showcaseTabsField(f: ReturnType<typeof createFields>, card = false, ownTabId?: string | null) {
   const { L, text, textarea, tags, image, video, pdf, list } = f;
-  return list(
+  const field = list(
     TABS_LABEL_EN,
     TABS_LABEL_ID,
     card
@@ -102,6 +102,13 @@ export function showcaseTabsField(f: ReturnType<typeof createFields>, card = fal
       : { name: L("New tab", "Tab baru"), description: "", tags: [], video: null, videoMobile: null, brochure: null },
     10,
   );
+  // On the product card, its own tab says so (its image is edited there).
+  if (!ownTabId) return field;
+  return {
+    ...field,
+    getItemSummary: (item: AnyProps) =>
+      `${String(item.name || "…")}${item.id === ownTabId ? `  ${L("· this product", "· produk ini")}` : ""}`,
+  } as typeof field;
 }
 
 export function createCategoryConfig(context: StudioContext & { backPath: string }): Config {

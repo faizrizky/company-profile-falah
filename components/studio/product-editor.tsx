@@ -79,6 +79,7 @@ function ProductEditorClient(props: ProductEditorProps) {
         linkGroups: [],
         backPath: `/admin/collections/products/${product.id}/form`,
         tabsCategoryId: category?.id ?? null,
+        ownTabId: product.showcaseTab ?? null,
       }),
       metadata: {
         ctx: { locale, t: dictionary, data: siteData },

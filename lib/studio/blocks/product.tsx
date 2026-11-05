@@ -24,9 +24,11 @@ export function createProductConfig(
     backPath: string;
     /** The category whose Showcase tabs the card carries (see lib/studio/product.ts). */
     tabsCategoryId: number | null;
+    /** The tab of this product: its images are edited in that row, not above it. */
+    ownTabId: string | null;
   },
 ): Config {
-  const { lang, locale, cmsUrl, embedded, backPath, data, tabsCategoryId } = context;
+  const { lang, locale, cmsUrl, embedded, backPath, data, tabsCategoryId, ownTabId } = context;
   const f = createFields(context);
   const { s, L, text, image, tags, toggle } = f;
 
@@ -94,17 +96,21 @@ export function createProductConfig(
    * loaded category they are the tab list below, as edited (one tab per
    * product, saved to the category with the card).
    */
-  const cardFields = (categoryId: number, liveTabs?: unknown): Fields<AnyProps> => {
-    const own = categoryId === tabsCategoryId;
-    const tabs = ((own ? liveTabs : undefined) ??
+  const tabsOf = (liveTabs: unknown, categoryId: number) =>
+    ((categoryId === tabsCategoryId ? liveTabs : undefined) ??
       data.categories.find((c) => c.id === categoryId)?.showcase?.tabs ??
       []) as { id?: string | null; name?: string | null }[];
+
+  const cardFields = (categoryId: number, liveTabs?: unknown): Fields<AnyProps> => {
+    const own = categoryId === tabsCategoryId;
+    const ownRow = own && Boolean(ownTabId) && tabsOf(liveTabs, categoryId).some((t) => t.id === ownTabId);
+    const tabs = tabsOf(liveTabs, categoryId);
     return {
       title: text("Title", "Judul"),
       summary: { type: "textarea", label: L("Short description (on hover)", "Deskripsi singkat (saat di-hover)") },
       tags: tags("Recommended for (chips, on hover)", "Direkomendasikan untuk (chip, saat di-hover)"),
-      image: image("Image", "Gambar"),
-      imageMobile: image("Image (mobile)", "Gambar (HP)"),
+      // With its tab in the list, the images are edited in that row (not twice).
+      ...(ownRow ? {} : { image: image("Image", "Gambar"), imageMobile: image("Image (mobile)", "Gambar (HP)") }),
       category: {
         type: "select",
         label: L("Category", "Kategori"),
@@ -120,7 +126,7 @@ export function createProductConfig(
       },
       ...(own
         ? {
-            tabs: showcaseTabsField(f, true),
+            tabs: showcaseTabsField(f, true, ownTabId),
           }
         : {}),
       wide: toggle("Wide (2 columns on desktop)", "Lebar (2 kolom di desktop)"),
