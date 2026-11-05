@@ -128,12 +128,14 @@ function HeaderActions({
 
   const switcher = props.document.switcher;
   const openOther = (target: NonNullable<NonNullable<typeof switcher>["other"]>) => {
-    if (dirty && !window.confirm(s.leaveUnsaved)) return;
     if (props.embedded) {
-      // Inside the CMS: the CMS opens the other document (VisualEditorView).
+      // Inside the CMS: the CMS opens the other document, and asks first (with
+      // its own confirmation modal) when there are unsaved changes.
       const path = `/collections/${target.collection}/${target.id}`;
-      window.parent.postMessage({ type: "falah-studio:open", path }, new URL(props.cmsUrl).origin);
+      window.parent.postMessage({ type: "falah-studio:open", path, confirm: dirty }, new URL(props.cmsUrl).origin);
     } else {
+      // Standalone (no CMS around it, so no modal to borrow): the browser's own question.
+      if (dirty && !window.confirm(s.leaveUnsaved)) return;
       window.location.href = `/studio/${target.collection}/${target.id}${window.location.search}`;
     }
   };
