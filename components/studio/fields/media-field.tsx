@@ -100,9 +100,23 @@ export function MediaField({
   return (
     <FieldLabel label={label} el="div">
       <div className="studio-media">
-        <div className="studio-media__preview">
-          {current?.url ? <MediaThumb item={current} /> : <span>{none}</span>}
-        </div>
+        {current?.url ? (
+          // The file itself in a new tab, to see it properly (as in the CMS form).
+          <a
+            className="studio-media__preview studio-media__preview--link"
+            href={current.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={s.openInNewTab}
+            aria-label={`${s.openInNewTab}: ${current.displayName || current.filename || ""}`}
+          >
+            <MediaThumb item={current} />
+          </a>
+        ) : (
+          <div className="studio-media__preview">
+            <span>{none}</span>
+          </div>
+        )}
         <div className="studio-media__actions">
           <button type="button" className="studio-btn studio-btn--ghost" onClick={() => setOpen((v) => !v)}>
             {open ? s.close : current ? s.replace : chooseLabel}
