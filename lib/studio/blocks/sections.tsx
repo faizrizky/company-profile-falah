@@ -154,9 +154,15 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
         items: list(
           "Small cards",
           "Kartu kecil",
-          { image: image("Image", "Gambar"), title: text("Title", "Judul"), href: link("Link", "Link") },
+          {
+            image: image("Image", "Gambar"),
+            title: text("Title", "Judul"),
+            description: textarea("Description (on hover)", "Deskripsi (saat di-hover)"),
+            tags: tags("Recommended for (chips, on hover)", "Direkomendasikan untuk (chip, saat di-hover)"),
+            href: link("Link", "Link"),
+          },
           "title",
-          { title: L("Card", "Kartu"), href: "/solution" },
+          { title: L("Card", "Kartu"), description: "", tags: [], href: "/solution" },
           7,
         ),
       },
