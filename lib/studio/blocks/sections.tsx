@@ -7,7 +7,6 @@ import type { BlockContext } from "@/components/blocks/types";
 import type { Page } from "@/types/cms";
 
 import type { StudioFields } from "./fields";
-import { FEATURED_ID, highlightsFromProps } from "../highlights";
 import { meta, type AnyProps } from "./metadata";
 
 type Block = Page["layout"][number];
@@ -39,41 +38,13 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
   const section = <T extends Block["blockType"]>(
     type: T,
     config: Omit<ComponentConfig<AnyProps>, "render">,
-    // For a block whose editor props differ from the CMS block's fields.
-    toBlock: (props: AnyProps) => AnyProps = (props) => props,
   ): ComponentConfig<AnyProps> => ({
     ...config,
     render: ({ puck, id, editMode: _editMode, ...props }) => {
       const Component = blockComponents[type] as unknown as React.ComponentType<{ block: Block; ctx: BlockContext }>;
-      return <Component block={{ ...toBlock(props), id, blockType: type } as unknown as Block} ctx={meta(puck).ctx} />;
+      return <Component block={{ ...props, id, blockType: type } as unknown as Block} ctx={meta(puck).ctx} />;
     },
   });
-
-  /**
-   * The cards of "Solution highlights" as one list: the first is the big card
-   * (the one marked), the others the small ones (see lib/studio/highlights.ts).
-   */
-  const highlightCards = (): Fields<AnyProps>[string] => {
-    const field = list(
-      "Cards (the first is the big one)",
-      "Kartu (yang pertama jadi kartu besar)",
-      {
-        image: image("Image", "Gambar"),
-        title: text("Title", "Judul"),
-        description: textarea("Description (on hover)", "Deskripsi (saat di-hover)"),
-        tags: tags("Recommended for (chips, on hover)", "Direkomendasikan untuk (chip, saat di-hover)"),
-        href: link("Link", "Link"),
-      },
-      "title",
-      { title: L("Card", "Kartu"), description: "", tags: [], href: "/solution" },
-      8,
-    );
-    return {
-      ...field,
-      getItemSummary: (item: AnyProps) =>
-        `${String(item.title || "…")}${item.id === FEATURED_ID ? `  ${L("· big card", "· kartu besar")}` : ""}`,
-    } as typeof field;
-  };
 
   return {
     // ── Ready-made sections ──────────────────────────────────────────────
@@ -159,26 +130,48 @@ export function sectionComponents(f: StudioFields): Record<string, ComponentConf
       },
       defaultProps: { header: headerDefaults },
     }),
-    solutionHighlights: section(
-      "solutionHighlights",
-      {
-        label: L("Solution highlights", "Sorotan solusi"),
-        fields: {
-          header: header(),
-          background: image("Background", "Latar belakang"),
-          tagsLabel: text("Tags label (all cards)", "Label tag (semua kartu)"),
-          buttonLabel: text("Big card button label", "Teks tombol kartu besar"),
-          cards: highlightCards(),
+    solutionHighlights: section("solutionHighlights", {
+      label: L("Solution highlights", "Sorotan solusi"),
+      fields: {
+        header: header(),
+        background: image("Background", "Latar belakang"),
+        featured: {
+          type: "object",
+          label: L("Featured card", "Kartu utama"),
+          objectFields: {
+            image: image("Image", "Gambar"),
+            title: text("Title", "Judul"),
+            description: textarea("Description", "Deskripsi"),
+            tagsLabel: text("Tags label", "Label tag"),
+            tags: tags("Tags", "Tag"),
+            button: {
+              type: "object",
+              label: L("Button", "Tombol"),
+              objectFields: { label: text("Label", "Label"), href: link("Link", "Link") },
+            },
+          },
         },
-        defaultProps: {
-          header: headerDefaults,
-          tagsLabel: "",
-          buttonLabel: "",
-          cards: [{ id: FEATURED_ID, title: L("Featured", "Utama"), description: "", tags: [], href: "" }],
-        },
+        items: list(
+          "Small cards",
+          "Kartu kecil",
+          {
+            image: image("Image", "Gambar"),
+            title: text("Title", "Judul"),
+            description: textarea("Description (on hover)", "Deskripsi (saat di-hover)"),
+            tags: tags("Recommended for (chips, on hover)", "Direkomendasikan untuk (chip, saat di-hover)"),
+            href: link("Link", "Link"),
+          },
+          "title",
+          { title: L("Card", "Kartu"), description: "", tags: [], href: "/solution" },
+          7,
+        ),
       },
-      highlightsFromProps,
-    ),
+      defaultProps: {
+        header: headerDefaults,
+        featured: { title: L("Featured", "Utama"), tags: [], button: {} },
+        items: [],
+      },
+    }),
     expertise: section("expertise", {
       label: L("Expertise + stats", "Keahlian + statistik"),
       fields: {
