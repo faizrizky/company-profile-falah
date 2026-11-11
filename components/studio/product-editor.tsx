@@ -39,6 +39,8 @@ export type ProductEditorProps = {
     /** The category's other products: the tab list edits their images. */
     products: Product[];
   } | null;
+  /** Every product as it is now (drafts too): the cards of the category it is moved to. */
+  allProducts: Product[];
 };
 
 /** The visual editor of a product: its card, among the others of its category. */
@@ -49,7 +51,8 @@ export function ProductEditor(props: ProductEditorProps) {
 }
 
 function ProductEditorClient(props: ProductEditorProps) {
-  const { product, locale, uiLang, embedded, cmsUrl, siteData, chrome, dictionary, fontClass, category } = props;
+  const { product, locale, uiLang, embedded, cmsUrl, siteData, chrome, dictionary, fontClass, category, allProducts } =
+    props;
   // The category's Showcase and the other products' images as last saved from
   // here: what the tab list is compared with.
   const showcaseRef = useRef(category?.showcase ?? {});
@@ -92,6 +95,7 @@ function ProductEditorClient(props: ProductEditorProps) {
         product,
         // The cards around this one: the category's products as they are now, drafts included.
         siblings: category?.products ?? [],
+        everyProduct: allProducts,
       } satisfies ProductStudioMetadata,
       initialData,
       snapshot,
@@ -141,7 +145,7 @@ function ProductEditorClient(props: ProductEditorProps) {
         })(),
       },
     };
-  }, [product, uiLang, locale, cmsUrl, siteData, embedded, dictionary, fontClass, chrome, category]);
+  }, [product, uiLang, locale, cmsUrl, siteData, embedded, dictionary, fontClass, chrome, category, allProducts]);
 
   return <StudioShell document={document} locale={locale} uiLang={uiLang} embedded={embedded} cmsUrl={cmsUrl} />;
 }

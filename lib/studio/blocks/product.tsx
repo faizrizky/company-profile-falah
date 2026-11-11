@@ -18,6 +18,8 @@ export type ProductStudioMetadata = StudioMetadata & {
   product: Product;
   /** The other products of the loaded category, latest drafts included. */
   siblings: Product[];
+  /** Every product as it is now: the cards of another category the product is moved to. */
+  everyProduct: Product[];
 };
 
 /** What the product's category tab shows next to it: published products in their dragged order. */
@@ -39,8 +41,8 @@ export function createProductConfig(
   const { s, L, text, image, tags, toggle } = f;
 
   const Card = ({ puck, ...props }: AnyProps & { puck: { metadata: unknown } }) => {
-    const { product: base, ctx, siblings } = meta(puck) as ProductStudioMetadata;
-    const { categories, products } = ctx.data;
+    const { product: base, ctx, siblings, everyProduct } = meta(puck) as ProductStudioMetadata;
+    const { categories } = ctx.data;
     const categoryId = typeof props.category === "number" ? props.category : productCategoryId(base);
 
     // The card as the editor holds it (its description, chips and images are edited in the tab list too).
@@ -66,10 +68,9 @@ export function createProductConfig(
     } as Product;
 
     // The category's tab as the live Solution overview shows it, the product among its neighbours.
-    // In the loaded category: its products as they are now, drafts too (a tab
-    // saved a moment ago has a draft product, not yet published). In another
-    // one the site's published products are all there is to show.
-    const around = categoryId === tabsCategoryId ? siblings : products;
+    // Its products as they are now, drafts too (a tab saved a moment ago has a
+    // draft product, not yet published): in the loaded category and in another one.
+    const around = categoryId === tabsCategoryId ? siblings : everyProduct;
     const neighbours = around
       .filter((p) => p.id !== base.id && productCategoryId(p) === categoryId)
       // Their card as the tab list holds it now.

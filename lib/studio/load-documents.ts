@@ -81,11 +81,11 @@ export async function loadStudioDocument({
     };
   }
   const product = doc as Product;
-  return {
-    status: "ok",
-    collection,
-    props: { ...shared, product, category: await categoryShowcaseOf(product, locale, authorization) },
-  };
+  const [category, allProducts] = await Promise.all([
+    categoryShowcaseOf(product, locale, authorization),
+    allProductsNow(locale, authorization),
+  ]);
+  return { status: "ok", collection, props: { ...shared, product, category, allProducts } };
 }
 
 /** The category's first product (drafts included), for Solution | Product; null when it has none. */
@@ -103,6 +103,24 @@ async function firstProductOf(categoryId: number, authorization: string): Promis
   if (!res?.ok) return null;
   const { docs } = (await res.json()) as { docs?: { id: number }[] };
   return docs?.[0]?.id ?? null;
+}
+
+/**
+ * Every product as it is now, drafts included: the cards of another category,
+ * when this product is moved to it in the editor (before it is saved there).
+ */
+async function allProductsNow(locale: Locale, authorization: string): Promise<Product[]> {
+  const url = new URL("/api/products", env.CMS_URL);
+  url.search = new URLSearchParams({
+    draft: "true",
+    depth: "1",
+    locale,
+    "fallback-locale": defaultLocale,
+    sort: "_order",
+    limit: "200",
+  }).toString();
+  const res = await fetch(url, { headers: { authorization }, cache: "no-store" }).catch(() => null);
+  return res?.ok ? (((await res.json()) as { docs?: Product[] }).docs ?? []) : [];
 }
 
 /**
