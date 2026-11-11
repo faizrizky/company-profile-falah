@@ -47,6 +47,7 @@ export function createProductConfig(
     const cardData = { root: { props: {} }, content: [{ type: "productCard", props }] } as unknown as Data;
     const rows = (Array.isArray(props.tabs) ? props.tabs : []) as {
       id?: string;
+      name?: string;
       summary?: string;
       tags?: string[];
       image?: unknown;
@@ -83,7 +84,27 @@ export function createProductConfig(
           imageMobile: row.imageMobile ?? null,
         } as Product;
       });
-    const cards = [...neighbours, self].sort(byOrder);
+    // A tab just added in the list has no product until the category is saved: its card shows already, last.
+    const known = new Set([...around.map((p) => p.showcaseTab), base.showcaseTab]);
+    const added =
+      categoryId === tabsCategoryId
+        ? rows
+            .filter((row) => row.id && !known.has(row.id) && row.name?.trim())
+            .map(
+              (row) =>
+                ({
+                  id: -1 - rows.indexOf(row),
+                  title: row.name,
+                  summary: row.summary ?? "",
+                  tags: row.tags ?? [],
+                  image: row.image ?? null,
+                  imageMobile: row.imageMobile ?? null,
+                  category: categoryId,
+                  _order: "\uffff",
+                }) as unknown as Product,
+            )
+        : [];
+    const cards = [...neighbours, ...added, self].sort(byOrder);
 
     return (
       <section className="bg-surface-dark px-6 pb-12.5 pt-12.5 lg:px-page">
