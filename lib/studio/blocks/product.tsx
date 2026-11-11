@@ -11,7 +11,7 @@ import { showcaseTabsField } from "./category";
 import { createFields, type StudioContext } from "./fields";
 import { meta, type AnyProps, type StudioMetadata } from "./metadata";
 import { renderStudioRoot } from "./root";
-import { ownField, productCategoryId } from "../product";
+import { ownField, ownRowOf, productCategoryId, SELF_ROW } from "../product";
 
 /** The canvas metadata of a product: the site's, plus the product as it was loaded. */
 export type ProductStudioMetadata = StudioMetadata & {
@@ -88,7 +88,7 @@ export function createProductConfig(
         } as Product;
       });
     // A tab just added in the list has no product until the category is saved: its card shows already, last.
-    const known = new Set([...around.map((p) => p.showcaseTab), base.showcaseTab]);
+    const known = new Set([...around.map((p) => p.showcaseTab), base.showcaseTab, SELF_ROW]);
     const added = categoryId
       ? rows
           .filter((row) => row.id && !known.has(row.id) && row.name?.trim())
@@ -106,7 +106,13 @@ export function createProductConfig(
               }) as unknown as Product,
           )
       : [];
-    const cards = [...neighbours, ...added, self].sort(byOrder);
+    // In the order of the tab list (the rows), then the products without a tab in theirs.
+    const place = (p: Product) => {
+      const key = p.id === base.id ? ownRowOf(rows, base)?.id : p.showcaseTab;
+      const at = key ? rows.findIndex((row) => row.id === key) : -1;
+      return at < 0 ? rows.length : at;
+    };
+    const cards = [...neighbours, ...added, self].sort((a, b) => place(a) - place(b) || byOrder(a, b));
 
     return (
       <section className="bg-surface-dark px-6 pb-12.5 pt-12.5 lg:px-page">
@@ -147,9 +153,8 @@ export function createProductConfig(
   const cardFields = (categoryId: number, liveTabs?: unknown): Fields<AnyProps> => {
     // The tab list is the chosen category's: its cards, as products, in this category's order.
     const own = Number.isFinite(categoryId);
-    // This product's own tab exists in its category only.
-    const ownRow =
-      categoryId === tabsCategoryId && Boolean(ownTabId) && tabsOf(liveTabs, categoryId).some((t) => t.id === ownTabId);
+    // Its row (its tab's, or the stand-in of a product without one there) holds its card.
+    const ownRow = tabsOf(liveTabs, categoryId).some((t) => t.id === ownTabId || t.id === SELF_ROW);
     const tabs = tabsOf(liveTabs, categoryId);
     return {
       title: text("Title", "Judul"),
@@ -175,7 +180,9 @@ export function createProductConfig(
         label: L("Card opens tab", "Kartu membuka tab"),
         options: [
           { label: L("Automatic (the tab named like the product)", "Otomatis (tab yang bernama sama)"), value: "" },
-          ...tabs.filter((t) => t.id).map((t) => ({ label: t.name || "…", value: t.id as string })),
+          ...tabs
+            .filter((t) => t.id && t.id !== SELF_ROW)
+            .map((t) => ({ label: t.name || "…", value: t.id as string })),
         ],
       },
       ...(own

@@ -60,9 +60,20 @@ export const productCategoryId = (product: Pick<Product, "category">): number | 
 
 const tabRows = (value: unknown): TabRow[] => list(value) as TabRow[];
 
+/**
+ * The row of a product that has no tab in the category yet (a new product, or
+ * one moved to another category): its card is in the list all the same. The
+ * server gives it a tab when it is saved, so the row is never written as one.
+ */
+export const SELF_ROW = "this-product";
+
+/** The row of the product's own card: its tab's, else the stand-in. */
+export const ownRowOf = (rows: TabRow[], base: Pick<Product, "showcaseTab">) =>
+  rows.find((tab) => base.showcaseTab && tab.id === base.showcaseTab) ?? rows.find((tab) => tab.id === SELF_ROW);
+
 /** The tab list as the editor holds it: name, and the card of the tab's product. */
 export function tabRowsOf(product: Product, tabs: TabRow[], siblings: SiblingProduct[]) {
-  return tabs.map((tab) => {
+  const rows = tabs.map((tab) => {
     const owner = tab.id && tab.id === product.showcaseTab ? product : siblings.find((p) => p.showcaseTab === tab.id);
     return {
       id: tab.id,
@@ -73,6 +84,18 @@ export function tabRowsOf(product: Product, tabs: TabRow[], siblings: SiblingPro
       imageMobile: owner?.imageMobile ?? null,
     };
   });
+  if (product.showcaseTab && tabs.some((tab) => tab.id === product.showcaseTab)) return rows;
+  return [
+    ...rows,
+    {
+      id: SELF_ROW,
+      name: text(product.title),
+      summary: text(product.summary),
+      tags: list(product.tags),
+      image: product.image ?? null,
+      imageMobile: product.imageMobile ?? null,
+    },
+  ];
 }
 
 export function productToPuck(product: Product, tabs: TabRow[] = [], siblings: SiblingProduct[] = []): Data {
@@ -109,7 +132,7 @@ export const productProps = (data: Data): Props => (data.content[0]?.props ?? {}
  */
 export function ownField(data: Data, base: Product, key: RowField): unknown {
   const card = productProps(data);
-  const row = base.showcaseTab ? tabRows(card.tabs).find((tab) => tab.id === base.showcaseTab) : undefined;
+  const row = ownRowOf(tabRows(card.tabs), base);
   const fieldChanged = plain(key, card[key]) !== plain(key, base[key]);
   return !fieldChanged && row && plain(key, row[key]) !== plain(key, base[key]) ? row[key] : card[key];
 }
@@ -122,8 +145,9 @@ export function ownField(data: Data, base: Product, key: RowField): unknown {
 export function puckToProduct(data: Data, base: Product, tabsBefore: TabRow[] = []): Record<string, unknown> {
   const card = productProps(data);
   const category = typeof card.category === "number" ? card.category : productCategoryId(base);
-  const ownTab = base.showcaseTab ? tabRows(card.tabs).find((tab) => tab.id === base.showcaseTab) : undefined;
-  const ownBefore = tabsBefore.find((tab) => tab.id === base.showcaseTab);
+  const ownTab = ownRowOf(tabRows(card.tabs), base);
+  const ownBefore =
+    ownTab?.id === SELF_ROW ? { name: base.title } : tabsBefore.find((tab) => tab.id === base.showcaseTab);
   const tabName = text(ownTab?.name).trim();
   const renamedByTab = ownTab && ownBefore && tabName && tabName !== text(ownBefore.name).trim();
   return {
@@ -147,7 +171,7 @@ export function puckToProduct(data: Data, base: Product, tabsBefore: TabRow[] = 
  * brochure) is kept as it was.
  */
 export function puckToCategoryShowcase(data: Data, showcase: Showcase): Record<string, unknown> | null {
-  const rows = tabRows(productProps(data).tabs);
+  const rows = tabRows(productProps(data).tabs).filter((row) => row.id !== SELF_ROW);
   const before = (showcase.tabs ?? []) as TabRow[];
   const key = (tabs: TabRow[]) => JSON.stringify(tabs.map((tab) => [tab.id, text(tab.name)]));
   if (key(rows) === key(before)) return null;

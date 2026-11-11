@@ -14,6 +14,7 @@ import type { SolutionCategory } from "@/types/cms";
 import { createFields, type StudioContext } from "./fields";
 import { meta, type AnyProps, type StudioMetadata } from "./metadata";
 import { renderStudioRoot } from "./root";
+import { SELF_ROW } from "../product";
 
 /** The canvas metadata of a category: the site's, plus the category as it was loaded. */
 export type CategoryStudioMetadata = StudioMetadata & { category: SolutionCategory };
@@ -111,12 +112,12 @@ export function showcaseTabsField(
     10,
   );
   // On the product card, its own tab says so (its image is edited there).
-  if (!ownTabId && !draftTabIds.length) return field;
+  if (!card && !ownTabId && !draftTabIds.length) return field;
   return {
     ...field,
     getItemSummary: (item: AnyProps) => {
       const mark =
-        item.id === ownTabId
+        item.id === ownTabId || item.id === SELF_ROW
           ? L("· this product", "· produk ini")
           : draftTabIds.includes(String(item.id))
             ? L("· draft", "· draf")

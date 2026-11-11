@@ -7,6 +7,7 @@ import {
   puckToCategoryShowcase,
   puckToProduct,
   puckToSiblings,
+  SELF_ROW,
 } from "./product";
 import type { Product } from "@/types/cms";
 
@@ -213,5 +214,15 @@ describe("product ↔ visual editor", () => {
       rowsOf(other)[1].name = "Maintenance";
       expect(puckToProduct(other, product, tabs).title).toBe("Virtual Operational Training");
     });
+  });
+
+  it("a product without a tab in its category has its own row, never saved as a tab", () => {
+    const tabs = [{ id: "a", name: "Other" }];
+    const data = productToPuck({ ...product, showcaseTab: null } as Product, tabs);
+    const rows = (data.content[0].props as { tabs: { id: string; name: string }[] }).tabs;
+    expect(rows.map((row) => row.id)).toEqual(["a", SELF_ROW]);
+    expect(rows[1].name).toBe("Virtual Operational Training");
+    // Only the names and order of the real tabs are compared with the category's.
+    expect(puckToCategoryShowcase(data, { tabs })).toBeNull();
   });
 });
