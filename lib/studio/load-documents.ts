@@ -81,11 +81,12 @@ export async function loadStudioDocument({
     };
   }
   const product = doc as Product;
-  const [category, allProducts] = await Promise.all([
+  const [category, allProducts, allShowcases] = await Promise.all([
     categoryShowcaseOf(product, locale, authorization),
     allProductsNow(locale, authorization),
+    allShowcasesNow(locale, authorization),
   ]);
-  return { status: "ok", collection, props: { ...shared, product, category, allProducts } };
+  return { status: "ok", collection, props: { ...shared, product, category, allProducts, allShowcases } };
 }
 
 /** The category's first product (drafts included), for Solution | Product; null when it has none. */
@@ -121,6 +122,27 @@ async function allProductsNow(locale: Locale, authorization: string): Promise<Pr
   }).toString();
   const res = await fetch(url, { headers: { authorization }, cache: "no-store" }).catch(() => null);
   return res?.ok ? (((await res.json()) as { docs?: Product[] }).docs ?? []) : [];
+}
+
+/** Every category's Showcase (latest draft): the tab list of the category a product is moved to. */
+async function allShowcasesNow(
+  locale: Locale,
+  authorization: string,
+): Promise<{ id: number; showcase: NonNullable<SolutionCategory["showcase"]> }[]> {
+  const url = new URL("/api/solution-categories", env.CMS_URL);
+  url.search = new URLSearchParams({
+    draft: "true",
+    depth: "1",
+    locale,
+    "fallback-locale": defaultLocale,
+    limit: "100",
+    "select[showcase]": "true",
+  }).toString();
+  const res = await fetch(url, { headers: { authorization }, cache: "no-store" }).catch(() => null);
+  const docs = res?.ok
+    ? (((await res.json()) as { docs?: Pick<SolutionCategory, "id" | "showcase">[] }).docs ?? [])
+    : [];
+  return docs.map((c) => ({ id: c.id, showcase: c.showcase ?? {} }));
 }
 
 /**

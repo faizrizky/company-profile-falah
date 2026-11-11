@@ -23,7 +23,7 @@ import { toReference } from "./convert";
 
 type Props = Record<string, unknown>;
 type Showcase = NonNullable<SolutionCategory["showcase"]>;
-type TabRow = { id?: string | null; name?: string | null } & Record<string, unknown>;
+export type TabRow = { id?: string | null; name?: string | null } & Record<string, unknown>;
 /** A product of the category, as far as the tab list needs it. */
 export type SiblingProduct = Pick<
   Product,
@@ -61,7 +61,7 @@ export const productCategoryId = (product: Pick<Product, "category">): number | 
 const tabRows = (value: unknown): TabRow[] => list(value) as TabRow[];
 
 /** The tab list as the editor holds it: name, and the card of the tab's product. */
-function tabRowsOf(product: Product, tabs: TabRow[], siblings: SiblingProduct[]) {
+export function tabRowsOf(product: Product, tabs: TabRow[], siblings: SiblingProduct[]) {
   return tabs.map((tab) => {
     const owner = tab.id && tab.id === product.showcaseTab ? product : siblings.find((p) => p.showcaseTab === tab.id);
     return {

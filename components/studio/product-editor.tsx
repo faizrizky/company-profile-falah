@@ -8,7 +8,10 @@ import type { Dictionary } from "@/lib/i18n/dictionaries";
 import { createProductConfig, type ProductStudioMetadata } from "@/lib/studio/blocks/product";
 import {
   productCategoryId,
+  productProps,
   productToPuck,
+  tabRowsOf,
+  type TabRow,
   puckToCategoryShowcase,
   puckToProduct,
   hasWaitingDrafts,
@@ -41,6 +44,8 @@ export type ProductEditorProps = {
   } | null;
   /** Every product as it is now (drafts too): the cards of the category it is moved to. */
   allProducts: Product[];
+  /** Every category's Showcase (latest draft): its tabs, when the product is moved to it. */
+  allShowcases: { id: number; showcase: NonNullable<SolutionCategory["showcase"]> }[];
 };
 
 /** The visual editor of a product: its card, among the others of its category. */
@@ -51,23 +56,52 @@ export function ProductEditor(props: ProductEditorProps) {
 }
 
 function ProductEditorClient(props: ProductEditorProps) {
-  const { product, locale, uiLang, embedded, cmsUrl, siteData, chrome, dictionary, fontClass, category, allProducts } =
-    props;
+  const {
+    product,
+    locale,
+    uiLang,
+    embedded,
+    cmsUrl,
+    siteData,
+    chrome,
+    dictionary,
+    fontClass,
+    category,
+    allProducts,
+    allShowcases,
+  } = props;
   // The category's Showcase and the other products' images as last saved from
   // here: what the tab list is compared with.
-  const showcaseRef = useRef(category?.showcase ?? {});
-  const siblingsRef = useRef<SiblingProduct[]>(category?.products ?? []);
+  // Per category: the card can be moved to another one, whose tabs are then edited here.
+  const showcaseRef = useRef<Record<number, NonNullable<SolutionCategory["showcase"]>>>({});
+  const siblingsRef = useRef<Record<number, SiblingProduct[]>>({});
 
   const document = useMemo<StudioDocument>(() => {
     const tabsBefore = category?.showcase.tabs ?? [];
     const initialData = productToPuck(product, tabsBefore, category?.products);
-    const toProduct = (data: typeof initialData) => puckToProduct(data, product, tabsBefore);
-    const snapshot = (data: typeof initialData) =>
-      JSON.stringify([
+    // The category the card is in: loaded, or the one it was moved to in the editor.
+    const chosen = (data: typeof initialData) => {
+      const picked = productProps(data).category;
+      return typeof picked === "number" ? picked : (category?.id ?? null);
+    };
+    const showcaseAt = (id: number) =>
+      id === category?.id ? category.showcase : (allShowcases.find((c) => c.id === id)?.showcase ?? {});
+    const productsAt = (id: number): SiblingProduct[] =>
+      id === category?.id
+        ? category.products
+        : allProducts.filter((p) => p.id !== product.id && productCategoryId(p) === id);
+    const showcaseNow = (id: number) => showcaseRef.current[id] ?? showcaseAt(id);
+    const siblingsNow = (id: number) => siblingsRef.current[id] ?? productsAt(id);
+    const toProduct = (data: typeof initialData) =>
+      puckToProduct(data, product, chosen(data) === category?.id ? tabsBefore : []);
+    const snapshot = (data: typeof initialData) => {
+      const id = chosen(data);
+      return JSON.stringify([
         toProduct(data),
-        category && puckToCategoryShowcase(data, category.showcase),
-        category && puckToSiblings(data, product, category.products),
+        id && puckToCategoryShowcase(data, showcaseAt(id)),
+        id && puckToSiblings(data, product, productsAt(id)),
       ]);
+    };
     return {
       collection: "products",
       id: product.id,
@@ -84,7 +118,8 @@ function ProductEditorClient(props: ProductEditorProps) {
         backPath: `/admin/collections/products/${product.id}/form`,
         tabsCategoryId: category?.id ?? null,
         ownTabId: product.showcaseTab ?? null,
-        draftTabIds: (category?.products ?? [])
+        tabRowsFor: (id) => tabRowsOf(product, (showcaseNow(id).tabs ?? []) as TabRow[], siblingsNow(id)),
+        draftTabIds: allProducts
           .filter((p) => p._status === "draft" && p.showcaseTab)
           .map((p) => p.showcaseTab as string),
       }),
@@ -93,7 +128,7 @@ function ProductEditorClient(props: ProductEditorProps) {
         fontClass,
         chrome,
         product,
-        // The cards around this one: the category's products as they are now, drafts included.
+        // The cards around this one: the products as they are now, drafts included.
         siblings: category?.products ?? [],
         everyProduct: allProducts,
       } satisfies ProductStudioMetadata,
@@ -102,30 +137,33 @@ function ProductEditorClient(props: ProductEditorProps) {
       initialSnapshot: snapshot(initialData),
       changes: toProduct,
       alsoSave: (data, publish) => {
-        if (!category) return [];
+        const id = chosen(data);
+        if (!id) return [];
         const items: ReturnType<NonNullable<StudioDocument["alsoSave"]>> = [];
-        const showcase = puckToCategoryShowcase(data, showcaseRef.current);
+        const showcase = puckToCategoryShowcase(data, showcaseNow(id));
         if (showcase) {
           items.push({
             collection: "solution-categories",
-            id: category.id,
+            id,
             changes: showcase,
             saved: () => {
-              showcaseRef.current = showcase.showcase as typeof showcaseRef.current;
+              showcaseRef.current[id] = showcase.showcase as NonNullable<SolutionCategory["showcase"]>;
             },
           });
         }
         // The other products changed in the tab list, and on Publish the ones waiting as drafts.
-        for (const { id, changes, publishable } of puckToSiblings(data, product, siblingsRef.current, publish)) {
+        for (const { id: siblingId, changes, publishable } of puckToSiblings(data, product, siblingsNow(id), publish)) {
           items.push({
             collection: "products",
-            id,
+            id: siblingId,
             changes,
             // Without its image a product can't be published: saved as a draft.
             publish: publishable,
             saved: () => {
-              siblingsRef.current = siblingsRef.current.map((p) =>
-                p.id === id ? { ...p, ...changes, ...(publish && publishable ? { _status: "published" } : {}) } : p,
+              siblingsRef.current[id] = siblingsNow(id).map((p) =>
+                p.id === siblingId
+                  ? { ...p, ...changes, ...(publish && publishable ? { _status: "published" } : {}) }
+                  : p,
               ) as SiblingProduct[];
             },
           });
@@ -145,7 +183,20 @@ function ProductEditorClient(props: ProductEditorProps) {
         })(),
       },
     };
-  }, [product, uiLang, locale, cmsUrl, siteData, embedded, dictionary, fontClass, chrome, category, allProducts]);
+  }, [
+    product,
+    uiLang,
+    locale,
+    cmsUrl,
+    siteData,
+    embedded,
+    dictionary,
+    fontClass,
+    chrome,
+    category,
+    allProducts,
+    allShowcases,
+  ]);
 
   return <StudioShell document={document} locale={locale} uiLang={uiLang} embedded={embedded} cmsUrl={cmsUrl} />;
 }

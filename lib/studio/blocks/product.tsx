@@ -32,16 +32,18 @@ export function createProductConfig(
     tabsCategoryId: number | null;
     /** The tab of this product: its images are edited in that row, not above it. */
     ownTabId: string | null;
+    /** A category's tab list as the editor shows it: a row per tab, the card of its product in it. */
+    tabRowsFor: (categoryId: number) => Record<string, unknown>[];
     /** Tabs whose product is still a draft (marked in the list). */
     draftTabIds: string[];
   },
 ): Config {
-  const { lang, locale, cmsUrl, embedded, backPath, data, tabsCategoryId, ownTabId, draftTabIds } = context;
+  const { lang, locale, cmsUrl, embedded, backPath, data, tabsCategoryId, ownTabId, draftTabIds, tabRowsFor } = context;
   const f = createFields(context);
   const { s, L, text, image, tags, toggle } = f;
 
   const Card = ({ puck, ...props }: AnyProps & { puck: { metadata: unknown } }) => {
-    const { product: base, ctx, siblings, everyProduct } = meta(puck) as ProductStudioMetadata;
+    const { product: base, ctx, everyProduct } = meta(puck) as ProductStudioMetadata;
     const { categories } = ctx.data;
     const categoryId = typeof props.category === "number" ? props.category : productCategoryId(base);
 
@@ -70,7 +72,7 @@ export function createProductConfig(
     // The category's tab as the live Solution overview shows it, the product among its neighbours.
     // Its products as they are now, drafts too (a tab saved a moment ago has a
     // draft product, not yet published): in the loaded category and in another one.
-    const around = categoryId === tabsCategoryId ? siblings : everyProduct;
+    const around = everyProduct;
     const neighbours = around
       .filter((p) => p.id !== base.id && productCategoryId(p) === categoryId)
       // Their card as the tab list holds it now.
@@ -87,24 +89,23 @@ export function createProductConfig(
       });
     // A tab just added in the list has no product until the category is saved: its card shows already, last.
     const known = new Set([...around.map((p) => p.showcaseTab), base.showcaseTab]);
-    const added =
-      categoryId === tabsCategoryId
-        ? rows
-            .filter((row) => row.id && !known.has(row.id) && row.name?.trim())
-            .map(
-              (row) =>
-                ({
-                  id: -1 - rows.indexOf(row),
-                  title: row.name,
-                  summary: row.summary ?? "",
-                  tags: row.tags ?? [],
-                  image: row.image ?? null,
-                  imageMobile: row.imageMobile ?? null,
-                  category: categoryId,
-                  _order: "\uffff",
-                }) as unknown as Product,
-            )
-        : [];
+    const added = categoryId
+      ? rows
+          .filter((row) => row.id && !known.has(row.id) && row.name?.trim())
+          .map(
+            (row) =>
+              ({
+                id: -1 - rows.indexOf(row),
+                title: row.name,
+                summary: row.summary ?? "",
+                tags: row.tags ?? [],
+                image: row.image ?? null,
+                imageMobile: row.imageMobile ?? null,
+                category: categoryId,
+                _order: "\uffff",
+              }) as unknown as Product,
+          )
+      : [];
     const cards = [...neighbours, ...added, self].sort(byOrder);
 
     return (
@@ -138,13 +139,17 @@ export function createProductConfig(
    * product, saved to the category with the card).
    */
   const tabsOf = (liveTabs: unknown, categoryId: number) =>
-    ((categoryId === tabsCategoryId ? liveTabs : undefined) ??
-      data.categories.find((c) => c.id === categoryId)?.showcase?.tabs ??
-      []) as { id?: string | null; name?: string | null }[];
+    (liveTabs ?? data.categories.find((c) => c.id === categoryId)?.showcase?.tabs ?? []) as {
+      id?: string | null;
+      name?: string | null;
+    }[];
 
   const cardFields = (categoryId: number, liveTabs?: unknown): Fields<AnyProps> => {
-    const own = categoryId === tabsCategoryId;
-    const ownRow = own && Boolean(ownTabId) && tabsOf(liveTabs, categoryId).some((t) => t.id === ownTabId);
+    // The tab list is the chosen category's: its cards, as products, in this category's order.
+    const own = Number.isFinite(categoryId);
+    // This product's own tab exists in its category only.
+    const ownRow =
+      categoryId === tabsCategoryId && Boolean(ownTabId) && tabsOf(liveTabs, categoryId).some((t) => t.id === ownTabId);
     const tabs = tabsOf(liveTabs, categoryId);
     return {
       title: text("Title", "Judul"),
@@ -188,6 +193,11 @@ export function createProductConfig(
       label: L("Product card", "Kartu produk"),
       fields: cardFields(Number.NaN),
       resolveFields: (item) => cardFields(Number(item.props.category), item.props.tabs),
+      // Another category chosen: the list shows that category's cards.
+      resolveData: ({ props }, { lastData }) =>
+        lastData && Number(lastData.props.category) !== Number(props.category)
+          ? { props: { ...props, showcaseTab: "", tabs: tabRowsFor(Number(props.category)) } }
+          : { props },
       render: Card as never,
     },
   };
