@@ -74,8 +74,8 @@ function useLiveCategory(base: SolutionCategory, own: "hero" | "challenges" | "s
 
 /**
  * The Showcase tab list (one tab per product). On the category page (Product):
- * all of a tab. On the product card (Solution, `card`): the tab's name and the
- * images of its product, as in the Solution overview.
+ * all of a tab. On the product card (Solution, `card`): the tab's name and its
+ * product's card, as in the Solution overview (short description, chips, images).
  */
 export function showcaseTabsField(f: ReturnType<typeof createFields>, card = false, ownTabId?: string | null) {
   const { L, text, textarea, tags, image, video, pdf, list } = f;
@@ -85,6 +85,8 @@ export function showcaseTabsField(f: ReturnType<typeof createFields>, card = fal
     card
       ? {
           name: text("Name", "Nama"),
+          summary: textarea("Short description (on hover)", "Deskripsi singkat (saat di-hover)"),
+          tags: tags("Recommended for (chips, on hover)", "Direkomendasikan untuk (chip, saat di-hover)"),
           image: image("Image", "Gambar"),
           imageMobile: image("Image (mobile)", "Gambar (HP)"),
         }
@@ -98,7 +100,7 @@ export function showcaseTabsField(f: ReturnType<typeof createFields>, card = fal
         },
     "name",
     card
-      ? { name: L("New tab", "Tab baru"), image: null, imageMobile: null }
+      ? { name: L("New tab", "Tab baru"), summary: "", tags: [], image: null, imageMobile: null }
       : { name: L("New tab", "Tab baru"), description: "", tags: [], video: null, videoMobile: null, brochure: null },
     10,
   );

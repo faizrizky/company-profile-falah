@@ -11,7 +11,7 @@ import {
   productToPuck,
   puckToCategoryShowcase,
   puckToProduct,
-  puckToSiblingImages,
+  puckToSiblings,
   type SiblingProduct,
 } from "@/lib/studio/product";
 import type { StudioLang } from "@/lib/studio/strings";
@@ -62,7 +62,7 @@ function ProductEditorClient(props: ProductEditorProps) {
       JSON.stringify([
         toProduct(data),
         category && puckToCategoryShowcase(data, category.showcase),
-        category && puckToSiblingImages(data, product, category.products),
+        category && puckToSiblings(data, product, category.products),
       ]);
     return {
       collection: "products",
@@ -107,8 +107,8 @@ function ProductEditorClient(props: ProductEditorProps) {
             },
           });
         }
-        // The other products whose images were changed in the tab list.
-        for (const { id, changes } of puckToSiblingImages(data, product, siblingsRef.current)) {
+        // The other products whose card was changed in the tab list.
+        for (const { id, changes } of puckToSiblings(data, product, siblingsRef.current)) {
           items.push({
             collection: "products",
             id,

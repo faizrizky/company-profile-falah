@@ -11,7 +11,7 @@ import { showcaseTabsField } from "./category";
 import { createFields, type StudioContext } from "./fields";
 import { meta, type AnyProps, type StudioMetadata } from "./metadata";
 import { renderStudioRoot } from "./root";
-import { ownMedia, productCategoryId } from "../product";
+import { ownField, productCategoryId } from "../product";
 
 /** The canvas metadata of a product: the site's, plus the product as it was loaded. */
 export type ProductStudioMetadata = StudioMetadata & {
@@ -41,10 +41,12 @@ export function createProductConfig(
     const { categories, products } = ctx.data;
     const categoryId = typeof props.category === "number" ? props.category : productCategoryId(base);
 
-    // The card as the editor holds it (for the images, which the tab list edits too).
+    // The card as the editor holds it (its description, chips and images are edited in the tab list too).
     const cardData = { root: { props: {} }, content: [{ type: "productCard", props }] } as unknown as Data;
     const rows = (Array.isArray(props.tabs) ? props.tabs : []) as {
       id?: string;
+      summary?: string;
+      tags?: string[];
       image?: unknown;
       imageMobile?: unknown;
     }[];
@@ -52,11 +54,11 @@ export function createProductConfig(
     const self = {
       ...base,
       title: props.title as string,
-      summary: props.summary as string,
-      tags: props.tags as string[],
+      summary: ownField(cardData, base, "summary") as string,
+      tags: ownField(cardData, base, "tags") as string[],
       category: categoryId ?? base.category,
-      image: ownMedia(cardData, base, "image") as never,
-      imageMobile: ownMedia(cardData, base, "imageMobile") as never,
+      image: ownField(cardData, base, "image") as never,
+      imageMobile: ownField(cardData, base, "imageMobile") as never,
       layout: { wide: Boolean(props.wide), largeTitle: Boolean(props.largeTitle) },
     } as Product;
 
@@ -67,10 +69,17 @@ export function createProductConfig(
     const around = categoryId === tabsCategoryId ? siblings : products;
     const neighbours = around
       .filter((p) => p.id !== base.id && productCategoryId(p) === categoryId)
-      // Their images as the tab list holds them now.
+      // Their card as the tab list holds it now.
       .map((p) => {
         const row = rows.find((tab) => tab.id && tab.id === p.showcaseTab);
-        return row ? ({ ...p, image: row.image ?? null, imageMobile: row.imageMobile ?? null } as Product) : p;
+        if (!row) return p;
+        return {
+          ...p,
+          summary: row.summary ?? "",
+          tags: row.tags ?? [],
+          image: row.image ?? null,
+          imageMobile: row.imageMobile ?? null,
+        } as Product;
       });
     const cards = [...neighbours, self].sort(byOrder);
 
@@ -115,10 +124,18 @@ export function createProductConfig(
     const tabs = tabsOf(liveTabs, categoryId);
     return {
       title: text("Title", "Judul"),
-      summary: { type: "textarea", label: L("Short description (on hover)", "Deskripsi singkat (saat di-hover)") },
-      tags: tags("Recommended for (chips, on hover)", "Direkomendasikan untuk (chip, saat di-hover)"),
-      // With its tab in the list, the images are edited in that row (not twice).
-      ...(ownRow ? {} : { image: image("Image", "Gambar"), imageMobile: image("Image (mobile)", "Gambar (HP)") }),
+      // With its tab in the list, its description, chips and images are edited in that row (not twice).
+      ...(ownRow
+        ? {}
+        : {
+            summary: {
+              type: "textarea",
+              label: L("Short description (on hover)", "Deskripsi singkat (saat di-hover)"),
+            },
+            tags: tags("Recommended for (chips, on hover)", "Direkomendasikan untuk (chip, saat di-hover)"),
+            image: image("Image", "Gambar"),
+            imageMobile: image("Image (mobile)", "Gambar (HP)"),
+          }),
       category: {
         type: "select",
         label: L("Category", "Kategori"),

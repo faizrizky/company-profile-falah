@@ -1,12 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  productCategoryId,
-  productToPuck,
-  puckToCategoryShowcase,
-  puckToProduct,
-  puckToSiblingImages,
-} from "./product";
+import { productCategoryId, productToPuck, puckToCategoryShowcase, puckToProduct, puckToSiblings } from "./product";
 import type { Product } from "@/types/cms";
 
 const media = { id: 12, createdAt: "2026-01-01" } as never;
@@ -68,24 +62,45 @@ describe("product ↔ visual editor", () => {
       ],
     } as never;
     const tabs = (showcase as { tabs: { id: string; name: string }[] }).tabs;
-    // t1 is this product's; t2 is another product's, with its own images.
-    const sibling = { id: 9, showcaseTab: "t2", image: { id: 21 }, imageMobile: null } as never;
+    // t1 is this product's; t2 is another product's, with its own card.
+    const sibling = {
+      id: 9,
+      showcaseTab: "t2",
+      summary: "Keeps jets flying",
+      tags: ["Army"],
+      image: { id: 21 },
+      imageMobile: null,
+    } as never;
     const siblings = [sibling] as never[];
     const rowsOf = (data: ReturnType<typeof productToPuck>) =>
       (data.content[0].props as { tabs: Record<string, unknown>[] }).tabs;
 
-    it("lists each tab with the images of its product", () => {
+    it("lists each tab with the card of its product", () => {
       const rows = rowsOf(productToPuck(product, tabs, siblings));
       expect(rows).toEqual([
-        { id: "t1", name: "Virtual Operational Training", image: media, imageMobile: null },
-        { id: "t2", name: "Virtual Maintenance Training", image: { id: 21 }, imageMobile: null },
+        {
+          id: "t1",
+          name: "Virtual Operational Training",
+          summary: "Train safely",
+          tags: ["Army"],
+          image: media,
+          imageMobile: null,
+        },
+        {
+          id: "t2",
+          name: "Virtual Maintenance Training",
+          summary: "Keeps jets flying",
+          tags: ["Army"],
+          image: { id: 21 },
+          imageMobile: null,
+        },
       ]);
     });
 
-    it("saves nothing else when the names, order and images are as loaded", () => {
+    it("saves nothing else when the names, order and cards are as loaded", () => {
       const data = productToPuck(product, tabs, siblings);
       expect(puckToCategoryShowcase(data, showcase)).toBeNull();
-      expect(puckToSiblingImages(data, product, siblings)).toEqual([]);
+      expect(puckToSiblings(data, product, siblings)).toEqual([]);
     });
 
     it("renames and reorders tabs, keeping everything else each tab had", () => {
@@ -94,7 +109,7 @@ describe("product ↔ visual editor", () => {
       (data.content[0].props as { tabs: unknown }).tabs = [
         { ...other, name: "Maintenance" },
         own,
-        { id: "t3", name: "Medical", image: null, imageMobile: null },
+        { id: "t3", name: "Medical", summary: "", tags: [], image: null, imageMobile: null },
       ];
       const changes = puckToCategoryShowcase(data, showcase) as {
         showcase: { background: number; tabs: Record<string, unknown>[] };
@@ -107,24 +122,46 @@ describe("product ↔ visual editor", () => {
       ]);
     });
 
-    it("saves another product's changed image to that product, as an id", () => {
+    it("saves another product's changed description, chips and images to that product", () => {
       const data = productToPuck(product, tabs, siblings);
-      rowsOf(data)[1].image = { id: 33, createdAt: "2026-01-01" };
-      rowsOf(data)[1].imageMobile = { id: 34, createdAt: "2026-01-01" };
-      expect(puckToSiblingImages(data, product, siblings)).toEqual([
-        { id: 9, changes: { image: 33, imageMobile: 34 } },
+      Object.assign(rowsOf(data)[1], {
+        summary: "Keeps jets and trucks flying",
+        tags: ["Army", "Navy"],
+        image: { id: 33, createdAt: "2026-01-01" },
+        imageMobile: { id: 34, createdAt: "2026-01-01" },
+      });
+      expect(puckToSiblings(data, product, siblings)).toEqual([
+        {
+          id: 9,
+          changes: { summary: "Keeps jets and trucks flying", tags: ["Army", "Navy"], image: 33, imageMobile: 34 },
+        },
       ]);
       // Its own row goes with the product's own save, not as a sibling.
       expect(puckToProduct(data, product, tabs).image).toBe(12);
     });
 
-    it("the product's own image changed in its row is saved like the card's own field", () => {
+    it("saves only what changed of another product", () => {
       const data = productToPuck(product, tabs, siblings);
-      rowsOf(data)[0].image = { id: 40, createdAt: "2026-01-01" };
-      expect(puckToProduct(data, product, tabs).image).toBe(40);
+      rowsOf(data)[1].tags = ["Army", "Navy"];
+      expect(puckToSiblings(data, product, siblings)).toEqual([{ id: 9, changes: { tags: ["Army", "Navy"] } }]);
+    });
+
+    it("the product's own description, chips and image changed in its row are saved like its own fields", () => {
+      const data = productToPuck(product, tabs, siblings);
+      Object.assign(rowsOf(data)[0], {
+        summary: "Train very safely",
+        tags: ["Army", "Air"],
+        image: { id: 40, createdAt: "2026-01-01" },
+      });
+      const saved = puckToProduct(data, product, tabs);
+      expect(saved.summary).toBe("Train very safely");
+      expect(saved.tags).toEqual(["Army", "Air"]);
+      expect(saved.image).toBe(40);
       // Both changed: the card's own field wins.
-      (data.content[0].props as { image: unknown }).image = { id: 41, createdAt: "2026-01-01" };
-      expect(puckToProduct(data, product, tabs).image).toBe(41);
+      Object.assign(data.content[0].props, { summary: "Card wins", image: { id: 41, createdAt: "2026-01-01" } });
+      const both = puckToProduct(data, product, tabs);
+      expect(both.summary).toBe("Card wins");
+      expect(both.image).toBe(41);
     });
 
     it("renaming the product's own tab renames the product", () => {
