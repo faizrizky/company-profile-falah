@@ -15,6 +15,8 @@ export function renderStudioRoot({ children, puck }: { children: ReactNode; puck
   const { ctx, fontClass, chrome } = meta(puck);
   return (
     <div className={`${fontClass} min-h-screen bg-surface-dark font-sans antialiased`}>
+      {/* The editor's overlay catches the mouse, so cards never see a hover: what they reveal on hover (description, chips) is always shown here. */}
+      <style>{`[data-hover-reveal]{grid-template-rows:1fr!important;opacity:1!important;transform:none!important}`}</style>
       <LocaleProvider locale={ctx.locale} t={ctx.t}>
         {chrome.navigation && (
           <Navbar

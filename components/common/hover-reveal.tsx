@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 export function HoverReveal({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <div
+      data-hover-reveal
       className={cn(
         "grid grid-rows-[0fr] opacity-0 transition-[grid-template-rows,opacity,transform] duration-300 ease-out",
         "translate-y-2 group-hover:translate-y-0 group-hover:grid-rows-[1fr] group-hover:opacity-100",
