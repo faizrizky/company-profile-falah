@@ -77,7 +77,13 @@ function useLiveCategory(base: SolutionCategory, own: "hero" | "challenges" | "s
  * all of a tab. On the product card (Solution, `card`): the tab's name and its
  * product's card, as in the Solution overview (short description, chips, images).
  */
-export function showcaseTabsField(f: ReturnType<typeof createFields>, card = false, ownTabId?: string | null) {
+export function showcaseTabsField(
+  f: ReturnType<typeof createFields>,
+  card = false,
+  ownTabId?: string | null,
+  /** Tabs whose product is still a draft (marked in the list). */
+  draftTabIds: string[] = [],
+) {
   const { L, text, textarea, tags, image, video, pdf, list } = f;
   const field = list(
     TABS_LABEL_EN,
@@ -105,11 +111,18 @@ export function showcaseTabsField(f: ReturnType<typeof createFields>, card = fal
     10,
   );
   // On the product card, its own tab says so (its image is edited there).
-  if (!ownTabId) return field;
+  if (!ownTabId && !draftTabIds.length) return field;
   return {
     ...field,
-    getItemSummary: (item: AnyProps) =>
-      `${String(item.name || "…")}${item.id === ownTabId ? `  ${L("· this product", "· produk ini")}` : ""}`,
+    getItemSummary: (item: AnyProps) => {
+      const mark =
+        item.id === ownTabId
+          ? L("· this product", "· produk ini")
+          : draftTabIds.includes(String(item.id))
+            ? L("· draft", "· draf")
+            : "";
+      return `${String(item.name || "…")}${mark ? `  ${mark}` : ""}`;
+    },
   } as typeof field;
 }
 

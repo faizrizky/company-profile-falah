@@ -25,7 +25,10 @@ type Props = Record<string, unknown>;
 type Showcase = NonNullable<SolutionCategory["showcase"]>;
 type TabRow = { id?: string | null; name?: string | null } & Record<string, unknown>;
 /** A product of the category, as far as the tab list needs it. */
-export type SiblingProduct = Pick<Product, "id" | "showcaseTab" | "image" | "imageMobile" | "summary" | "tags">;
+export type SiblingProduct = Pick<
+  Product,
+  "id" | "showcaseTab" | "image" | "imageMobile" | "summary" | "tags" | "_status"
+>;
 
 /** What a tab's row holds of its product's card. */
 export const ROW_FIELDS = ["summary", "tags", "image", "imageMobile"] as const;
@@ -160,26 +163,40 @@ export function puckToCategoryShowcase(data: Data, showcase: Showcase): Record<s
 }
 
 /**
- * The other products of the category whose card was changed in the tab list
- * (short description, chips, images): { id, changes } for each, to save with
- * the card. (This product's own row goes through puckToProduct.)
+ * The other products of the category to save with the card: { id, changes } for
+ * each, `publishable` when it can be published (a product needs its image).
+ *
+ * - Those whose card (short description, chips, images) was changed in the tab
+ *   list.
+ * - On Publish, also those still waiting as drafts (changes saved earlier with
+ *   "Save draft" from here), which would otherwise stay drafts for good.
+ *
+ * (This product's own row goes through puckToProduct.)
  */
 export function puckToSiblings(
   data: Data,
   base: Product,
   siblings: SiblingProduct[],
-): { id: number; changes: Record<string, unknown> }[] {
+  publish = false,
+): { id: number; changes: Record<string, unknown>; publishable: boolean }[] {
   const rows = tabRows(productProps(data).tabs);
-  const changed: { id: number; changes: Record<string, unknown> }[] = [];
+  const out: { id: number; changes: Record<string, unknown>; publishable: boolean }[] = [];
   for (const sibling of siblings) {
     const row = rows.find((tab) => tab.id && tab.id === sibling.showcaseTab && tab.id !== base.showcaseTab);
-    if (!row) continue;
     const changes: Record<string, unknown> = {};
-    for (const key of ROW_FIELDS) {
-      if (plain(key, row[key]) === plain(key, sibling[key])) continue;
-      changes[key] = key === "summary" ? text(row[key]) : toReference(row[key] ?? (key === "tags" ? [] : null));
+    if (row) {
+      for (const key of ROW_FIELDS) {
+        if (plain(key, row[key]) === plain(key, sibling[key])) continue;
+        changes[key] = key === "summary" ? text(row[key]) : toReference(row[key] ?? (key === "tags" ? [] : null));
+      }
     }
-    if (Object.keys(changes).length) changed.push({ id: sibling.id, changes });
+    const publishable = mediaId("image" in changes ? changes.image : sibling.image) !== null;
+    const waiting = publish && sibling._status === "draft" && publishable;
+    if (Object.keys(changes).length || waiting) out.push({ id: sibling.id, changes, publishable });
   }
-  return changed;
+  return out;
 }
+
+/** Whether some other product of the category is a complete draft, waiting to be published. */
+export const hasWaitingDrafts = (siblings: SiblingProduct[]): boolean =>
+  siblings.some((p) => p._status === "draft" && mediaId(p.image) !== null);

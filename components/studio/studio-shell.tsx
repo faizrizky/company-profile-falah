@@ -77,15 +77,22 @@ export type StudioDocument = {
   };
   /**
    * Other documents saved with this one, first (a product's category tabs, the
-   * other products' images); empty when there is nothing to save. `saved` is
-   * called for each once it is.
+   * other products' cards); empty when there is nothing to save. `publish`
+   * false: saved as a draft even on Publish (it can't be published yet).
+   * `saved` is called for each once it is.
    */
-  alsoSave?: (data: Data) => {
+  alsoSave?: (
+    data: Data,
+    publish: boolean,
+  ) => {
     collection: StudioCollection;
     id: number;
     changes: Record<string, unknown>;
+    publish?: boolean;
     saved: () => void;
   }[];
+  /** Other documents wait as complete drafts: Publish has something to do even without edits. */
+  otherDraftsPending?: boolean;
 };
 
 export type StudioShellProps = {
@@ -351,7 +358,7 @@ export function StudioShell(props: StudioShellProps) {
   const savedRef = useRef(doc.initialSnapshot);
   const [dirty, setDirty] = useState(false);
   // The loaded page is the latest draft; "draft" means it differs from the live page.
-  const [draftPending, setDraftPending] = useState(doc.status === "draft");
+  const [draftPending, setDraftPending] = useState(doc.status === "draft" || Boolean(doc.otherDraftsPending));
   const canPublish = dirty || draftPending;
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const upload = useUploadState();
@@ -400,8 +407,14 @@ export function StudioShell(props: StudioShellProps) {
       setProgress((p) => (pct > p.pct ? { stage, pct } : p));
     };
     try {
-      for (const also of doc.alsoSave?.(data) ?? []) {
-        await saveDocumentWithProgress(cmsUrl, also, also.changes, { locale, publish }, onProgress);
+      for (const also of doc.alsoSave?.(data, publish) ?? []) {
+        await saveDocumentWithProgress(
+          cmsUrl,
+          also,
+          also.changes,
+          { locale, publish: publish && also.publish !== false },
+          onProgress,
+        );
         also.saved();
       }
       const { handedOver } = await saveDocumentWithProgress(

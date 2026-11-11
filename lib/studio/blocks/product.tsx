@@ -30,9 +30,11 @@ export function createProductConfig(
     tabsCategoryId: number | null;
     /** The tab of this product: its images are edited in that row, not above it. */
     ownTabId: string | null;
+    /** Tabs whose product is still a draft (marked in the list). */
+    draftTabIds: string[];
   },
 ): Config {
-  const { lang, locale, cmsUrl, embedded, backPath, data, tabsCategoryId, ownTabId } = context;
+  const { lang, locale, cmsUrl, embedded, backPath, data, tabsCategoryId, ownTabId, draftTabIds } = context;
   const f = createFields(context);
   const { s, L, text, image, tags, toggle } = f;
 
@@ -151,7 +153,7 @@ export function createProductConfig(
       },
       ...(own
         ? {
-            tabs: showcaseTabsField(f, true, ownTabId),
+            tabs: showcaseTabsField(f, true, ownTabId, draftTabIds),
           }
         : {}),
       wide: toggle("Wide (2 columns on desktop)", "Lebar (2 kolom di desktop)"),

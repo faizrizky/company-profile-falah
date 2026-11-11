@@ -11,6 +11,7 @@ import {
   productToPuck,
   puckToCategoryShowcase,
   puckToProduct,
+  hasWaitingDrafts,
   puckToSiblings,
   type SiblingProduct,
 } from "@/lib/studio/product";
@@ -80,6 +81,9 @@ function ProductEditorClient(props: ProductEditorProps) {
         backPath: `/admin/collections/products/${product.id}/form`,
         tabsCategoryId: category?.id ?? null,
         ownTabId: product.showcaseTab ?? null,
+        draftTabIds: (category?.products ?? [])
+          .filter((p) => p._status === "draft" && p.showcaseTab)
+          .map((p) => p.showcaseTab as string),
       }),
       metadata: {
         ctx: { locale, t: dictionary, data: siteData },
@@ -93,7 +97,7 @@ function ProductEditorClient(props: ProductEditorProps) {
       snapshot,
       initialSnapshot: snapshot(initialData),
       changes: toProduct,
-      alsoSave: (data) => {
+      alsoSave: (data, publish) => {
         if (!category) return [];
         const items: ReturnType<NonNullable<StudioDocument["alsoSave"]>> = [];
         const showcase = puckToCategoryShowcase(data, showcaseRef.current);
@@ -107,21 +111,24 @@ function ProductEditorClient(props: ProductEditorProps) {
             },
           });
         }
-        // The other products whose card was changed in the tab list.
-        for (const { id, changes } of puckToSiblings(data, product, siblingsRef.current)) {
+        // The other products changed in the tab list, and on Publish the ones waiting as drafts.
+        for (const { id, changes, publishable } of puckToSiblings(data, product, siblingsRef.current, publish)) {
           items.push({
             collection: "products",
             id,
             changes,
+            // Without its image a product can't be published: saved as a draft.
+            publish: publishable,
             saved: () => {
               siblingsRef.current = siblingsRef.current.map((p) =>
-                p.id === id ? { ...p, ...changes } : p,
+                p.id === id ? { ...p, ...changes, ...(publish && publishable ? { _status: "published" } : {}) } : p,
               ) as SiblingProduct[];
             },
           });
         }
         return items;
       },
+      otherDraftsPending: hasWaitingDrafts(category?.products ?? []),
       livePath: (code) => `/${code}/solution`,
       // One card: nothing to add, move or remove.
       permissions: { insert: false, drag: false, delete: false, duplicate: false },

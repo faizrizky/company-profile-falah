@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { productCategoryId, productToPuck, puckToCategoryShowcase, puckToProduct, puckToSiblings } from "./product";
+import {
+  hasWaitingDrafts,
+  productCategoryId,
+  productToPuck,
+  puckToCategoryShowcase,
+  puckToProduct,
+  puckToSiblings,
+} from "./product";
 import type { Product } from "@/types/cms";
 
 const media = { id: 12, createdAt: "2026-01-01" } as never;
@@ -70,7 +77,7 @@ describe("product ↔ visual editor", () => {
       tags: ["Army"],
       image: { id: 21 },
       imageMobile: null,
-    } as never;
+    };
     const siblings = [sibling] as never[];
     const rowsOf = (data: ReturnType<typeof productToPuck>) =>
       (data.content[0].props as { tabs: Record<string, unknown>[] }).tabs;
@@ -134,6 +141,7 @@ describe("product ↔ visual editor", () => {
         {
           id: 9,
           changes: { summary: "Keeps jets and trucks flying", tags: ["Army", "Navy"], image: 33, imageMobile: 34 },
+          publishable: true,
         },
       ]);
       // Its own row goes with the product's own save, not as a sibling.
@@ -143,7 +151,9 @@ describe("product ↔ visual editor", () => {
     it("saves only what changed of another product", () => {
       const data = productToPuck(product, tabs, siblings);
       rowsOf(data)[1].tags = ["Army", "Navy"];
-      expect(puckToSiblings(data, product, siblings)).toEqual([{ id: 9, changes: { tags: ["Army", "Navy"] } }]);
+      expect(puckToSiblings(data, product, siblings)).toEqual([
+        { id: 9, changes: { tags: ["Army", "Navy"] }, publishable: true },
+      ]);
     });
 
     it("the product's own description, chips and image changed in its row are saved like its own fields", () => {
@@ -162,6 +172,36 @@ describe("product ↔ visual editor", () => {
       const both = puckToProduct(data, product, tabs);
       expect(both.summary).toBe("Card wins");
       expect(both.image).toBe(41);
+    });
+
+    it("on Publish, a complete draft saved earlier is published too, even with nothing new to save", () => {
+      const waiting = [{ ...sibling, _status: "draft" }] as never[];
+      const data = productToPuck(product, tabs, waiting);
+      // Save draft: nothing changed since, so nothing is sent.
+      expect(puckToSiblings(data, product, waiting, false)).toEqual([]);
+      // Publish: it goes along.
+      expect(puckToSiblings(data, product, waiting, true)).toEqual([{ id: 9, changes: {}, publishable: true }]);
+      // Already published: not touched.
+      expect(puckToSiblings(productToPuck(product, tabs, siblings), product, siblings, true)).toEqual([]);
+    });
+
+    it("a draft without its image can't be published: only saved if changed", () => {
+      const noImage = [{ ...sibling, _status: "draft", image: null }] as never[];
+      const data = productToPuck(product, tabs, noImage);
+      expect(puckToSiblings(data, product, noImage, true)).toEqual([]);
+      rowsOf(data)[1].summary = "Edited";
+      expect(puckToSiblings(data, product, noImage, true)).toEqual([
+        { id: 9, changes: { summary: "Edited" }, publishable: false },
+      ]);
+      // Choosing its image in the row makes it publishable.
+      rowsOf(data)[1].image = { id: 50, createdAt: "2026-01-01" };
+      expect(puckToSiblings(data, product, noImage, true)[0].publishable).toBe(true);
+    });
+
+    it("tells when complete drafts are waiting (Publish then has something to do)", () => {
+      expect(hasWaitingDrafts(siblings)).toBe(false);
+      expect(hasWaitingDrafts([{ ...sibling, _status: "draft" }] as never[])).toBe(true);
+      expect(hasWaitingDrafts([{ ...sibling, _status: "draft", image: null }] as never[])).toBe(false);
     });
 
     it("renaming the product's own tab renames the product", () => {
