@@ -3,6 +3,7 @@ import type { Data } from "@puckeditor/core";
 import { COLUMN_KEYS } from "@/components/blocks/LayoutSection";
 import type { Page } from "@/types/cms";
 
+import { highlightsFromProps, highlightsToProps } from "./highlights";
 import { randomId } from "./random-id";
 
 /**
@@ -32,7 +33,11 @@ function toPuckItem(block: { blockType: string; id?: string | null; blockName?: 
     blockType: string;
     id?: string | null;
   };
-  const props: PuckItem["props"] = { ...fields, id: id || newId(blockType) };
+  const props: PuckItem["props"] = {
+    // "Solution highlights" shows its featured and small cards as one list.
+    ...(blockType === "solutionHighlights" ? highlightsToProps(fields) : fields),
+    id: id || newId(blockType),
+  };
 
   if (blockType === "layoutSection") {
     for (const key of COLUMN_KEYS) {
@@ -89,7 +94,8 @@ export function toReference(value: unknown): unknown {
 }
 
 function fromPuckItem(item: PuckItem): Record<string, unknown> {
-  const { id, ...props } = item.props;
+  const { id, ...editorProps } = item.props;
+  const props = item.type === "solutionHighlights" ? highlightsFromProps(editorProps) : editorProps;
   const block: Record<string, unknown> = { id, blockType: item.type };
 
   for (const [key, value] of Object.entries(props)) {
