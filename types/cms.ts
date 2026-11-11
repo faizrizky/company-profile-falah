@@ -393,20 +393,8 @@ export interface SolutionHighlightsBlock {
     description?: string | null;
   };
   background?: (number | null) | Media;
-  featured: {
-    image: number | Media;
-    title: string;
-    description?: string | null;
-    tagsLabel?: string | null;
-    tags?: string[] | null;
-    button: {
-      label: string;
-      /**
-       * Pick a page, or "Other" for your own URL (/contact, #faq, https://…).
-       */
-      href: string;
-    };
-  };
+  tagsLabel?: string | null;
+  buttonLabel?: string | null;
   items?:
     | {
         image: number | Media;
@@ -416,7 +404,7 @@ export interface SolutionHighlightsBlock {
          */
         description?: string | null;
         /**
-         * Shown on hover under the featured card’s tags label.
+         * Shown on hover under the tags label.
          */
         tags?: string[] | null;
         /**
@@ -1036,6 +1024,9 @@ export interface Product {
   image: number | Media;
   imageMobile?: (number | null) | Media;
   layout?: {
+    /**
+     * Produk pertama di tiap kategori selalu tampil lebar dengan judul besar, apa pun pilihan ini.
+     */
     wide?: boolean | null;
     largeTitle?: boolean | null;
   };
@@ -1451,21 +1442,8 @@ export interface SolutionHighlightsBlockSelect<T extends boolean = true> {
         description?: T;
       };
   background?: T;
-  featured?:
-    | T
-    | {
-        image?: T;
-        title?: T;
-        description?: T;
-        tagsLabel?: T;
-        tags?: T;
-        button?:
-          | T
-          | {
-              label?: T;
-              href?: T;
-            };
-      };
+  tagsLabel?: T;
+  buttonLabel?: T;
   items?:
     | T
     | {
